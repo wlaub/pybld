@@ -60,10 +60,10 @@ class Game():
                         pass
 
         for item in self.items.values():
-	    room = self.rooms[item.loc]
-	    room.items[item.name] = item
-	    print("Added item {} to room {}".format(item.name, room.name))
-	    item.room = room
+            room = self.rooms[item.loc]
+            room.items[item.name] = item
+            item.room = room
+
 
 
         self.currRoom = self.rooms['First Room']
@@ -72,7 +72,7 @@ class Game():
 
     def doCmd(self, cmd):
         self.tickTurn()
-	if self.inv.doCmd(cmd):
+        if self.inv.doCmd(cmd):
             pass
         elif self.currRoom.doCmd(cmd):
             pass
@@ -99,9 +99,9 @@ class Game():
     def getFlag(self, name, default = None):
         if name in self.flags.keys():
             return self.flags[name]
-	elif name in self.baseFlags.keys():
-	    self.flags[name] = self.baseFlags[name]
-	    return self.flags[name]
+        elif name in self.baseFlags.keys():
+            self.flags[name] = self.baseFlags[name]
+            return self.flags[name]
         else:
             return default
 
@@ -124,18 +124,18 @@ class Game():
 
     def addScore(self, val):
         score = self.getFlag("score")
-	self.flags["score"] = score+val
+        self.flags["score"] = score+val
 
     def score(self, cmd):
         score = self.getFlag("score")
-	turns = self.getFlag("turns")
-	hair = self.getFlag("hair")
-	scoreStr = "SCORE: {}".format(score)
+        turns = self.getFlag("turns")
+        hair = self.getFlag("hair")
+        scoreStr = "SCORE: {}".format(score)
         scoreStr += " "*(15 - len(scoreStr))
         scoreStr += "TURNS: {}".format(turns)
         scoreStr += " "*(30 - len(scoreStr))
         scoreStr+= "HAIR: {}".format(hair)
-	say(" "*7 + scoreStr)
+        say(" "*7 + scoreStr)
 
 
     def help(self, cmd):
@@ -152,9 +152,9 @@ class Room():
     desc = "It is a room?"
     name = ""
     verbs = ["look", "go", "sit", "stand"]
-    items = {}
 
     def __init__(self, game):
+        self.items = {}
         self.g = game
 
 
@@ -162,7 +162,7 @@ class Room():
         for item in self.g.items.values():
             if item.loc == self.name:
                 self.items[item.name] = item
-		item.room = self
+                item.room = self
 
     def _flagName(self, name):
         return _flagName(self, name)
@@ -185,8 +185,8 @@ class Room():
     def look(self, cmd):
         say(self.desc)
         itemStr = "\n"
-	for item in self.items.values():
-	    itemStr += item.getGround() + " "
+        for item in self.items.values():
+            itemStr += item.getGround() + " "
         say(itemStr)
 
     def go(self, cmd):
@@ -279,9 +279,9 @@ class Item():
 
     def _move(self, newLoc):
         del self.g.rooms[self.loc].items[self.name]
-	nRoom = self.g.rooms[newLoc]
+        nRoom = self.g.rooms[newLoc]
         nRoom.items[self.name] = self
-	self.room = nRoom
+        self.room = nRoom
         self.loc = newLoc
 
     def _flagName(self, name):

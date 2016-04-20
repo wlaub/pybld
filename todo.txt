@@ -1,3 +1,8 @@
-Figure out why items are sowing up in inventory items dict
+Learn pdb
+
 
 Figure out why first room is not called overidden function
+
+
+Figure out about aliasing dict entries
+

@@ -9,15 +9,16 @@ currRoom = g.rooms['First Room']
 inv = g.rooms['inv']
 
 
-while not g.done:
-    sys.stdout.write("> ")
-    cmd = sys.stdin.readline().lower().strip()
-    if g.force != "":
-        cmd = g.force
-    g.force = ""
+if __name__ == "__main__":
+    while not g.done:
+        sys.stdout.write("> ")
+        cmd = sys.stdin.readline().lower().strip()
+        if g.force != "":
+            cmd = g.force
+        g.force = ""
+ 
+        print("\r> "+cmd.upper())
 
-    print("\r> "+cmd.upper())
-
-    g.doCmd(cmd)
+        g.doCmd(cmd)
 
 

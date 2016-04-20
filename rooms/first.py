@@ -11,30 +11,30 @@ class Room(game.Room):
 
     def go(self, cmd):
         dir = game.getDir(cmd)
-	pos = self.getFlag("pos")
+        pos = self.getFlag("pos")
         if dir == None:
-	    game.say("...")
-	    return
+            game.say("...")
+            return
 
         if self.g.getFlag("sit") != "not":
-	    game.say("You can't walk while sitting!")
-	    return
+            game.say("You can't walk while sitting!")
+            return
 
         if dir == "left":
-	    if pos == "left":
-	        game.say("You can't go any farther left.")
+            if pos == "left":
+                game.say("You can't go any farther left.")
             else:
-	        self.setFlag("pos", "left")
-		game.say("You walk to the left.")
+                self.setFlag("pos", "left")
+                game.say("You walk to the left.")
 
         elif dir == "right":
-	   if pos == "right":
-	       game.say("You can't go any farther right.")
-	   else:
-	       self.setFlag("pos", "right")
-	       game.say("You walk to the right. You are now standing next to the door.")
+           if pos == "right":
+               game.say("You can't go any farther right.")
+           else:
+               self.setFlag("pos", "right")
+               game.say("You walk to the right. You are now standing next to the door.")
         else:
-	    game.say("You can't go in that direction.")
+            game.say("You can't go in that direction.")
 
 
     #Figure out why this doesn't work
@@ -61,14 +61,14 @@ class Door(game.Item):
   
     def open(self, cmd):
         state = self.g.getFlag("text pars'r", 0)
-	pos = self.room.getFlag("pos")
+        pos = self.room.getFlag("pos")
 
         if state ==0:
             game.say("It's not a real door.")
-	    return
+            return
         if pos != "right":
-	    game.say("You can't reach the door from here. You are too far left.")
-	    return
+            game.say("You can't reach the door from here. You are too far left.")
+            return
         game.say("You open the door and walk through into the next room. There's no going back now. Hope you didn't miss anything important!")
             
 
@@ -93,7 +93,7 @@ class TextParser(game.Item):
 
     def take(self, cmd):
         if self.loc == 'inv':
-	    game.say("You already have the text pars'r.")
+            game.say("You already have the text pars'r.")
         self._move('inv')
         self.loc = 'inv'
         game.say("You pick up the TEXT PARS'R. A BLACK WIND blows through you.")
