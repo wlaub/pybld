@@ -1,8 +1,16 @@
 Learn pdb
 
+-------------------
 
 Figure out why first room is not called overidden function
 
+--------------------
+
+Saving
+
+Loading
+
+Run script?
 
 Figure out about aliasing dict entries
 
