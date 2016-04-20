@@ -1,0 +1,3 @@
+Figure out why items are sowing up in inventory items dict
+
+Figure out why first room is not called overidden function
