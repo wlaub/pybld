@@ -1,4 +1,4 @@
-import os
+import os, time, sys
 import importlib, inspect
 import pickle
 
@@ -28,9 +28,17 @@ def getSaveNames():
 
 
 
-def say(data):
-    print(data.upper())
+def sayBit(data):
+    sys.stdout.write(data.upper())
 
+def spell(data, delay=.75):
+    for c in data:
+        sayBit(c)
+        time.sleep(delay)
+
+def say(data):
+    sayBit(data)
+    sayBit('\n')
 
 
 def extractSaveName(cmd):
