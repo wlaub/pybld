@@ -6,10 +6,9 @@ Figure out why first room is not called overidden function
 
 --------------------
 
-Find better way of making members non-static
-
 Figure out about aliasing dict entries
 
+Generalize positioning mechanic for take/drop functions
 
 ----------------------------------
 

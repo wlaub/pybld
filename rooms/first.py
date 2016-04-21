@@ -82,6 +82,8 @@ class TextParser(game.Item):
     groundStr = "There is a {} on the ground."
     defLoc = "First Room"
 
+    pos = 'left'
+
     verbs = ["look", "use", "caress", "take", "drop", "eat"]
 
     flags = {
@@ -96,6 +98,11 @@ class TextParser(game.Item):
     def take(self, cmd):
         if self.loc == 'inv':
             game.say("You already have the text pars'r.")
+            return
+        pos = self.room.getFlag("pos")
+        if pos != None and pos != self.pos:
+            game.say("You can't reach it from here!")
+            return
         self._move('inv')
         self.loc = 'inv'
         game.say("You pick up the TEXT PARS'R. A BLACK WIND blows through you.")
