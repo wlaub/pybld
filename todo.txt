@@ -6,11 +6,13 @@ Figure out why first room is not called overidden function
 
 --------------------
 
-Saving
-
-Loading
-
-Run script?
+Make saveable game, room, item members non-static
 
 Figure out about aliasing dict entries
 
+
+----------------------------------
+
+Prevent taking text pars'r from right of room
+
+Add hidden object / look closer mechanic

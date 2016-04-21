@@ -1,15 +1,55 @@
 import os
 import importlib, inspect
+import pickle
 
 directions = ["up", "down", "left", "right"]
 
+def makeSaveName(name):
+    return "save/"+name+".bld"
+
+def save(g, filename):
+    with open(makeSaveName(filename), "wb") as f:
+        pickle.dump(g, f)
+
+def load(g, filename):
+    with open(makeSaveName(filename), "rb") as f:
+        return pickle.load(f)
+
+
+
+def getSaveNames():
+    files = os.listdir("save")
+    saves = []
+    for name in files:
+        parts = name.split('.')
+        if len(parts) > 1 and parts[1] == 'bld':
+            saves.append(name)
+    return saves
+
+
+
 def say(data):
     print(data.upper())
+
+
+
+def extractSaveName(cmd):
+    parts = cmd.split(' ')
+    next = False
+    for p in parts:
+        if next:
+            return p
+        if p == 'save' or p == 'load':
+            next = True
+    return None
+
 
 def getDir(cmd):
     for part in cmd.split(' '):
         if part in directions:
             return part
+
+
 
 def _doCmd(obj, cmd):
     for v in obj.verbs:
@@ -34,9 +74,10 @@ class Game():
     }
 
     force = ""
+    lastSave = "default"
     done = False
 
-    verbs = ["help", "exit", "hint", "score"]
+    verbs = ["help", "exit", "hint", "score", "save", "load"]
 
     currRoom = None
 
@@ -70,6 +111,7 @@ class Game():
         self.inv = self.rooms['inv']
 
 
+
     def doCmd(self, cmd):
         self.tickTurn()
         if self.inv.doCmd(cmd):
@@ -81,9 +123,6 @@ class Game():
         else:
             say('Hmm...')
         say('')
-
-
-
 
 
     def addRoom(self, room):
@@ -127,6 +166,30 @@ class Game():
     def addScore(self, val):
         score = self.getFlag("score")
         self.flags["score"] = score+val
+
+    def _saveLoad(self, cmd, func):
+        saveName = extractSaveName(cmd)
+        if saveName == None:
+            saveName = self.lastSave
+        self.lastSave = saveName
+        return func(self, saveName)
+
+        
+
+    def save(self, cmd):
+        self._saveLoad(cmd, save)
+        say("Saved gamed as {}.".format(self.lastSave))
+
+    def load(self, cmd):
+        loadGame = self._saveLoad(cmd, load)
+        if loadGame == None:
+            say("Failed to load game {}.".format(self.lastSave))
+            return
+        self.__dict__.update(loadGame.__dict__)
+        say("Loaded gamed {}.".format(self.lastSave))
+        return loadGame
+
+       
 
     def score(self, cmd):
         score = self.getFlag("score")
