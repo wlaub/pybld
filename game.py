@@ -332,9 +332,10 @@ class Item():
     groundStr = "There is a {}"
     room = None
     flags = {} 
+    defLoc = ""
 
     def  __init__(self, game):
-        self.loc = ""
+        self.loc = self.defLoc
         self.g = game
         self.groundStr = self.groundStr.format(self.name)
 

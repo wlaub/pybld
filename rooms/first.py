@@ -49,11 +49,10 @@ class Door(game.Item):
     desc = "It is mural of a door."
     desc2 = "It is a normal door."
 
+    defLoc = "First Room"
+
     verbs = ["look", "open"]
 
-    def __init__(self, g):
-        game.Item.__init__(self, g)
-        self.loc = "First Room"
 
     def look(self, cmd):
         state = self.g.getFlag("text pars'r", 0)
@@ -81,6 +80,7 @@ class TextParser(game.Item):
     name = "text pars'r"
     desc = "It looks like a normal TEXT PARS'R"
     groundStr = "There is a {} on the ground."
+    defLoc = "First Room"
 
     verbs = ["look", "use", "caress", "take", "drop", "eat"]
 
@@ -89,9 +89,6 @@ class TextParser(game.Item):
     "speed": 0
     }
 
-    def __init__(self, g):
-        game.Item.__init__(self, g)
-        self.loc = "First Room"
 
     def eat(self,cmd):
         game.say("Ew, no.")
