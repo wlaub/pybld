@@ -62,9 +62,6 @@ def _flagName(obj, name):
     return obj.name+"~"+name
 
 class Game():
-    rooms = {}
-    items = {}
-    flags = {}
 
     baseFlags = {
     "subTurn": 0,
@@ -74,13 +71,16 @@ class Game():
     }
 
     force = ""
-    lastSave = "default"
     done = False
 
     verbs = ["help", "exit", "hint", "score", "save", "load"]
 
-    currRoom = None
-
+    def __init__(self):
+        self.currRoom = None
+        self.flags = {}
+        self.rooms = {}
+        self.items = {}
+        self.lastSave = "default"
 
     def loadModules(self):
         roomFiles = os.listdir('./rooms')
@@ -96,7 +96,10 @@ class Game():
                     try:
                         if Item in inspect.getmro(mod.__dict__[val]):
                             print("Found item")
-                            self.addItem(mod.__dict__[val](self))
+                            try:
+                                self.addItem(mod.__dict__[val](self))
+                            except Exception as e:
+                                print(e)
                     except Exception as e:
                         pass
 
@@ -104,6 +107,7 @@ class Game():
             room = self.rooms[item.loc]
             room.items[item.name] = item
             item.room = room
+            print("Adding item {} to room {}".format(item.name, room.name))
 
 
 
@@ -322,16 +326,15 @@ class Room():
 class Item():
     desc = "It is ITEM?"
     name = ""
-    loc = ""
     verbs = ["look"]
     takeable = False
     visible = False
     groundStr = "There is a {}"
-    flags = {}
     room = None
-   
+    flags = {} 
 
     def  __init__(self, game):
+        self.loc = ""
         self.g = game
         self.groundStr = self.groundStr.format(self.name)
 
