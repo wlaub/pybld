@@ -14,6 +14,8 @@ Mechanic for ascertaining item location i.e. location string in room and loca
 
 Make text wrapping prettier
 
+Implement automatic item spacing for inv etc.
+
 ----------------------------------
 
 Add hidden object / look closer mechanic

@@ -233,6 +233,7 @@ class Room():
     desc = "It is a room?"
     name = ""
     verbs = ["look", "go", "sit", "stand"]
+    posList = []
 
     def __init__(self, game):
         self.items = {}
@@ -247,6 +248,29 @@ class Room():
 
     def _flagName(self, name):
         return _flagName(self, name)
+
+    def _makeItemString(self):
+        itemStr = "\n"
+        for item in self.items.values():
+            itemStr += item.getGround() + " "
+        return itemStr
+
+    def _makeLocStr(self):
+        if len(self.posList) == 0:
+            return ""
+        locStr = "\nLocations are:\n"
+        line = " "*5
+        lineCount = 0
+        for pos in self.posList:
+            line += pos + " "*(15-len(pos))
+            lineCount += 1
+            if lineCount == 4:
+                lineCount = 0
+                locStr += line+'\n'
+        if lineCount != 0:
+            locStr += line+'\n'
+        return locStr
+
 
     def getFlag(self, name):
         return self.g.getFlag(self._flagName(name), self.flags[name])
@@ -265,10 +289,10 @@ class Room():
 
     def look(self, cmd):
         say(self.desc)
-        itemStr = "\n"
-        for item in self.items.values():
-            itemStr += item.getGround() + " "
-        say(itemStr)
+
+        say(self._makeLocStr())
+
+        say(self._makeItemString())
 
     def go(self, cmd):
         say("This is the base room. You cannot leave.")

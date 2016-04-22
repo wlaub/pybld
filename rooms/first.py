@@ -6,6 +6,8 @@ class Room(game.Room):
     name = "First Room"
     desc = "You are sitting in a room, different from the one I am in. There is a door to the RIGHT."
 
+    posList = ["left", "right"]
+
     flags={
     "pos": "left",
     }
