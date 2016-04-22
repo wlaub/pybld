@@ -37,9 +37,12 @@ def spell(data, delay=.75):
         time.sleep(delay)
 
 def say(data):
-    sayBit(data)
-    sayBit('\n')
+    if data.strip() != "" and data != None:
+        sayBit(data)
+        sayBit('\n')
 
+def lf():
+    sayBit('\n')
 
 def extractSaveName(cmd):
     parts = cmd.split(' ')
@@ -125,6 +128,7 @@ class Game():
 
 
     def doCmd(self, cmd):
+        lf()
         self.tickTurn()
         if self.inv.doCmd(cmd):
             pass
@@ -134,8 +138,8 @@ class Game():
             pass
         else:
             say('Hmm...')
-        say('')
-
+        lf()
+        
 
     def addRoom(self, room):
         if not room.name in self.rooms.keys():
