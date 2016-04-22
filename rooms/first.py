@@ -1,5 +1,6 @@
 import game
-import time
+import time, sys
+import traceback
 
 class Room(game.Room):
     name = "First Room"
@@ -160,10 +161,19 @@ class dldo(game.Item):
         "ground": "There is a {} on the ground.",
         "take":"You pick up the {}.",
         "drop":"You drop the {}.",
+        "cmd": "slay"
     }
 
     defPos = 'left'
 
-    verbs = ["look", "take", "drop"]
+    verbs = ["look", "take", "drop", "use"]
 
-
+    def use(self, cmd):
+        if not self._reqInv():
+            return
+        try:
+            fakeCmd = self.strings['cmd']
+            v = fakeCmd.split(' ')[0]
+            getattr(self, v)(cmd)
+        except Exception as e:
+            game.say(traceback.format_exc())

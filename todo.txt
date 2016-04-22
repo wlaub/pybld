@@ -10,6 +10,8 @@ Figure out about aliasing dict entries
 
 Turn descriptive strings into a dictionary
 
+Mechanic for ascertaining item location i.e. location string in room and loca
+
 ----------------------------------
 
 Add hidden object / look closer mechanic
