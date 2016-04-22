@@ -147,3 +147,23 @@ class TextParser(game.Item):
             if speed == 2:
                 game.say("It is ready.")
 
+
+class dldo(game.Item):
+    takeable = True
+    dropable = True
+    visible = True
+    name = "d'ldo"
+    defLoc = "First Room"
+
+    strings = {
+        "desc": "It is a {}.",
+        "ground": "There is a {} on the ground.",
+        "take":"You pick up the {}.",
+        "drop":"You drop the {}.",
+    }
+
+    defPos = 'left'
+
+    verbs = ["look", "take", "drop"]
+
+
