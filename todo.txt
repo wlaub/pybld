@@ -8,10 +8,8 @@ Figure out why first room is not called overidden function
 
 Figure out about aliasing dict entries
 
-Generalize positioning mechanic for take/drop functions
+Turn descriptive strings into a dictionary
 
 ----------------------------------
-
-Prevent taking text pars'r from right of room
 
 Add hidden object / look closer mechanic

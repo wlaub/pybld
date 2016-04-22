@@ -332,13 +332,17 @@ class Room():
 
 
 class Item():
-    desc = "It is ITEM?"
-    name = ""
+    name = "item"
     verbs = ["look"]
     takeable = False
     dropable = False
     visible = False
-    groundStr = "There is a {}"
+    strings = {
+        "desc": "It is {}?",
+        "ground": "There is a {}",
+        "take": "I pick up the {} and put it in my INV.",
+        "drop": "You drop the {}."
+    }
     room = None
     flags = {} 
     defLoc = ""
@@ -348,7 +352,8 @@ class Item():
         self.loc = self.defLoc
         self.pos = self.defPos
         self.g = game
-        self.groundStr = self.groundStr.format(self.name)
+        for key, string in self.strings.iteritems():
+            self.strings[key] = string.replace("{}", self.name.upper())
 
 
     def _reqInv(self):
@@ -376,11 +381,11 @@ class Item():
 
     def getGround(self ):
         if self.visible:
-            return self.groundStr
+            return self.strings["ground"]
         return ""
 
     def look(self, cmd):
-        say(self.desc)
+        say(self.strings["desc"])
 
     def take(self, cmd):
         if self.takeable == False:
@@ -394,10 +399,10 @@ class Item():
             return
         self._move('inv')
         self.loc = 'inv'
-        say(self.takeStr)
+        say(self.strings['take'])
 
     def drop(self, cmd):
-        say(self.dropStr)
+        say(self.strings['drop'])
         if self.dropable:
             room = self.g.currRoom
             pPos = room.getFlag("pos")

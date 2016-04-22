@@ -6,7 +6,7 @@ class Room(game.Room):
     desc = "You are sitting in a room, different from the one I am in. There is a door to the RIGHT."
 
     flags={
-    "pos": "left"
+    "pos": "left",
     }
 
     def go(self, cmd):
@@ -46,8 +46,12 @@ class Room(game.Room):
 
 class Door(game.Item):
     name = "door"
-    desc = "It is mural of a door."
-    desc2 = "It is a normal door."
+
+    strings = {
+        "desc": "It is a mural of a {}",
+        "desc2": "It is a normal {}"
+    }
+
 
     defLoc = "First Room"
 
@@ -57,9 +61,9 @@ class Door(game.Item):
     def look(self, cmd):
         state = self.g.getFlag("text pars'r", 0)
         if state == 0:
-            game.say(self.desc)
+            game.say(self.strings["desc"])
         else:
-            game.say(self.desc2)
+            game.say(self.strings["desc2"])
   
     def open(self, cmd):
         state = self.g.getFlag("text pars'r", 0)
@@ -79,11 +83,14 @@ class TextParser(game.Item):
     dropable = False
     visible = True
     name = "text pars'r"
-    desc = "It looks like a normal TEXT PARS'R"
-    groundStr = "There is a {} on the ground."
     defLoc = "First Room"
-    takeStr = "You pick up the TEXT PARS'R. a BLACK WIND blows through you."
-    dropStr = "You cannot."
+
+    strings = {
+        "desc": "It looks like a normal {}",
+        "ground": "There is a {} on the ground.",
+        "take":"You pick up the {}. a BLACK WIND blows through you.",
+        "drop":"You cannot.",
+    }
 
     defPos = 'left'
 
