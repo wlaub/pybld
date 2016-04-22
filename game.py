@@ -336,14 +336,17 @@ class Item():
     name = ""
     verbs = ["look"]
     takeable = False
+    dropable = False
     visible = False
     groundStr = "There is a {}"
     room = None
     flags = {} 
     defLoc = ""
+    defPos = ""
 
     def  __init__(self, game):
         self.loc = self.defLoc
+        self.pos = self.defPos
         self.g = game
         self.groundStr = self.groundStr.format(self.name)
 
@@ -378,5 +381,31 @@ class Item():
 
     def look(self, cmd):
         say(self.desc)
+
+    def take(self, cmd):
+        if self.takeable == False:
+            return
+        if self.loc == 'inv':
+            say("You already have the {}.".format(self.name))
+            return
+        pPos = self.room.getFlag("pos")
+        if pPos != None and pPos != self.pos:
+            say("You can't reach it from here!")
+            return
+        self._move('inv')
+        self.loc = 'inv'
+        say(self.takeStr)
+
+    def drop(self, cmd):
+        say(self.dropStr)
+        if self.dropable:
+            room = self.g.currRoom
+            pPos = room.getFlag("pos")
+            self.pos = pPos
+            self._move(room)
+
+
+
+
 
 

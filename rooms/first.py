@@ -76,13 +76,16 @@ class Door(game.Item):
 
 class TextParser(game.Item):
     takeable = True
+    dropable = False
     visible = True
     name = "text pars'r"
     desc = "It looks like a normal TEXT PARS'R"
     groundStr = "There is a {} on the ground."
     defLoc = "First Room"
+    takeStr = "You pick up the TEXT PARS'R. a BLACK WIND blows through you."
+    dropStr = "You cannot."
 
-    pos = 'left'
+    defPos = 'left'
 
     verbs = ["look", "use", "caress", "take", "drop", "eat"]
 
@@ -95,21 +98,6 @@ class TextParser(game.Item):
     def eat(self,cmd):
         game.say("Ew, no.")
 
-    def take(self, cmd):
-        if self.loc == 'inv':
-            game.say("You already have the text pars'r.")
-            return
-        pos = self.room.getFlag("pos")
-        if pos != None and pos != self.pos:
-            game.say("You can't reach it from here!")
-            return
-        self._move('inv')
-        self.loc = 'inv'
-        game.say("You pick up the TEXT PARS'R. A BLACK WIND blows through you.")
-
-
-    def drop(self, cmd):
-        game.say("You cannot.")
 
     speedStr = ["you can't help it.", "you open your mouth as wide as you can.", 
                 "and force the text parser inside.", "your throat convulses as you try to resist.",
