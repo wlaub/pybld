@@ -158,35 +158,60 @@ class dldo(game.Item):
 
     strings = {
         "desc": "The blocky machine shimmers with r'cane en'rgy. There are four rows of keys bearing stranges glyphs you do not recognize. A scroll of parchment protrudes from the top.",
+        "descBrk": "It is a broken {}. It's not much use for anyone.",
         "ground": "There is a {} on the ground.",
         "take":"You pick up the {}.",
         "drop":"You drop the {}.",
         "cmd": "slay",
-        "use": "You press a few keys at random and then press the large on on the right. The {} shackes and clatters for a few moments as text appears on the parchment:\n"
-
+        "useTry": "You press a few keys at random and then press the large one on the right.",
+        "use": "The {} shackes and clatters for a few moments as text appears on the parchment:\n",
+        "useBrk": "But nothing happens."
     }
 
     defPos = 'left'
 
     verbs = ["look", "take", "drop", "use"]
 
+    def __init__(self, g):
+        game.Item.__init__(self, g)
+        self.broken = False
+
+    def look(self, cmd):
+        if self.broken:
+            game.say(self.strings['descBrk'])
+        else:
+            game.say(self.strings['desc'])
+
+
+    def drop(self,cmd):
+        game.Item.drop(self, cmd)
+        if not self.broken:
+            game.say("It breaks.")
+        self.broken = True
+       
+
     def use(self, cmd):
         if not self._reqInv():
             return
-        game.say(self.strings['use'])
+        game.say(self.strings['useTry'])
+        if not self.broken:
+            game.say(self.strings['use'])
         time.sleep(1)
-        try:
-            fakeCmd = self.strings['cmd']
-            v = "defy"
-            getattr(self.g, v)(cmd)
-        except Exception as e:
-            eList = traceback.format_stack()
-            eList = eList[:-2]
-            eList.extend(traceback.format_tb(sys.exc_info()[2]))
-            eList.extend(traceback.format_exception_only(sys.exc_info()[0], sys.exc_info()[1]))
+        if self.broken:
+            game.say(self.strings['useBrk'])
+        else:
+            try:
+                fakeCmd = self.strings['cmd']
+                v = "defy"
+                getattr(self.g, v)(cmd)
+            except Exception as e:
+                eList = traceback.format_stack()
+                eList = eList[:-2]
+                eList.extend(traceback.format_tb(sys.exc_info()[2]))
+                eList.extend(traceback.format_exception_only(sys.exc_info()[0], sys.exc_info()[1]))
 
-            eStr = "Traceback (most recent call last):\n"
-            eStr += "".join(eList)
-            eStr = eStr[:-1]
-            game.say(eStr)
+                eStr = "Traceback (most recent call last):\n"
+                eStr += "".join(eList)
+                eStr = eStr[:-1]
+                game.say(eStr)
 
