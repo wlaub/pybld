@@ -411,7 +411,7 @@ class Item():
             room = self.g.currRoom
             pPos = room.getFlag("pos")
             self.pos = pPos
-            self._move(room)
+            self._move(room.name)
 
 
 
