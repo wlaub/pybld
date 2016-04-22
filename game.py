@@ -2,6 +2,9 @@ import os, time, sys
 import importlib, inspect
 import pickle
 
+WIDTH = 60
+HEIGHT = 45
+
 directions = ["up", "down", "left", "right"]
 
 def makeSaveName(name):
@@ -26,6 +29,10 @@ def getSaveNames():
             saves.append(name)
     return saves
 
+
+def formatStrings(strings, size = 5, width = 10):
+    #:((( 
+    pass 
 
 
 def sayBit(data):
@@ -232,7 +239,7 @@ class Game():
 class Room():
     desc = "It is a room?"
     name = ""
-    verbs = ["look", "go", "sit", "stand"]
+    verbs = ["look", "go", "sit", "stand", "loc"]
     posList = []
 
     def __init__(self, game):
@@ -258,7 +265,7 @@ class Room():
     def _makeLocStr(self):
         if len(self.posList) == 0:
             return ""
-        locStr = "\nLocations are:\n"
+        lines = ["\nLocations are:\n"]
         line = " "*5
         lineCount = 0
         for pos in self.posList:
@@ -266,10 +273,10 @@ class Room():
             lineCount += 1
             if lineCount == 4:
                 lineCount = 0
-                locStr += line+'\n'
+                lines.append(line)
         if lineCount != 0:
-            locStr += line+'\n'
-        return locStr
+            lines.append(line)
+        return '\n'.join(lines)
 
 
     def getFlag(self, name):
@@ -290,9 +297,11 @@ class Room():
     def look(self, cmd):
         say(self.desc)
 
-        say(self._makeLocStr())
-
         say(self._makeItemString())
+
+    def loc(self, cmd):
+        say("You are {}.".format(self.getFlag("pos")))
+        say(self._makeLocStr())
 
     def go(self, cmd):
         say("This is the base room. You cannot leave.")
