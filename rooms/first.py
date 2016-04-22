@@ -157,11 +157,13 @@ class dldo(game.Item):
     defLoc = "First Room"
 
     strings = {
-        "desc": "It is a {}.",
+        "desc": "The blocky machine shimmers with r'cane en'rgy. There are four rows of keys bearing stranges glyphs you do not recognize. A scroll of parchment protrudes from the top.",
         "ground": "There is a {} on the ground.",
         "take":"You pick up the {}.",
         "drop":"You drop the {}.",
-        "cmd": "slay"
+        "cmd": "slay",
+        "use": "You press a few keys at random and then press the large on on the right. The {} shackes and clatters for a few moments as text appears on the parchment:\n"
+
     }
 
     defPos = 'left'
@@ -171,9 +173,20 @@ class dldo(game.Item):
     def use(self, cmd):
         if not self._reqInv():
             return
+        game.say(self.strings['use'])
+        time.sleep(1)
         try:
             fakeCmd = self.strings['cmd']
-            v = fakeCmd.split(' ')[0]
-            getattr(self, v)(cmd)
+            v = "defy"
+            getattr(self.g, v)(cmd)
         except Exception as e:
-            game.say(traceback.format_exc())
+            eList = traceback.format_stack()
+            eList = eList[:-2]
+            eList.extend(traceback.format_tb(sys.exc_info()[2]))
+            eList.extend(traceback.format_exception_only(sys.exc_info()[0], sys.exc_info()[1]))
+
+            eStr = "Traceback (most recent call last):\n"
+            eStr += "".join(eList)
+            eStr = eStr[:-1]
+            game.say(eStr)
+
