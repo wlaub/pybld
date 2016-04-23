@@ -202,15 +202,16 @@ class Game():
     def save(self, cmd):
         self._saveLoad(cmd, save)
         say("Saved gamed as {}.".format(self.lastSave))
+        return True
 
     def load(self, cmd):
         loadGame = self._saveLoad(cmd, load)
         if loadGame == None:
             say("Failed to load game {}.".format(self.lastSave))
-            return
+            return False
         self.__dict__.update(loadGame.__dict__)
         say("Loaded gamed {}.".format(self.lastSave))
-        return loadGame
+        return True
 
        
 
@@ -224,13 +225,16 @@ class Game():
         scoreStr += " "*(30 - len(scoreStr))
         scoreStr+= "HAIR: {}".format(hair)
         say(" "*7 + scoreStr)
+        return True
 
 
     def help(self, cmd):
         say("there is no one here you can help.")
+        return False
 
     def hint(self, cmd):
         say("I don't need any hints, but thanks for offering.")
+        return False
 
     def exit(self, cmd):
         self.done = True
@@ -298,13 +302,16 @@ class Room():
         say(self.desc)
 
         say(self._makeItemString())
+        return True
 
     def loc(self, cmd):
         say("You are {}.".format(self.getFlag("pos")))
         say(self._makeLocStr())
+        return True
 
     def go(self, cmd):
         say("This is the base room. You cannot leave.")
+        return False
 
 
     def sit(self, cmd):
@@ -314,58 +321,67 @@ class Room():
 
         if state != "not":
             if direction == "up":
-                self.sitUp()
+                return self.sitUp()
             else:
                 say("You are already sitting {}".format(state))
-            return
+            return False
 
 
         if direction == None:
-            say("Sit in what direction?")
+            return say("Sit in what direction?")
         elif direction == "down":
-            self.sitDown()
+            return self.sitDown()
         elif direction == "left":
-            self.sitLeft()
+            return self.sitLeft()
         elif direction == "right":
-            self.sitRight()
+            return self.sitRight()
         else:
             say("You cannot sit in the direction.")
+            return False
 
     def stand(self, cmd):
         state = self.g.getFlag("sit", "down")
 
         if state == "not":
             say("You are already standing.")
+            return False
 
         direction = getDir(cmd)
         if direction == None:
-            say("Stand in what direction?")
+            return say("Stand in what direction?")
         elif direction == "up":
-            self.standUp()
+            return self.standUp()
         elif direction == "down":
-            self.standDown()
+            return self.standDown()
         else:
             say("You cannot stand in that direction.")
+            return False
 
     def sitUp(self):
         say("You pay more attention to you posture.")
+        return True
 
     def sitDown(self):
         say("There is nowhere to sit.")
+        return False
 
     def sitLeft(self):
         say("You cannot sit in that direction.")
+        return False
 
     def sitRight(self):
         say("You cannot sit in that direction")
+        return False
 
     def standUp(self):
         say("You stand up. You are now standing.")
         self.g.flags["sit"] = "not"
+        return True
 
     def standDown(self):
         say("You chill the fuck out. You are no longer AGGRO.")
         self.g.flags["aggro"] = 0
+        return True
 
 
 class Item():
@@ -423,6 +439,7 @@ class Item():
 
     def look(self, cmd):
         say(self.strings["desc"])
+        return True
 
     def take(self, cmd):
         if self.takeable == False:

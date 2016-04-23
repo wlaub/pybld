@@ -2,15 +2,21 @@ Learn pdb
 
 -------------------
 
+Rework command functions to return true/false 
+
+Implement list of callbacks for turns?
+
 Figure out about aliasing dict entries
 
-Turn descriptive strings into a dictionary
+Turn descriptive strings into a dictionary for rooms?
 
 Mechanic for ascertaining item location i.e. location string in room and loca
 
 Make text wrapping prettier
 
 Implement automatic item spacing for inv etc.
+
+
 
 ----------------------------------
 
