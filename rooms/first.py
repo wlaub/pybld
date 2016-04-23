@@ -79,7 +79,43 @@ class Door(game.Item):
             game.say("You can't reach the door from here. You are too far left.")
             return
         game.say("You open the door and walk through into the next room. There's no going back now. Hope you didn't miss anything important!")
-            
+   
+
+class BlackWind(game.Item):
+    takeable = True
+    dropable = False
+    visible = False
+    name = "black wind"
+    defLoc = "First Room"
+
+    strings = {
+        "desc": "It is the {} that blew through you earlier.",
+        "take": "You quickly snatch the {} before it can blow away.",
+        "take2": "It already got away...",
+        "drop": "You try to drop it but it just floats there."
+    }
+
+    defPos = 'left'
+
+    verbs = ["look", "use", "take", "drop"]
+
+    flags = {
+    "time": -1, 
+    }
+
+    timeout = 3
+
+    def take(self, cmd):
+        blkTime = self.getFlag("time")
+        currTime = self.g.getFlag("turns")
+        if blkTime < 0:
+            game.say("...")
+            return
+        elif currTime - blkTime > self.timeout:
+            game.say(self.strings['take2'])
+            return
+        game.Item.take(self, cmd)
+
 
 class TextParser(game.Item):
     takeable = True
@@ -114,6 +150,13 @@ class TextParser(game.Item):
                 "but you swallow anyway.", "it doesn't seem to fit but you keep trying.",
                 "eventually it slides down your throat.", "you can feel it throbbing inside you."]
 
+
+    def take(self, cmd):
+        if game.Item.take(self, cmd):
+            blkTime = self.g.getFlag("turns")
+            self.g.items['black wind'].setFlag("time", blkTime)
+            return True
+        return False
 
     def use(self, cmd):
         if not self._reqInv():

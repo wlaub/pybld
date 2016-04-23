@@ -426,17 +426,18 @@ class Item():
 
     def take(self, cmd):
         if self.takeable == False:
-            return
+            return False
         if self.loc == 'inv':
             say("You already have the {}.".format(self.name))
-            return
+            return False
         pPos = self.room.getFlag("pos")
         if pPos != None and pPos != self.pos:
             say("You can't reach it from here!")
-            return
+            return False
         self._move('inv')
         self.loc = 'inv'
         say(self.strings['take'])
+        return True
 
     def drop(self, cmd):
         say(self.strings['drop'])
@@ -445,6 +446,8 @@ class Item():
             pPos = room.getFlag("pos")
             self.pos = pPos
             self._move(room.name)
+            return True
+        return False
 
 
 

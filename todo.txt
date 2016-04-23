@@ -2,10 +2,6 @@ Learn pdb
 
 -------------------
 
-Figure out why first room is not called overidden function
-
---------------------
-
 Figure out about aliasing dict entries
 
 Turn descriptive strings into a dictionary
