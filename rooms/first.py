@@ -17,34 +17,38 @@ class Room(game.Room):
         pos = self.getFlag("pos")
         if dir == None:
             game.say("...")
-            return
+            return False
 
         if self.g.getFlag("sit") != "not":
             game.say("You can't walk while sitting!")
-            return
+            return False
 
         if dir == "left":
             if pos == "left":
                 game.say("You can't go any farther left.")
+                return False
             else:
                 self.setFlag("pos", "left")
                 game.say("You walk to the left.")
+                return True
 
         elif dir == "right":
            if pos == "right":
                game.say("You can't go any farther right.")
+               return False
            else:
                self.setFlag("pos", "right")
                game.say("You walk to the right. You are now standing next to the door.")
+               return True
         else:
             game.say("You can't go in that direction.")
+            return False
 
 
-    #Figure out why this doesn't work
     def sitDown(self):
         game.say("You sit down on the floor.")
         self.g.flags["sit"] = "down"
-
+        return True
 
 
 class Door(game.Item):

@@ -37,6 +37,7 @@ def formatStrings(strings, size = 5, width = 10):
 
 def sayBit(data):
     sys.stdout.write(data.upper())
+    sys.stdout.flush()
 
 def spell(data, delay=.75):
     for c in data:

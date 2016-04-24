@@ -4,7 +4,10 @@ Learn pdb
 
 Rework command functions to return true/false 
 
+Move go command to base room
+
 Implement list of callbacks for turns?
+
 
 Figure out about aliasing dict entries
 
