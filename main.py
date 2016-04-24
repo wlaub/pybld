@@ -1,4 +1,4 @@
-import time, sys
+import time, sys, os
 import rooms, game
 
 g = game.Game()
@@ -30,8 +30,11 @@ if __name__ == "__main__":
         if cmd == '':
             file = sys.stdin
             cmd = sys.stdin.readline().lower().strip()
- 
-        print("\r> "+cmd.upper())
+
+        if os.name == 'posix':
+            sys.stdout.write("\033[1A\r")
+            sys.stdout.flush()
+        print("> "+cmd.upper())
 
         g.doCmd(cmd)
 
