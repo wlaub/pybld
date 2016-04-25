@@ -4,13 +4,43 @@ import traceback
 
 class Room(game.Room):
     name = "First Room"
-    desc = "You are sitting in a room, different from the one I am in. There is a door to the RIGHT."
+
+    strings = {
+    "desc": "You are sitting in a room, different from the one I am in. There is a door to the RIGHT.",
+    }
 
     posList = ["left", "right"]
+
+    #Direction: [[From locations], [To locations]]
+    goMap = {
+    "left": [["right"], ["left"]],
+    "right": [["left"],["right"]]
+    } 
 
     flags={
     "pos": "left",
     }
+
+
+    def _go_empty(self):
+        game.say("...")
+        return False
+
+    def goX(self,cmd):
+        _dir = game.getInter(cmd.split[' '], goMap.keys())
+        pos = self.getFlag("pos")
+        if len(_dir) == 0:
+            return self._go_empty()
+            game.say("...")
+            return False
+
+        for d in _dir:
+            if goMap[d][0] == pos:
+                pass
+            else:
+                pass                
+
+
 
     def go(self, cmd):
         dir = game.getDir(cmd)

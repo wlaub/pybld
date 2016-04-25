@@ -2,6 +2,8 @@ import os, time, sys
 import importlib, inspect
 import pickle
 
+import pdb
+
 WIDTH = 60
 HEIGHT = 45
 
@@ -68,12 +70,19 @@ def getDir(cmd):
         if part in directions:
             return part
 
+def getInter(list1, list2):
+    return [x for x in list1 if x in list2]
+
 
 
 def _doCmd(obj, cmd):
     for v in obj.verbs:
         if v in cmd:
             getattr(obj, v)(cmd)
+            return True
+    for v in obj.fancyVerbs.keys():
+        if v in cmd:
+            getattr(obj, obj.fancyVerbs[v])(cmd)
             return True
     return False
 
@@ -93,6 +102,10 @@ class Game():
     done = False
 
     verbs = ["help", "exit", "hint", "score", "save", "load"]
+
+    fancyVerbs = {
+    "==>": "_mspa"
+    }
 
     def __init__(self):
         self.currRoom = None
@@ -239,13 +252,22 @@ class Game():
 
     def exit(self, cmd):
         self.done = True
+        return True
 
+    def _mspa(self, cmd):
+        say("hhhhhhm..")
+        return False
 
 class Room():
-    desc = "It is a room?"
     name = ""
     verbs = ["look", "go", "sit", "stand", "loc"]
     posList = []
+
+    strings = {
+    "desc": "It is a room?"
+    }
+
+    fancyVerbs={}
 
     def __init__(self, game):
         self.items = {}
@@ -300,7 +322,7 @@ class Room():
         return False
 
     def look(self, cmd):
-        say(self.desc)
+        say(self.strings['desc'])
 
         say(self._makeItemString())
         return True
@@ -388,6 +410,7 @@ class Room():
 class Item():
     name = "item"
     verbs = ["look"]
+    fancyVerbs = {}
     takeable = False
     dropable = False
     visible = False

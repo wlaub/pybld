@@ -2,7 +2,7 @@ Learn pdb
 
 -------------------
 
-Rework command functions to return true/false 
+Add verb dictionary for verbs that can't be functions
 
 Move go command to base room
 
