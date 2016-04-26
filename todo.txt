@@ -2,7 +2,7 @@ Learn pdb
 
 -------------------
 
-
+retcon game.fail() into verbs
 
 Look into "{str}".format behavior
 

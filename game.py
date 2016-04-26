@@ -54,6 +54,10 @@ def say(data):
 def lf():
     sayBit('\n')
 
+def fail(string = "Hmm..."):
+    say(string)
+    return False
+
 def extractSaveName(cmd):
     parts = cmd.split(' ')
     next = False
