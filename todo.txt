@@ -2,12 +2,9 @@ Learn pdb
 
 -------------------
 
-Add verb dictionary for verbs that can't be functions
-
 Move go command to base room
 
-Implement list of callbacks for turns?
-
+Fix black wind escape behavior
 
 Figure out about aliasing dict entries
 

@@ -135,20 +135,33 @@ class BlackWind(game.Item):
 
     flags = {
     "time": -1, 
+    "ticks": 0,
     }
 
     timeout = 3
+
+    def _tick(self):
+        if self.loc == 'inv':
+            return
+        t = self.getFlag("ticks")
+        if t == 0:
+            self.pos = "right"
+        else:
+            self._move('trash') 
+        self.g.setAlarm(self.timeout, self._tick)
+        self.setFlag("ticks",t+1)
+
 
     def take(self, cmd):
         blkTime = self.getFlag("time")
         currTime = self.g.getFlag("turns")
         if blkTime < 0:
             game.say("...")
-            return
-        elif currTime - blkTime > self.timeout:
+            return False
+        elif self.loc == 'trash':
             game.say(self.strings['take2'])
-            return
-        game.Item.take(self, cmd)
+            return False
+        return game.Item.take(self, cmd)
 
 
 class TextParser(game.Item):
@@ -187,6 +200,8 @@ class TextParser(game.Item):
 
     def take(self, cmd):
         if game.Item.take(self, cmd):
+            wind = self.g.items['black wind']
+            self.g.setAlarm(wind.timeout, wind._tick)
             blkTime = self.g.getFlag("turns")
             self.g.items['black wind'].setFlag("time", blkTime)
             return True

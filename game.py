@@ -107,6 +107,8 @@ class Game():
     "==>": "_mspa"
     }
 
+    alarms = {}
+
     def __init__(self):
         self.currRoom = None
         self.flags = {}
@@ -186,6 +188,12 @@ class Game():
     def forceCmd(self, cmd):
         self.force = cmd
 
+    def setAlarm(self, delay, func):
+        turn = self.flags["turns"]+delay
+        if not turn in self.alarms.keys():
+            self.alarms[turn] = []
+        self.alarms[turn].append(func)
+
     def tickTurn(self):
         turns = self.getFlag("turns")
         sub = self.getFlag("subTurn")
@@ -195,6 +203,9 @@ class Game():
         if sub >= hair:
             sub = 0
             turns += 1
+            if turns in self.alarms.keys():
+                for func in self.alarms[turns]:
+                    func()
 
         self.flags["subTurn"] = sub
         self.flags["turns"] = turns
