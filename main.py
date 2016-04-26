@@ -18,6 +18,20 @@ def getCmd(f):
 
     return cmd
 
+def _getCmd(f):
+    read = ""
+    temp = f.read(1)
+    f.flush()
+    force = g.force != ""
+    while temp != '\n':
+        read += g.force[len(read)] if force else temp
+        temp = f.read(1)
+        f.flush()
+        sys.stdout.write('\r'+read.upper())
+        sys.stdout.flush()
+
+    return read
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         file = open(sys.argv[1], 'r')
