@@ -148,7 +148,7 @@ class BlackWind(game.Item):
         if t == 0:
             self.pos = "right"
         else:
-            self.setFlag("escape", True)
+            self.hidden = True
             return
         self.g.setAlarm(self.timeout, self._tick)
         self.setFlag("ticks",t+1)
@@ -161,7 +161,7 @@ class BlackWind(game.Item):
         if blkTime < 0:
             game.say("...")
             return False
-        elif escape:
+        elif self.hidden:
             game.say(self.strings['take2'])
             return False
         return game.Item.take(self, cmd)

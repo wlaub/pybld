@@ -9,12 +9,13 @@ class Room(game.Room):
         xpos = 0
         invStr = "         "
         for item in self.items.values():
-           invStr += item.name
-           xpos += 1
-           if xpos == 4:
-               xpos = 0
-               invStr += "\n"
-           else:
-               invStr += " "*(15-len(item.name))
+            if not item.hidden:
+                invStr += item.name
+                xpos += 1
+                if xpos == 4:
+                    xpos = 0
+                    invStr += "\n"
+                else:
+                    invStr += " "*(15-len(item.name))
         game.say(invStr)
 

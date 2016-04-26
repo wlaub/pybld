@@ -2,6 +2,8 @@ Learn pdb
 
 -------------------
 
+
+
 Look into "{str}".format behavior
 
 figure out stdin.read() behavior
@@ -11,8 +13,6 @@ Move go command to base room
 Figure out about aliasing dict entries
 
 Turn descriptive strings into a dictionary for rooms?
-
-Mechanic for ascertaining item location i.e. location string in room and loca
 
 Make text wrapping prettier
 

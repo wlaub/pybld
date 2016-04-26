@@ -425,6 +425,7 @@ class Item():
     takeable = False    #for automatic take command
     dropable = False    #for automatic drop command
     visible = False     #Appears in room description.
+    hidden = False      #Does not respond to look, does not appear in inventory
     spawn = True        #Automatically added to room at startup
     strings = {
         "desc": "It is {}?",
@@ -469,15 +470,19 @@ class Item():
 
 
     def getGround(self ):
-        if self.visible:
+        if self.visible and not self.hidden:
             return self.strings["ground"]
         return ""
 
     def look(self, cmd):
+        if self.hidden:
+            return False
         say(self.strings["desc"])
         return True
 
     def where(self, cmd):
+        if self.hidden:
+            return False
         if self.pos != "":
             say(self.pos)
             return True
