@@ -131,7 +131,7 @@ class BlackWind(game.Item):
 
     defPos = 'left'
 
-    verbs = ["look", "use", "take", "drop"]
+    verbs = ["where","look", "use", "take", "drop"]
 
     flags = {
     "time": -1, 
@@ -184,7 +184,7 @@ class TextParser(game.Item):
 
     defPos = 'left'
 
-    verbs = ["look", "use", "caress", "take", "drop", "eat"]
+    verbs = ["where","look", "use", "caress", "take", "drop", "eat"]
 
     flags = {
     "tries": 0,
@@ -268,7 +268,7 @@ class dldo(game.Item):
 
     defPos = 'left'
 
-    verbs = ["look", "take", "drop", "use"]
+    verbs = ["where","look", "take", "drop", "use"]
 
     def __init__(self, g):
         game.Item.__init__(self, g)

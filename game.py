@@ -420,7 +420,7 @@ class Room():
 
 class Item():
     name = "item"
-    verbs = ["look"]
+    verbs = ["look", "where"]
     fancyVerbs = {}
     takeable = False    #for automatic take command
     dropable = False    #for automatic drop command
@@ -476,6 +476,12 @@ class Item():
     def look(self, cmd):
         say(self.strings["desc"])
         return True
+
+    def where(self, cmd):
+        if self.pos != "":
+            say(self.pos)
+            return True
+        return False
 
     def take(self, cmd):
         if self.takeable == False:

@@ -2,6 +2,8 @@ Learn pdb
 
 -------------------
 
+Look into "{str}".format behavior
+
 figure out stdin.read() behavior
 
 Move go command to base room
