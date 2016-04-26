@@ -2,6 +2,8 @@ Learn pdb
 
 -------------------
 
+Give items unique IDs
+
 Move go command to base room
 
 Fix black wind escape behavior

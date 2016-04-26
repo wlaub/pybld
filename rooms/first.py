@@ -136,6 +136,7 @@ class BlackWind(game.Item):
     flags = {
     "time": -1, 
     "ticks": 0,
+    "escape": False,
     }
 
     timeout = 3
@@ -147,7 +148,8 @@ class BlackWind(game.Item):
         if t == 0:
             self.pos = "right"
         else:
-            self._move('trash') 
+            self.setFlag("escape", True)
+            return
         self.g.setAlarm(self.timeout, self._tick)
         self.setFlag("ticks",t+1)
 
@@ -155,13 +157,15 @@ class BlackWind(game.Item):
     def take(self, cmd):
         blkTime = self.getFlag("time")
         currTime = self.g.getFlag("turns")
+        escape = self.getFlag("escape")
         if blkTime < 0:
             game.say("...")
             return False
-        elif self.loc == 'trash':
+        elif escape:
             game.say(self.strings['take2'])
             return False
         return game.Item.take(self, cmd)
+
 
 
 class TextParser(game.Item):

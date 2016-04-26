@@ -325,7 +325,7 @@ class Room():
 
     def doCmd(self, cmd):
         for item in self.items.values():
-            if item.name in cmd:
+            if item.name.lower() in cmd:
                 if _doCmd(item, cmd):
                     return True
         if _doCmd(self, cmd):
@@ -422,9 +422,10 @@ class Item():
     name = "item"
     verbs = ["look"]
     fancyVerbs = {}
-    takeable = False
-    dropable = False
-    visible = False
+    takeable = False    #for automatic take command
+    dropable = False    #for automatic drop command
+    visible = False     #Appears in room description.
+    spawn = True        #Automatically added to room at startup
     strings = {
         "desc": "It is {}?",
         "ground": "There is a {}",
