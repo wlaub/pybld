@@ -7,7 +7,7 @@ class Room(game.Room):
 
     strings = {
     "desc": "You are sitting in a room, different from the one I am in. There is a door to the RIGHT.",
-    "closer": "You take a closer look. The walls and floor are made out of MATERIALS.ACOUSTICS.002C.NAME. The ceiling is high-grade asbestos tile."
+    "closer": "You take a closer look. The walls and floor are made out of MATERIALS.ACOUSTIC.002C.COLORS.00.NAME MATERIALS.ACOUSTICS.002C.NAME. The drop ceiling is made of white high-grade asbestos tile. There is a single square flourescent light in the middle of the ceiling. You stare hard at the ceiling for a few minutes to make sure it's not coated in shifting iridescent glyphs. It is not."
     }
 
     posList = ["left", "right"]
@@ -115,6 +115,25 @@ class Door(game.Item):
             return
         game.say("You open the door and walk through into the next room. There's no going back now. Hope you didn't miss anything important!")
    
+class Glyph(game.Item):
+    obscure = True
+    visible = True
+    name = "glyphs"
+    defLoc = "First Room"
+
+    strings = {
+        "desc":"They are shifting iridescent {} on the ceiling. You have to stare for a few seconds to see them.",
+        "ground": "Oh wait yes it is.",
+        "use": "You still don't know what they mean..."
+    }
+
+    defPos = ""
+    verbs = ["look", "use"]
+
+    def use(self, cmd):
+       game.say(self.strings['use']) 
+
+
 
 class BlackWind(game.Item):
     takeable = True
