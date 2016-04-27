@@ -18,8 +18,5 @@ Make text wrapping prettier
 
 Implement automatic item spacing for inv etc.
 
-
-
 ----------------------------------
 
-Add hidden object / look closer mechanic

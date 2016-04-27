@@ -279,7 +279,8 @@ class Room():
     posList = []
 
     strings = {
-    "desc": "It is a room?"
+    "desc": "It is a room?",
+    "closer": "You take a closer look."
     }
 
     fancyVerbs={}
@@ -298,10 +299,11 @@ class Room():
     def _flagName(self, name):
         return _flagName(self, name)
 
-    def _makeItemString(self):
+    def _makeItemString(self, obscure = False):
         itemStr = "\n"
         for item in self.items.values():
-            itemStr += item.getGround() + " "
+            if item.obscure == obscure:
+                itemStr += item.getGround() + " "
         return itemStr
 
     def _makeLocStr(self):
@@ -337,6 +339,11 @@ class Room():
         return False
 
     def look(self, cmd):
+        if "closer" in cmd:
+            say(self.strings['closer'])
+            say(self._makeItemString(True))
+            return True
+
         say(self.strings['desc'])
 
         say(self._makeItemString())
@@ -431,6 +438,7 @@ class Item():
     visible = False     #Appears in room description.
     hidden = False      #Does not respond to look, does not appear in inventory
     spawn = True        #Automatically added to room at startup
+    obscure = False     #Listed only in the look closer command
     strings = {
         "desc": "It is {}?",
         "ground": "There is a {}",

@@ -7,6 +7,7 @@ class Room(game.Room):
 
     strings = {
     "desc": "You are sitting in a room, different from the one I am in. There is a door to the RIGHT.",
+    "closer": "You take a closer look. The walls and floor are made out of MATERIALS.ACOUSTICS.002C.NAME. The ceiling is high-grade asbestos tile."
     }
 
     posList = ["left", "right"]
