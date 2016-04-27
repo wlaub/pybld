@@ -194,6 +194,9 @@ class TextParser(game.Item):
         "ground": "There is a {} on the ground.",
         "take":"You pick up the {}. a BLACK WIND blows through you.",
         "drop":"You cannot.",
+        "use": "The TEXT PARS'R throbs gently in your hands. It seems pleased.",
+        "useHint": "The TEXT PARS'R throbs gently in your hands. It seems pleased, but it would like a little more attention.",
+        "usePrimed": "The TEXT PARS'R pulse violenty in your hands. It seems XCIT'D."
     }
 
     defPos = 'left'
@@ -234,7 +237,7 @@ class TextParser(game.Item):
 
 
         if speed == 1:
-            game.say("The TEXT PARS'R pulse violenty in your hands. It seems XCIT'D.")
+            game.say(self.strings["usePrimed"])
             return False
         elif speed > 1 and speed < len(self.speedStr)+2:
             self.g.forceCmd("use text pars'r")
@@ -249,7 +252,11 @@ class TextParser(game.Item):
             self.g.flags["text pars'r"] = 1
             self._move("trash")
         else:
-            game.say("The TEXT PARS'R throbs gently in your hands. It seems pleased.")
+            if tries > 0:
+                game.say(self.strings['useHint'])
+            else:
+                game.say(self.strings['use'])
+            self.setFlag("tries", tries+1)
             return False
         return True
 
