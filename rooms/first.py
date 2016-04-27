@@ -47,17 +47,14 @@ class Room(game.Room):
         dir = game.getDir(cmd)
         pos = self.getFlag("pos")
         if dir == None:
-            game.say("...")
-            return False
+            return game.fail("...")
 
         if self.g.getFlag("sit") != "not":
-            game.say("You can't walk while sitting!")
-            return False
+            return game.fail("You can't walk while sitting!")
 
         if dir == "left":
             if pos == "left":
-                game.say("You can't go any farther left.")
-                return False
+                return game.fail("You can't go any farther left.")
             else:
                 self.setFlag("pos", "left")
                 game.say("You walk to the left.")
@@ -65,8 +62,7 @@ class Room(game.Room):
 
         elif dir == "right":
            if pos == "right":
-               game.say("You can't go any farther right.")
-               return False
+               return game.fail("You can't go any farther right.")
            else:
                self.setFlag("pos", "right")
                game.say("You walk to the right. You are now standing next to the door.")
@@ -179,11 +175,9 @@ class BlackWind(game.Item):
         currTime = self.g.getFlag("turns")
         escape = self.getFlag("escape")
         if blkTime < 0:
-            game.say("...")
-            return False
+            return game.fail("...")
         elif self.hidden:
-            game.say(self.strings['take2'])
-            return False
+            return game.fail(self.strings['take2'])
         return game.Item.take(self, cmd)
 
 
@@ -229,11 +223,11 @@ class TextParser(game.Item):
             blkTime = self.g.getFlag("turns")
             self.g.items['black wind'].setFlag("time", blkTime)
             return True
-        return False
+        return game.fail()
 
     def use(self, cmd):
         if not self._reqInv():
-            return
+            return False
 
         tries = self.getFlag("tries")
         speed = self.getFlag("speed")
@@ -241,6 +235,7 @@ class TextParser(game.Item):
 
         if speed == 1:
             game.say("The TEXT PARS'R pulse violenty in your hands. It seems XCIT'D.")
+            return False
         elif speed > 1 and speed < len(self.speedStr)+2:
             self.g.forceCmd("use text pars'r")
             self.setFlag("speed", speed + 1)
@@ -255,16 +250,22 @@ class TextParser(game.Item):
             self._move("trash")
         else:
             game.say("The TEXT PARS'R throbs gently in your hands. It seems pleased.")
+            return False
+        return True
 
 
     def caress(self, cmd):
-        if self._reqInv():
-            speed = self.getFlag("speed")
-            if speed < 2:
-                game.say("It begins to beat faster")
-                self.setFlag("speed", speed + 1)
-            if speed == 2:
-                game.say("It is ready.")
+        if not self._reqInv():
+            return False
+
+        speed = self.getFlag("speed")
+        if speed < 2:
+            game.say("It begins to beat faster")
+            self.setFlag("speed", speed + 1)
+            return True
+        if speed == 2:
+            game.say("It is ready.")
+        return False
 
 
 class dldo(game.Item):
@@ -299,18 +300,20 @@ class dldo(game.Item):
             game.say(self.strings['descBrk'])
         else:
             game.say(self.strings['desc'])
+        return True
 
 
     def drop(self,cmd):
-        game.Item.drop(self, cmd)
+        if not game.Item.drop(self, cmd):
+            return False
         if not self.broken:
             game.say("It breaks.")
-        self.broken = True
-       
+            self.broken = True
+        return True
 
     def use(self, cmd):
         if not self._reqInv():
-            return
+            return game.fail()
         game.say(self.strings['useTry'])
         if not self.broken:
             game.say(self.strings['use'])
@@ -332,4 +335,6 @@ class dldo(game.Item):
                 eStr += "".join(eList)
                 eStr = eStr[:-1]
                 game.say(eStr)
+            return True
+        return False
 

@@ -258,20 +258,17 @@ class Game():
 
 
     def help(self, cmd):
-        say("there is no one here you can help.")
-        return False
+        return fail("there is no one here you can help.")
 
     def hint(self, cmd):
-        say("I don't need any hints, but thanks for offering.")
-        return False
+        return fail("I don't need any hints, but thanks for offering.")
 
     def exit(self, cmd):
         self.done = True
         return True
 
     def _mspa(self, cmd):
-        say("hhhhhhm..")
-        return False
+        return fail("hhhhhhm..")
 
 class Room():
     name = ""
@@ -355,8 +352,7 @@ class Room():
         return True
 
     def go(self, cmd):
-        say("This is the base room. You cannot leave.")
-        return False
+        return fail("This is the base room. You cannot leave.")
 
 
     def sit(self, cmd):
@@ -368,8 +364,7 @@ class Room():
             if direction == "up":
                 return self.sitUp()
             else:
-                say("You are already sitting {}".format(state))
-            return False
+                return fail("You are already sitting {}".format(state))
 
 
         if direction == None:
@@ -381,15 +376,13 @@ class Room():
         elif direction == "right":
             return self.sitRight()
         else:
-            say("You cannot sit in the direction.")
-            return False
+            return fail("You cannot sit in the direction.")
 
     def stand(self, cmd):
         state = self.g.getFlag("sit", "down")
 
         if state == "not":
-            say("You are already standing.")
-            return False
+            return fail("You are already standing.")
 
         direction = getDir(cmd)
         if direction == None:
@@ -399,24 +392,20 @@ class Room():
         elif direction == "down":
             return self.standDown()
         else:
-            say("You cannot stand in that direction.")
-            return False
+            return fail("You cannot stand in that direction.")
 
     def sitUp(self):
         say("You pay more attention to you posture.")
         return True
 
     def sitDown(self):
-        say("There is nowhere to sit.")
-        return False
+        return fail("There is nowhere to sit.")
 
     def sitLeft(self):
-        say("You cannot sit in that direction.")
-        return False
+        return fail("You cannot sit in that direction.")
 
     def sitRight(self):
-        say("You cannot sit in that direction")
-        return False
+        return fail("You cannot sit in that direction")
 
     def standUp(self):
         say("You stand up. You are now standing.")
@@ -460,8 +449,7 @@ class Item():
 
     def _reqInv(self):
         if self.loc != "inv":
-            say("Hmmmm...")
-            return False
+            return fail("Hmmmm...")
         return True
 
     def _move(self, newLoc):
@@ -488,28 +476,26 @@ class Item():
 
     def look(self, cmd):
         if self.hidden:
-            return False
+            return fail()
         say(self.strings["desc"])
         return True
 
     def where(self, cmd):
         if self.hidden:
-            return False
+            return fail()
         if self.pos != "":
             say(self.pos)
             return True
-        return False
+        return fail()
 
     def take(self, cmd):
         if self.takeable == False:
-            return False
+            return fail()
         if self.loc == 'inv':
-            say("You already have the {}.".format(self.name))
-            return False
+            return fail("You already have the {}.".format(self.name))
         pPos = self.room.getFlag("pos")
         if pPos != None and pPos != self.pos:
-            say("You can't reach it from here!")
-            return False
+            return fail("You can't reach it from here!")
         self._move('inv')
         self.loc = 'inv'
         say(self.strings['take'])

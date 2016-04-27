@@ -1,8 +1,7 @@
-Learn pdb
-
--------------------
 
 retcon game.fail() into verbs
+
+Add hint to text pars'r use command
 
 Look into "{str}".format behavior
 
