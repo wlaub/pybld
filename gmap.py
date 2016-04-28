@@ -49,6 +49,9 @@ class GridMap(Map):
 class HorMap(Map):
     #012
     locs = {
+    "left": {"right":"mid"},
+    "mid":{"left": "left", "right":"right"},
+    "right": {"left":"mid"} 
     }
 
 class VertMap(Map):
@@ -56,6 +59,9 @@ class VertMap(Map):
     #2
     #3
     locs = {
+    "top": {"down":"mid"},
+    "mid":{"down":"bot","up":"top"},
+    "bot":{"up":"mid"}
     }
 
 class PlusMap(Map):

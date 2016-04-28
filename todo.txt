@@ -1,17 +1,15 @@
 
-Move room pos to room
+Fix items dict to allow multiple identical items
+
+Implement item quantity
 
 Populate map types
 
-Look into "{str}".format behavior
-
 figure out stdin.read() behavior
 
-Move go command to base room
 
-Figure out about aliasing dict entries
 
-Turn descriptive strings into a dictionary for rooms?
+---------------------------------
 
 Make text wrapping prettier
 
