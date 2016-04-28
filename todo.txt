@@ -1,4 +1,8 @@
 
+Move room pos to room
+
+Populate map types
+
 Look into "{str}".format behavior
 
 figure out stdin.read() behavior

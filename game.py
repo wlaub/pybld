@@ -1,6 +1,7 @@
 import os, time, sys
 import importlib, inspect
 import pickle
+from gmap import *
 
 import pdb
 
@@ -282,9 +283,13 @@ class Room():
 
     fancyVerbs={}
 
+    _map = Map()
+    defPos = ""
+
     def __init__(self, game):
         self.items = {}
         self.g = game
+        self.pos = self.defPos
 
 
     def _getItems(self):
@@ -347,12 +352,37 @@ class Room():
         return True
 
     def loc(self, cmd):
-        say("You are {}.".format(self.getFlag("pos")))
+        say("You are {}.".format(self.pos))
         say(self._makeLocStr())
         return True
 
-    def go(self, cmd):
+    def _enterPos(self, pos):
+        enter = ""
+        eKey = "enter "+pos
+        if "enter "+pos in self.strings.keys():
+            enter = self.strings[eKey]
+        say(enter) 
+
+
+    def _goDir(self, cmd):
+        _dir = getDir(cmd)
+        if _dir == None:
+            return False
+        nPos = self._map.go(self.pos, _dir)
+        if nPos != None:
+            self.pos = nPos
+            self._enterPos(nPos)
+            return True
+        return True
+
+    def _goOther(self, cmd):
         return fail("This is the base room. You cannot leave.")
+
+    def go(self, cmd):
+        if self._goDir(cmd):
+            return True
+
+        return self._goOther()
 
 
     def sit(self, cmd):
@@ -510,9 +540,5 @@ class Item():
             self._move(room.name)
             return True
         return False
-
-
-
-
 
 

@@ -7,7 +7,8 @@ class Room(game.Room):
 
     strings = {
     "desc": "You are sitting in a room, different from the one I am in. There is a door to the RIGHT.",
-    "closer": "You take a closer look. The walls and floor are made out of MATERIALS.ACOUSTIC.002C.COLORS.00.NAME MATERIALS.ACOUSTICS.002C.NAME. The drop ceiling is made of white high-grade asbestos tile. There is a single square flourescent light in the middle of the ceiling. You stare hard at the ceiling for a few minutes to make sure it's not coated in shifting iridescent glyphs. It is not."
+    "closer": "You take a closer look. The walls and floor are made out of MATERIALS.ACOUSTIC.002C.COLORS.00.NAME MATERIALS.ACOUSTICS.002C.NAME. The drop ceiling is made of white high-grade asbestos tile. There is a single square flourescent light in the middle of the ceiling. You stare hard at the ceiling for a few minutes to make sure it's not coated in shifting iridescent glyphs. It is not.",
+    "enter right": "You are now standing next to the door."
     }
 
     posList = ["left", "right"]
@@ -19,33 +20,23 @@ class Room(game.Room):
     } 
 
     flags={
-    "pos": "left",
+    
     }
-
-
+   
+    _map = game.HalfMap()
+    defPos = "left"
+ 
     def _go_empty(self):
         game.say("...")
         return False
 
-    def goX(self,cmd):
-        _dir = game.getInter(cmd.split[' '], goMap.keys())
-        pos = self.getFlag("pos")
-        if len(_dir) == 0:
-            return self._go_empty()
-            game.say("...")
-            return False
-
-        for d in _dir:
-            if goMap[d][0] == pos:
-                pass
-            else:
-                pass                
 
 
-
+    #This is getting mostly removed
+    """
     def go(self, cmd):
         dir = game.getDir(cmd)
-        pos = self.getFlag("pos")
+        pos = self.pos
         if dir == None:
             return game.fail("...")
 
@@ -56,7 +47,7 @@ class Room(game.Room):
             if pos == "left":
                 return game.fail("You can't go any farther left.")
             else:
-                self.setFlag("pos", "left")
+                self.pos = "left"
                 game.say("You walk to the left.")
                 return True
 
@@ -70,6 +61,7 @@ class Room(game.Room):
         else:
             game.say("You can't go in that direction.")
             return False
+    """
 
 
     def sitDown(self):
