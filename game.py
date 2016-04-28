@@ -274,11 +274,10 @@ class Game():
 class Room():
     name = ""
     verbs = ["look", "go", "sit", "stand", "loc"]
-    posList = []
 
     strings = {
     "desc": "It is a room?",
-    "closer": "You take a closer look."
+    "closer": "You take a closer look.",
     }
 
     fancyVerbs={}
@@ -309,12 +308,13 @@ class Room():
         return itemStr
 
     def _makeLocStr(self):
-        if len(self.posList) == 0:
+        posList = self._map.locs.keys()
+        if len(posList) == 0:
             return ""
         lines = ["\nLocations are:\n"]
         line = " "*5
         lineCount = 0
-        for pos in self.posList:
+        for pos in posList:
             line += pos + " "*(15-len(pos))
             lineCount += 1
             if lineCount == 4:
@@ -363,6 +363,8 @@ class Room():
             enter = self.strings[eKey]
         say(enter) 
 
+    def _goEmpty(self):
+        return fail("...")
 
     def _goDir(self, cmd):
         _dir = getDir(cmd)
@@ -378,11 +380,20 @@ class Room():
     def _goOther(self, cmd):
         return fail("This is the base room. You cannot leave.")
 
+    def _goSit(self, cmd):
+        return fail("You can't walk while sitting!")
+
     def go(self, cmd):
+        if cmd == "go":
+            return self._goEmpty()
+
+        if self.g.getFlag("sit") != "not":
+            return self._goSit(cmd)
+
         if self._goDir(cmd):
             return True
 
-        return self._goOther()
+        return self._goOther(cmd)
 
 
     def sit(self, cmd):

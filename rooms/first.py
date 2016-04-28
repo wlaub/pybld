@@ -11,14 +11,6 @@ class Room(game.Room):
     "enter right": "You are now standing next to the door."
     }
 
-    posList = ["left", "right"]
-
-    #Direction: [[From locations], [To locations]]
-    goMap = {
-    "left": [["right"], ["left"]],
-    "right": [["left"],["right"]]
-    } 
-
     flags={
     
     }
@@ -26,44 +18,6 @@ class Room(game.Room):
     _map = game.HalfMap()
     defPos = "left"
  
-    def _go_empty(self):
-        game.say("...")
-        return False
-
-
-
-    #This is getting mostly removed
-    """
-    def go(self, cmd):
-        dir = game.getDir(cmd)
-        pos = self.pos
-        if dir == None:
-            return game.fail("...")
-
-        if self.g.getFlag("sit") != "not":
-            return game.fail("You can't walk while sitting!")
-
-        if dir == "left":
-            if pos == "left":
-                return game.fail("You can't go any farther left.")
-            else:
-                self.pos = "left"
-                game.say("You walk to the left.")
-                return True
-
-        elif dir == "right":
-           if pos == "right":
-               return game.fail("You can't go any farther right.")
-           else:
-               self.setFlag("pos", "right")
-               game.say("You walk to the right. You are now standing next to the door.")
-               return True
-        else:
-            game.say("You can't go in that direction.")
-            return False
-    """
-
-
     def sitDown(self):
         game.say("You sit down on the floor.")
         self.g.flags["sit"] = "down"
