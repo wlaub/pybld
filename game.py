@@ -123,6 +123,7 @@ class Game():
 
     def loadModules(self):
         roomFiles = os.listdir('./rooms')
+        items = []
         for name in roomFiles:
             modName, modExt = os.path.splitext(name)
             if modExt == '.py' and modName != '__init__':
@@ -136,13 +137,15 @@ class Game():
                         if Item in inspect.getmro(mod.__dict__[val]):
                             print("Found item")
                             try:
-                                self.addItem(mod.__dict__[val](self))
+                                nItem = mod.__dict__[val](self)
+                                items.append(nItem)
+                                self.addItem(nItem)
                             except Exception as e:
                                 print(e)
                     except Exception as e:
                         pass
 
-        for item in self.items.values():
+        for item in items:
             room = self.rooms[item.loc]
             room.items[item.name] = item
             item.room = room
@@ -176,6 +179,8 @@ class Game():
             print("Failed to add duplicate room")
     
     def addItem(self, item):
+        if not item.unique:
+            return
         if not item.name in self.items.keys():
             self.items[item.name] = item
         else:
@@ -469,6 +474,7 @@ class Item():
     hidden = False      #Does not respond to look, does not appear in inventory
     spawn = True        #Automatically added to room at startup
     obscure = False     #Listed only in the look closer command
+    unique = True       #Adds item to global game dictionary
     strings = {
         "desc": "It is {}?",
         "ground": "There is a {}",
@@ -534,7 +540,7 @@ class Item():
             return fail()
         if self.loc == 'inv':
             return fail("You already have the {}.".format(self.name))
-        pPos = self.room.getFlag("pos")
+        pPos = self.room.pos
         if pPos != None and pPos != self.pos:
             return fail("You can't reach it from here!")
         self._move('inv')
@@ -546,7 +552,7 @@ class Item():
         say(self.strings['drop'])
         if self.dropable:
             room = self.g.currRoom
-            pPos = room.getFlag("pos")
+            pPos = room.pos
             self.pos = pPos
             self._move(room.name)
             return True

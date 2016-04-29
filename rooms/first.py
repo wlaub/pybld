@@ -47,7 +47,7 @@ class Door(game.Item):
   
     def open(self, cmd):
         state = self.g.getFlag("text pars'r", 0)
-        pos = self.room.getFlag("pos")
+        pos = self.room.pos
 
         if state ==0:
             game.say("It's not a real door.")

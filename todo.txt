@@ -7,8 +7,6 @@ Populate map types
 
 figure out stdin.read() behavior
 
-
-
 ---------------------------------
 
 Make text wrapping prettier
