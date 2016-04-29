@@ -1,7 +1,7 @@
 
-Fix items dict to allow multiple identical items
-
 Implement item quantity
+
+Fix black wind being dropable when missed
 
 Populate map types
 

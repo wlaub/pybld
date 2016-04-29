@@ -34,6 +34,7 @@ class Door(game.Item):
 
 
     defLoc = "First Room"
+    defPos = 'right'
 
     verbs = ["look", "open"]
 

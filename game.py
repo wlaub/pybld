@@ -147,7 +147,7 @@ class Game():
 
         for item in items:
             room = self.rooms[item.loc]
-            room.items[item.name] = item
+            room.items[item.pos][item.name] = item
             item.room = room
             print("Adding item {} to room {}".format(item.name, room.name))
 
@@ -292,24 +292,21 @@ class Room():
 
     def __init__(self, game):
         self.items = {}
+        self.items[''] = {}
+        for pos in self._map.locs.keys():
+            self.items[pos] = {}
         self.g = game
         self.pos = self.defPos
-
-
-    def _getItems(self):
-        for item in self.g.items.values():
-            if item.loc == self.name:
-                self.items[item.name] = item
-                item.room = self
 
     def _flagName(self, name):
         return _flagName(self, name)
 
     def _makeItemString(self, obscure = False):
         itemStr = "\n"
-        for item in self.items.values():
-            if item.obscure == obscure:
-                itemStr += item.getGround() + " "
+        for pos in self.items.values():
+            for item in pos.values():
+                if item.obscure == obscure:
+                    itemStr += item.getGround() + " "
         return itemStr
 
     def _makeLocStr(self):
@@ -337,10 +334,11 @@ class Room():
         self.g.flags[self._flagName(name)] = val
 
     def doCmd(self, cmd):
-        for item in self.items.values():
-            if item.name.lower() in cmd:
-                if _doCmd(item, cmd):
-                    return True
+        for pos in self.items.values():
+            for item in pos.values():
+                if item.name.lower() in cmd:
+                    if _doCmd(item, cmd):
+                        return True
         if _doCmd(self, cmd):
              return True
         return False
@@ -500,9 +498,14 @@ class Item():
         return True
 
     def _move(self, newLoc):
-        del self.g.rooms[self.loc].items[self.name]
+        oldRoom = self.room
+        oldPos = oldRoom.pos
+        ####Change for qtys
+        del oldRoom.items[oldPos][self.name] 
         nRoom = self.g.rooms[newLoc]
-        nRoom.items[self.name] = self
+        nPos = nRoom.pos
+        ####Change for qtys
+        nRoom.items[nPos][self.name] = self
         self.room = nRoom
         self.loc = newLoc
 
