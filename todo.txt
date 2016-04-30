@@ -1,5 +1,3 @@
-Change description string formatting
-
 Fix black wind being dropable when missed
 
 Populate map types

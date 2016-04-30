@@ -479,12 +479,12 @@ class Item():
     obscure = False     #Listed only in the look closer command
     unique = True       #Adds item to global game dictionary
 
-    strings = {
-        "desc": "It is {}?",
-        "ground": "There is a {}",
-        "take": "I pick up the {} and put it in my INV.",
-        "drop": "You drop the {}."
-    }
+    strings = {   "desc": "It is {}?"
+                , "ground": "There is a {}"
+                , "take": "I pick up the {} and put it in my INV."
+                , "have": "You already have the {}."
+                , "drop": "You drop the {}."
+                }
     room = None
     flags = {} 
     defLoc = ""
@@ -500,6 +500,12 @@ class Item():
             string = string.replace("{}", self.name.upper())
             self.strings[key] = string
 
+    def getString(self, key):
+        if key in self.strings.keys():
+            base = self.strings[key]
+        elif key in Item.strings.keys():
+            base = Item.strings[key]
+        return base.format(self.name.upper(), q = self.qty) 
 
 
     def _reqInv(self):
@@ -549,13 +555,13 @@ class Item():
 
     def getGround(self ):
         if self.visible and not self.hidden:
-            return self.strings["ground"]
+            return self.getString("ground")
         return ""
 
     def look(self, cmd):
         if self.hidden:
             return fail()
-        say(self.strings["desc"])
+        say(self.getString("desc"))
         return True
 
     def where(self, cmd):
@@ -572,18 +578,18 @@ class Item():
         if self.loc == 'inv':
             if not self.unique:
                 return _pass()
-            return fail("You already have the {}.".format(self.name))
+            return fail(self.getString("have"))
         pPos = self.room.pos
         if pPos != None and pPos != self.pos:
             return fail("You can't reach it from here!")
         self._move('inv')
-        say(self.strings['take'])
+        say(self.getString('take'))
         return True
 
     def drop(self, cmd):
         if self.loc != 'inv':
             return _pass()
-        say(self.strings['drop'])
+        say(self.getString('drop'))
         if self.dropable:
             room = self.g.currRoom
             pPos = room.pos

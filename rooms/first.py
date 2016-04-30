@@ -63,9 +63,9 @@ class Door(game.Item):
     def look(self, cmd):
         state = self.g.getFlag("text pars'r", 0)
         if state == 0:
-            game.say(self.strings["desc"])
+            game.say(self.getString("desc"))
         else:
-            game.say(self.strings["desc2"])
+            game.say(self.getString("desc2"))
   
     def open(self, cmd):
         state = self.g.getFlag("text pars'r", 0)
@@ -95,7 +95,7 @@ class Glyph(game.Item):
     verbs = ["look", "use"]
 
     def use(self, cmd):
-       game.say(self.strings['use']) 
+       game.say(self.getString('use')) 
 
 
 
@@ -145,7 +145,7 @@ class BlackWind(game.Item):
         if blkTime < 0:
             return game.fail("...")
         elif self.hidden:
-            return game.fail(self.strings['take2'])
+            return game.fail(self.getString('take2'))
         return game.Item.take(self, cmd)
 
 
@@ -194,7 +194,7 @@ class TextParser(game.Item):
             blkTime = self.g.getFlag("turns")
             self.g.items['black wind'].setFlag("time", blkTime)
             return True
-        return game.fail()
+        return False
 
     def use(self, cmd):
         if not self._reqInv():
@@ -205,7 +205,7 @@ class TextParser(game.Item):
 
 
         if speed == 1:
-            game.say(self.strings["usePrimed"])
+            game.say(self.getString("usePrimed"))
             return False
         elif speed > 1 and speed < len(self.speedStr)+2:
             self.g.forceCmd("use text pars'r")
@@ -221,9 +221,9 @@ class TextParser(game.Item):
             self._move("trash")
         else:
             if tries > 0:
-                game.say(self.strings['useHint'])
+                game.say(self.getString('useHint'))
             else:
-                game.say(self.strings['use'])
+                game.say(self.getString('use'))
             self.setFlag("tries", tries+1)
             return False
         return True
