@@ -23,21 +23,19 @@ class Map():
 
 class HalfMap(Map):
     #01
-    locs = {
-    "left": {"right":"right"},
-    "right": {"left":"left"} 
+    locs =  { "left": {"right":"right"}
+            , "right": {"left":"left"} 
     }    
 
 
 class SquareMap(Map):
     #01
     #23
-    locs = {
-    "upper left": {"right": "upper right", "down": "lower left"},
-    "upper right": {"left": "upper left", "down": "lower right"},
-    "lower left": {"right": "lower right", "up": "upper left"},
-    "lower right": {"left": "lower left", "up": "upper right"},
-    }
+    locs =  { "upper left": {"right": "upper right", "down": "lower left"}
+            , "upper right": {"left": "upper left", "down": "lower right"}
+            , "lower left": {"right": "lower right", "up": "upper left"}
+            , "lower right": {"left": "lower left", "up": "upper right"}
+            }
 
 class GridMap(Map):
     #012
@@ -52,25 +50,23 @@ class GridMap(Map):
             , "lower left": {"up":"left", "right":"bot"}
             , "bot": {"up":"mid", "left":"lower left","right":"lower right"}
             , "lower right": {"left":"bot", "up":"right"}
-    }
+            }
 
 class HorMap(Map):
     #012
-    locs = {
-    "left": {"right":"mid"},
-    "mid":{"left": "left", "right":"right"},
-    "right": {"left":"mid"} 
-    }
+    locs =  { "left": {"right":"mid"}
+            , "mid":{"left": "left", "right":"right"}
+            , "right": {"left":"mid"} 
+            }
 
 class VertMap(Map):
     #1
     #2
     #3
-    locs = {
-    "top": {"down":"mid"},
-    "mid":{"down":"bot","up":"top"},
-    "bot":{"up":"mid"}
-    }
+    locs =  { "top": {"down":"mid"}
+            , "mid":{"down":"bot","up":"top"}
+            , "bot":{"up":"mid"}
+            }
 
 class PlusMap(Map):
     # 0
@@ -81,5 +77,5 @@ class PlusMap(Map):
             , "mid": {"up":"top", "right":"right", "down":"bot", "left":"left"}
             , "right": {"left":"mid"}
             , "bot": {"up":"mid"}
-    }
+            }
 
