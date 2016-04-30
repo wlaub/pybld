@@ -1,4 +1,3 @@
-Move item list formatting to external function
 
 Fix black wind being dropable when missed
 

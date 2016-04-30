@@ -44,6 +44,15 @@ class GridMap(Map):
     #345
     #678
     locs = {
+    , "upper left": {"right":"top", "down":"left"}
+    , "top": {"left":"upper left", "down":"mid", "right":"upper right"}
+    , "upper right": {"left":"top", "down":""}
+    , "left": {"up":"upper left", "right":"mid", "down":"lower left"}
+    , "mid": {"up":"top", "right":"right", "down":"bot", "left":"left"}
+    , "right": {"up":"upper right", "down":"lower right","left":"mid"}
+    , "lower left": {"up":"left", "right":"bot"}
+    , "bot": {"up":"mid", "left":"lower left","right":"lower right"}
+    , "lower right": {"left":"bot", "up":"right"}
     }
 
 class HorMap(Map):
