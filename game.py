@@ -590,6 +590,8 @@ class Item():
     def drop(self, cmd):
         if self.loc != 'inv':
             return _pass()
+        if self.hidden:
+            return fail()
         say(self.getString('drop'))
         if self.dropable:
             room = self.g.currRoom
