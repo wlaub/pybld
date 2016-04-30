@@ -49,7 +49,6 @@ if __name__ == "__main__":
             sys.stdout.write("\033[1A\r")
             sys.stdout.flush()
         print("> "+cmd.upper())
-
         g.doCmd(cmd)
 
 

@@ -8,14 +8,18 @@ class Room(game.Room):
     def inv(self, cmd):
         xpos = 0
         invStr = "         "
-        for item in self.items.values():
-            if not item.hidden:
-                invStr += item.name
-                xpos += 1
-                if xpos == 4:
-                    xpos = 0
-                    invStr += "\n"
-                else:
-                    invStr += " "*(15-len(item.name))
+        for pos in self.items.values():
+            for item in pos.values():
+                if not item.hidden:
+                    nameStr = item.name
+                    if item.qty > 1:
+                        nameStr+="({})".format(item.qty)
+                    invStr += nameStr
+                    xpos += 1
+                    if xpos == 4:
+                        xpos = 0
+                        invStr += "\n"
+                    else:
+                        invStr += " "*(15-len(nameStr))
         game.say(invStr)
 

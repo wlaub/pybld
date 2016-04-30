@@ -78,17 +78,20 @@ def getDir(cmd):
 def getInter(list1, list2):
     return [x for x in list1 if x in list2]
 
-
+def _pass():
+    return "pass"
 
 def _doCmd(obj, cmd):
     for v in obj.verbs:
         if v in cmd:
-            getattr(obj, v)(cmd)
-            return True
+            result = getattr(obj, v)(cmd)
+            if result != "pass":
+                return True
     for v in obj.fancyVerbs.keys():
         if v in cmd:
-            getattr(obj, obj.fancyVerbs[v])(cmd)
-            return True
+            result = getattr(obj, obj.fancyVerbs[v])(cmd)
+            if result != "pass":
+                return success
     return False
 
 def _flagName(obj, name):
@@ -106,7 +109,7 @@ class Game():
     force = ""
     done = False
 
-    verbs = ["help", "exit", "hint", "score", "save", "load"]
+    verbs = ["debug", "help", "exit", "hint", "score", "save", "load"]
 
     fancyVerbs = {
     "==>": "_mspa"
@@ -248,6 +251,8 @@ class Game():
         say("Loaded gamed {}.".format(self.lastSave))
         return True
 
+    def debug(self, cmd):
+        pdb.set_trace()
        
 
     def score(self, cmd):
@@ -473,6 +478,7 @@ class Item():
     spawn = True        #Automatically added to room at startup
     obscure = False     #Listed only in the look closer command
     unique = True       #Adds item to global game dictionary
+
     strings = {
         "desc": "It is {}?",
         "ground": "There is a {}",
@@ -483,13 +489,17 @@ class Item():
     flags = {} 
     defLoc = ""
     defPos = ""
+    defQty = 1
 
     def  __init__(self, game):
+        self.qty = self.defQty
         self.loc = self.defLoc
         self.pos = self.defPos
         self.g = game
         for key, string in self.strings.iteritems():
-            self.strings[key] = string.replace("{}", self.name.upper())
+            string = string.replace("{}", self.name.upper())
+            self.strings[key] = string
+
 
 
     def _reqInv(self):
@@ -500,14 +510,32 @@ class Item():
     def _move(self, newLoc):
         oldRoom = self.room
         oldPos = oldRoom.pos
+
         ####Change for qtys
-        del oldRoom.items[oldPos][self.name] 
+        if self.unique or self.qty == 1:
+            del oldRoom.items[oldPos][self.name] 
+        else:
+            self.qty -=1
+
         nRoom = self.g.rooms[newLoc]
         nPos = nRoom.pos
+
         ####Change for qtys
-        nRoom.items[nPos][self.name] = self
-        self.room = nRoom
-        self.loc = newLoc
+
+        if self.unique:
+            nRoom.items[nPos][self.name] = self
+            self.room = nRoom
+            self.loc = newLoc
+        else:
+            if self.name in nRoom.items[nPos].keys():
+                nRoom.items[nPos][self.name].qty += 1
+            else:
+                nItem = self.__class__(self.g)
+                nItem.qty = 1
+                nItem.loc = newLoc
+                nItem.room = nRoom
+                nRoom.items[nPos][self.name] = nItem 
+            
 
     def _flagName(self, name):
         return _flagName(self, name)
@@ -542,16 +570,19 @@ class Item():
         if self.takeable == False:
             return fail()
         if self.loc == 'inv':
+            if not self.unique:
+                return _pass()
             return fail("You already have the {}.".format(self.name))
         pPos = self.room.pos
         if pPos != None and pPos != self.pos:
             return fail("You can't reach it from here!")
         self._move('inv')
-        self.loc = 'inv'
         say(self.strings['take'])
         return True
 
     def drop(self, cmd):
+        if self.loc != 'inv':
+            return _pass()
         say(self.strings['drop'])
         if self.dropable:
             room = self.g.currRoom

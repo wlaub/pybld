@@ -24,6 +24,27 @@ class Room(game.Room):
         return True
 
 
+class Bean(game.Item):
+    name = "bean"
+    unique = False
+    takeable = True
+    dropable = True
+    visible = True
+    strings = {
+        "desc": "It is a {}",
+        "ground": "There are {q} {}(s) on the ground.",
+        "take": "You take a {}.",
+        "drop": "You drop a {}."
+    }
+
+    verbs = ["look", "take", "drop"]
+
+    defLoc = 'First Room'
+    defPos = 'left'
+    defQty = 5
+
+
+
 class Door(game.Item):
     name = "door"
 
@@ -291,4 +312,6 @@ class dldo(game.Item):
                 game.say(eStr)
             return True
         return False
+
+
 

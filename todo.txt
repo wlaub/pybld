@@ -1,5 +1,4 @@
-
-Implement item quantity
+Change description string formatting
 
 Fix black wind being dropable when missed
 
