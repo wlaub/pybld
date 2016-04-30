@@ -33,11 +33,6 @@ def getSaveNames():
     return saves
 
 
-def formatStrings(strings, size = 5, width = 10):
-    #:((( 
-    pass 
-
-
 def sayBit(data):
     sys.stdout.write(data.upper())
     sys.stdout.flush()
@@ -58,6 +53,20 @@ def lf():
 def fail(string = "Hmm..."):
     say(string)
     return False
+
+def sayList(items):
+    xpos = 0
+    string = "         "
+    for item in items:
+        string += item
+        xpos += 1
+        if xpos == 4:
+            xpos = 0
+            string += "\n"
+        else:
+            string += " "*(15-len(item))
+    game.say(string)
+
 
 def extractSaveName(cmd):
     parts = cmd.split(' ')
@@ -318,18 +327,10 @@ class Room():
         posList = self._map.locs.keys()
         if len(posList) == 0:
             return ""
-        lines = ["\nLocations are:\n"]
-        line = " "*5
-        lineCount = 0
-        for pos in posList:
-            line += pos + " "*(15-len(pos))
-            lineCount += 1
-            if lineCount == 4:
-                lineCount = 0
-                lines.append(line)
-        if lineCount != 0:
-            lines.append(line)
-        return '\n'.join(lines)
+
+        say("\nLocations are:\n")
+
+        sayList(posList)
 
 
     def getFlag(self, name):
@@ -361,7 +362,7 @@ class Room():
 
     def loc(self, cmd):
         say("You are {}.".format(self.pos))
-        say(self._makeLocStr())
+        self._makeLocStr()
         return True
 
     def _enterPos(self, pos):
