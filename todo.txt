@@ -1,7 +1,5 @@
 
-Fix black wind being dropable when missed
-
-figure out stdin.read() behavior
+Look into readline for command manipulation
 
 ---------------------------------
 
