@@ -103,6 +103,12 @@ def _doCmd(obj, cmd):
                 return success
     return False
 
+def _getVerbs(obj):
+    result = []
+    result.extend(obj.verbs)
+    result.extend(obj.fancyVerbs)
+    return result
+
 def _flagName(obj, name):
     return obj.name+"~"+name
 
@@ -182,7 +188,15 @@ class Game():
         else:
             say('Hmm...')
         lf()
-        
+
+    def getVerbs(self):
+        verbs = []
+
+        verbs.extend(_getVerbs(self))
+        verbs.extend(self.inv.getVerbs())
+        verbs.extend(self.currRoom.getVerbs())
+        # Making lists of verbs for autocompletion
+        return verbs
 
     def addRoom(self, room):
         if not room.name in self.rooms.keys():
@@ -332,6 +346,12 @@ class Room():
 
         sayList(posList)
 
+    def getVerbs(self):
+        verbs = _getVerbs(self)
+        for pos in self.items.values():
+            for item in pos.values():
+                verbs.extend(item.getVerbs())
+        return verbs
 
     def getFlag(self, name):
         return self.g.getFlag(self._flagName(name), self.flags[name])
@@ -507,6 +527,9 @@ class Item():
         elif key in Item.strings.keys():
             base = Item.strings[key]
         return base.format(self.name.upper(), q = self.qty) 
+
+    def getVerbs(self):
+        return _getVerbs(self)
 
 
     def _reqInv(self):

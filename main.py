@@ -1,5 +1,5 @@
 import time, sys, os
-import rooms, game
+import rooms, game, iface
 import readline
 
 g = game.Game()
@@ -10,9 +10,13 @@ currRoom = g.rooms['First Room']
 inv = g.rooms['inv']
 file = sys.stdin
 
+ac = iface.AutoCompleter(g)
+readline.set_completer(ac.complete)
+readline.set_completion_display_matches_hook(ac.showMatches)
+readline.parse_and_bind('tab: complete')
+
 def getCmd(f):
     cmd = raw_input("> ").lower().strip()
-#    cmd = f.readline().lower().strip()
 
     if g.force != "":
         cmd = g.force
@@ -20,19 +24,6 @@ def getCmd(f):
 
     return cmd
 
-def _getCmd(f):
-    read = ""
-    temp = f.read(1)
-    f.flush()
-    force = g.force != ""
-    while temp != '\n':
-        read += g.force[len(read)] if force else temp
-        temp = f.read(1)
-        f.flush()
-        sys.stdout.write('\r'+read.upper())
-        sys.stdout.flush()
-
-    return read
 
 def replaceHistory(string):
     i = readline.get_current_history_length()
