@@ -32,6 +32,8 @@ def getSaveNames():
             saves.append(name)
     return saves
 
+
+
 currLine = ''
 
 def checkWord(data):
