@@ -1,5 +1,11 @@
 
+Move more interface stuff to iface.py
+
+
+
 Look into readline for command manipulation
+
+Maintain output buffer
 
 ---------------------------------
 

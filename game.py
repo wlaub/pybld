@@ -32,23 +32,49 @@ def getSaveNames():
             saves.append(name)
     return saves
 
+currLine = ''
+
+def checkWord(data):
+    global currLine
+    if len(currLine) + len(data) > WIDTH-1:
+        currLine = data
+        return '\n'
+    else:
+        if currLine == '':
+            currLine = data
+            return ''
+        else:
+            currLine += ' ' + data
+            return ' '
+
 
 def sayBit(data):
     sys.stdout.write(data.upper())
     sys.stdout.flush()
 
 def spell(data, delay=.75):
+    
+    if not checkWord(data):
+        sayBit('\n')
+    
     for c in data:
         sayBit(c)
         time.sleep(delay)
 
+def lf():
+    global currLine
+    sayBit('\n')
+    currLine = ''
+
 def say(data):
     if data.strip() != "" and data != None:
-        sayBit(data)
-        sayBit('\n')
+        newData = ''
+        words = data.split(' ')
+        for word in words:
+            newData += checkWord(word) + word
+        sayBit(newData)
+        lf()
 
-def lf():
-    sayBit('\n')
 
 def fail(string = "Hmm..."):
     say(string)
@@ -100,7 +126,7 @@ def _doCmd(obj, cmd):
         if v in cmd:
             result = getattr(obj, obj.fancyVerbs[v])(cmd)
             if result != "pass":
-                return success
+                return True
     return False
 
 def _getVerbs(obj):
@@ -330,12 +356,12 @@ class Room():
         return _flagName(self, name)
 
     def _makeItemString(self, obscure = False):
-        itemStr = "\n"
+        itemStrings = []
         for pos in self.items.values():
             for item in pos.values():
                 if item.obscure == obscure:
-                    itemStr += item.getGround() + " "
-        return itemStr
+                    itemStrings.append( item.getGround() )
+        return ' '.join(itemStrings)
 
     def _makeLocStr(self):
         posList = self._map.locs.keys()
@@ -377,7 +403,12 @@ class Room():
 
         say(self.strings['desc'])
 
-        say(self._makeItemString())
+        items = self._makeItemString()
+
+        if items != "":
+            lf()
+            say(self._makeItemString())
+
         return True
 
     def loc(self, cmd):
