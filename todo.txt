@@ -1,17 +1,10 @@
 
 Move more interface stuff to iface.py
 
-
+fix _enterPos behaviour/formatting stuff
 
 Look into readline for command manipulation
 
-Maintain output buffer
-
 ---------------------------------
 
-Make text wrapping prettier
-
-Implement automatic item spacing for inv etc.
-
-----------------------------------
 

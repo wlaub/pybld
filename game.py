@@ -308,6 +308,7 @@ class Room():
     strings = {
     "desc": "It is a room?",
     "closer": "You take a closer look.",
+    "loc": "You are {loc}."
     }
 
     fancyVerbs={}
@@ -343,6 +344,13 @@ class Room():
 
         sayList(posList)
 
+    def getString(self, key):
+        if key in self.strings.keys():
+            base = self.strings[key]
+        elif key in Room.strings.keys():
+            base = Room.strings[key]
+        return base.format(self.name.upper(), loc=self.pos) 
+
     def getVerbs(self):
         verbs = _getVerbs(self)
         for pos in self.items.values():
@@ -368,30 +376,30 @@ class Room():
 
     def look(self, cmd):
         if "closer" in cmd:
-            say(self.strings['closer'])
-            say(self._makeItemString(True))
-            return True
-
-        say(self.strings['desc'])
-
-        items = self._makeItemString()
-
+            desc = self.getString('closer')
+            items = self._makeItemString(True)
+        else:
+            desc = self.getString('desc')
+            items = self._makeItemString()
+    
+        say(desc)
         if items != "":
             lf()
-            say(self._makeItemString())
+            say(items)
 
         return True
 
     def loc(self, cmd):
-        say("You are {}.".format(self.pos))
+        say(self.getString("loc"))
         self._makeLocStr()
         return True
 
     def _enterPos(self, pos):
+        #This is a clusterfuck what needs fixing
         enter = ""
         eKey = "enter "+pos
         if "enter "+pos in self.strings.keys():
-            enter = self.strings[eKey]
+            enter = self.getString("enter "+pos)
         say(enter) 
 
     def _goEmpty(self):

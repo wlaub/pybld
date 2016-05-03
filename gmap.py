@@ -17,7 +17,7 @@ class Map():
         if _next == None:
             game.say(self.strings['fail'].format(_dir)) 
             return None
-        game.sayBit(self.strings['pass'].format(_dir))
+        game.sayLine(self.strings['pass'].format(_dir))
         return _next
 
 
