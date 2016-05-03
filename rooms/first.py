@@ -214,7 +214,7 @@ class TextParser(game.Item):
         elif speed == len(self.speedStr) +2:
             game.say("You obtained the text pars'r! HP/MP restored.\n")
             time.sleep(1)
-            game.sayBit("But you're still ")
+            game.sayLine("But you're still ")
             game.spell("h u n g r y", .25)
             game.say("...")
             self.g.flags["text pars'r"] = 1

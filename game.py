@@ -2,6 +2,7 @@ import os, time, sys
 import importlib, inspect
 import pickle
 from gmap import *
+import iface
 
 import pdb
 
@@ -32,51 +33,19 @@ def getSaveNames():
             saves.append(name)
     return saves
 
+scr = iface.Screen()
 
-
-currLine = ''
-
-def checkWord(data):
-    global currLine
-    if len(currLine) + len(data) > WIDTH-1:
-        currLine = data
-        return '\n'
-    else:
-        if currLine == '':
-            currLine = data
-            return ''
-        else:
-            currLine += ' ' + data
-            return ' '
-
-
-def sayBit(data):
-    sys.stdout.write(data.upper())
-    sys.stdout.flush()
+def sayLine(data):
+    scr.sayLine(data)
 
 def spell(data, delay=.75):
+    scr.spell(data, delay)
     
-    if not checkWord(data):
-        sayBit('\n')
-    
-    for c in data:
-        sayBit(c)
-        time.sleep(delay)
-
 def lf():
-    global currLine
-    sayBit('\n')
-    currLine = ''
+    scr.lf()
 
 def say(data):
-    if data.strip() != "" and data != None:
-        newData = ''
-        words = data.split(' ')
-        for word in words:
-            newData += checkWord(word) + word
-        sayBit(newData)
-        lf()
-
+    scr.say(data)
 
 def fail(string = "Hmm..."):
     say(string)
