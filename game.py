@@ -395,12 +395,11 @@ class Room():
         return True
 
     def _enterPos(self, pos):
-        #This is a clusterfuck what needs fixing
         enter = ""
         eKey = "enter "+pos
         if "enter "+pos in self.strings.keys():
             enter = self.getString("enter "+pos)
-        say(enter) 
+        sayLine(enter) 
 
     def _goEmpty(self):
         return fail("...")
@@ -413,6 +412,7 @@ class Room():
         if nPos != None:
             self.pos = nPos
             self._enterPos(nPos)
+            lf()
             return True
         return True
 

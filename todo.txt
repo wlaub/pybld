@@ -1,8 +1,6 @@
 
 Move more interface stuff to iface.py
 
-fix _enterPos behaviour/formatting stuff
-
 Look into readline for command manipulation
 
 ---------------------------------
