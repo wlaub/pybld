@@ -186,6 +186,12 @@ class Game():
             say('Hmm...')
         lf()
 
+    def hasItem(self, name):
+        for pos in self.inv.items.values():
+            for name in pos.keys():
+                return pos.keys[name].qty
+        return 0
+
     def getVerbs(self):
         verbs = []
 
@@ -221,8 +227,17 @@ class Game():
     def forceCmd(self, cmd):
         self.force = cmd
 
+    def getScore(self):
+        return self.getFlag("score")
+
+    def getTurns(self):
+        return self.getFlag("turns")
+    
+    def getHair(self):
+        return self.getFlag("hair")
+
     def setAlarm(self, delay, func):
-        turn = self.flags["turns"]+delay
+        turn = self.getFlag("turns")+delay
         if not turn in self.alarms.keys():
             self.alarms[turn] = []
         self.alarms[turn].append(func)

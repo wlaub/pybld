@@ -72,13 +72,18 @@ class Door(game.Item):
         pos = self.room.pos
 
         if state ==0:
-            game.say("It's not a real door.")
-            return
+            return game.fail("It's not a real door.")
         if pos != "right":
-            game.say("You can't reach the door from here. You are too far left.")
-            return
+            return game.fail("You can't reach the door from here. You are too far left.")
         game.say("You open the door and walk through into the next room. There's no going back now. Hope you didn't miss anything important!")
-   
+  
+        game.lf()
+        game.say("Congratulations! You completed the demo of pybld.\nYour score was: {score}\nYour hair was: {hair}\n Your turns was: {turn}".format(score = self.g.getScore(), hair=self.g.getHair(), turn=self.g.getTurns()))
+        game.say("BLACK WINDS obtained: {}/1".format(self.g.hasItem('black wind')))
+        game.say("GLYPHS PARS'D: {}/1".format(0))
+        game.say("D'LDOS BROK'N: {}/1".format(1 if self.g.items["d'ldo"].broken else 0))
+        return True
+ 
 class Glyph(game.Item):
     obscure = True
     visible = True

@@ -53,10 +53,6 @@ class Screen():
                 self.sayLine(line)
                 self.lf()
 
-
-   
-
-
 class AutoCompleter():
 
     def __init__(self, g):

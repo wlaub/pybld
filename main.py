@@ -11,7 +11,7 @@ inv = g.rooms['inv']
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        file = open(sys.argv[1], 'r')
+        infile = open(sys.argv[1], 'r')
 
     interface = iface.Interface(g)
 
