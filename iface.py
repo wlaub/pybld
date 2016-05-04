@@ -59,13 +59,31 @@ class Screen():
 
 
 class CurseScreen(Screen):
+
+    def __init__(self):
+        self.buffer=[]
+        self.line = ""
+
+    def setWindow(self, win):
+        self.window = win
+
     def sayBit(self, data):
         self.line += data
+        self.paint()
 
     def lf(self):
         self.buffer.append(self.line)
         self.line = ''
 
+    def paint(self):
+        i = 0
+        for i, line in enumerate(self.buffer[-23:]):
+            self.window.addstr(i, 0, "{:02} {}".format(i, line.upper())) 
+        self.window.addstr(i+1, 0, "{:02} {}".format(i+1, self.line.upper()))
+
+        self.window.refresh() 
+        self.window.clear()           
+ 
 
 
 class AutoCompleter():
@@ -135,11 +153,16 @@ class Interface():
 
 class CurseInterface():
 
+    cmdwin = None
+
     def __init__(self,g):
         self.g = g 
         self.infile = sys.stdin
         self.stdscr = curses.initscr()
-        self.cmdwin = curses.newwin(24, game.scr.width, 0, 0) 
+
+    def setScreen(self, scr):
+        self.scr = scr
+        self.cmdwin = curses.newwin(24, self.scr.width, 0, 0) 
 
     def getCmd(self, f):
         
@@ -160,12 +183,9 @@ class CurseInterface():
             game.say("> "+cmd.upper())
 
             self.g.doCmd(cmd)
-            
-            for i, line in enumerate(game.scr.buffer[-24:]):
-                self.cmdwin.addstr(i, 0, "{:02} {}".format(i, line.upper())) 
 
-            self.cmdwin.refresh() 
-            self.cmdwin.clear()           
+            self.scr.paint()
+            
             time.sleep(1)         
 
         curses.endwin()

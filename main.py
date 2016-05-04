@@ -17,6 +17,10 @@ if __name__ == "__main__":
 #    interface = iface.Interface(g)
     try:
         interface = iface.CurseInterface(g)
+        screen = iface.CurseScreen()
+        interface.setScreen(screen)
+        screen.setWindow(interface.cmdwin)
+        game.scr = screen
 
         interface.commandLoop()
     except:
