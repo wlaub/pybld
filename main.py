@@ -1,6 +1,7 @@
 import time, sys, os
 import rooms, game, iface
 import readline
+import curses
 
 g = game.Game()
 
@@ -13,8 +14,13 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         infile = open(sys.argv[1], 'r')
 
-    interface = iface.Interface(g)
+#    interface = iface.Interface(g)
+    try:
+        interface = iface.CurseInterface(g)
 
-    interface.commandLoop()
+        interface.commandLoop()
+    except:
+        curses.endwin()
+        raise
 
 

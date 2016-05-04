@@ -2,12 +2,15 @@ import game
 import os, sys, time
 import readline
 import pdb
+import curses
+
 
 class Screen():
     width = 60
     height = 45
 
     def __init__(self):
+        self.buffer=[]
         self.line = ""
 
     def checkWord(self, word):
@@ -24,6 +27,7 @@ class Screen():
         sys.stdout.flush()
 
     def lf(self):
+        self.buffer.append(self.line)
         self.sayBit('\n')
         self.line = ''
 
@@ -52,6 +56,17 @@ class Screen():
             for line in data.split('\n'):
                 self.sayLine(line)
                 self.lf()
+
+
+class CurseScreen(Screen):
+    def sayBit(self, data):
+        self.line += data
+
+    def lf(self):
+        self.buffer.append(self.line)
+        self.line = ''
+
+
 
 class AutoCompleter():
 
@@ -116,4 +131,45 @@ class Interface():
                 sys.stdout.flush()
             print("> "+cmd.upper())
             self.g.doCmd(cmd)
+
+
+class CurseInterface():
+
+    def __init__(self,g):
+        self.g = g 
+        self.infile = sys.stdin
+        self.stdscr = curses.initscr()
+        self.cmdwin = curses.newwin(24, game.scr.width, 0, 0) 
+
+    def getCmd(self, f):
+        
+        cmd = f.readline().strip().lower()
+
+        if self.g.force != "":
+            cmd = self.g.force
+            self.g.force = ""
+
+        return cmd
+
+
+    def commandLoop(self):
+        self.infile = open(sys.argv[1],'r')
+        while not self.g.done:
+            cmd = self.getCmd(self.infile)
+
+            game.say("> "+cmd.upper())
+
+            self.g.doCmd(cmd)
+            
+            for i, line in enumerate(game.scr.buffer[-24:]):
+                self.cmdwin.addstr(i, 0, "{:02} {}".format(i, line.upper())) 
+
+            self.cmdwin.refresh() 
+            self.cmdwin.clear()           
+            time.sleep(1)         
+
+        curses.endwin()
+
+
+
 

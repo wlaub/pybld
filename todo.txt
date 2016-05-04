@@ -1,7 +1,10 @@
 
-Move more interface stuff to iface.py
+Give screen and interface to each other
+
 
 Look into readline for command manipulation
+
+
 
 ---------------------------------
 

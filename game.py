@@ -33,7 +33,7 @@ def getSaveNames():
             saves.append(name)
     return saves
 
-scr = iface.Screen()
+scr = iface.CurseScreen()
 
 def sayLine(data):
     scr.sayLine(data)
