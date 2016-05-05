@@ -184,7 +184,6 @@ class Game():
             pass
         else:
             say('Hmm...')
-        lf()
 
     def hasItem(self, name):
         for pos in self.inv.items.values():

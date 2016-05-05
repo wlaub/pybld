@@ -1,6 +1,8 @@
 
 Look into curses text editing utils
 
+Figure out the text newline after running cmds
+
 Fix stand mechanics for stand down, etc
 
 ---------------------------------

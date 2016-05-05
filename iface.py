@@ -218,6 +218,7 @@ class CurseInterface():
         while not self.g.done:
             cmd = self.getCmd(self.infile)
 
+            game.lf()
             game.say("> "+cmd.upper())
 
             self.g.doCmd(cmd)
