@@ -1,10 +1,7 @@
 
-Give screen and interface to each other
+Look into curses text editing utils
 
-
-Look into readline for command manipulation
-
-
+Fix stand mechanics for stand down, etc
 
 ---------------------------------
 

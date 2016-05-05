@@ -77,9 +77,9 @@ class CurseScreen(Screen):
 
     def paint(self):
         i = 0
-        for i, line in enumerate(self.buffer[-23:]):
-            self.window.addstr(i, 0, "{:02} {}".format(i, line.upper())) 
-        self.window.addstr(i+1, 0, "{:02} {}".format(i+1, self.line.upper()))
+        for i, line in enumerate(self.buffer[-22:]):
+            self.window.addstr(i, 0, "{1}".format(i, line.upper())) 
+        self.window.addstr(i+1, 0, "{1}".format(i+1, self.line.upper()))
 
         self.window.refresh() 
         self.window.clear()           
@@ -162,15 +162,53 @@ class CurseInterface():
 
     def setScreen(self, scr):
         self.scr = scr
-        self.cmdwin = curses.newwin(24, self.scr.width, 0, 0) 
+        self.cmdwin = curses.newwin(23, self.scr.width, 0, 0) 
+        self.inwin = curses.newwin(1, self.scr.width, 23, 0)
 
     def getCmd(self, f):
         
-        cmd = f.readline().strip().lower()
+#        cmd = f.readline().strip().lower()
 
-        if self.g.force != "":
+        curses.noecho()
+        cmd = ""
+        force = not self.g.force == ""
+        if force:
             cmd = self.g.force
-            self.g.force = ""
+        self.inwin.clear()
+        self.inwin.addstr(0,0, "> ")
+        self.inwin.refresh()
+        xpos = 0
+        while 1:
+            char =self.inwin.getch()
+            if char == 0x0a:
+                break
+            elif char == -1:
+                pass
+            elif char == 127:
+                if xpos > 0 and not force:
+                    cmd = cmd[:-1]
+                    self.inwin.delch(0, xpos+1)
+                    xpos -= 1
+            elif char == 21:
+                if not force:
+                    xpos = 0
+                    cmd = ''
+                    self.inwin.clear()
+                    self.inwin.addstr(0,0,"> ")
+                
+            else:
+                if not force:
+                    cmd += chr(char)
+                self.inwin.addstr(0, xpos+2, cmd[xpos].upper())
+                xpos += 1
+                if force and xpos >= len(cmd):
+                    xpos = len(cmd)-1
+            self.inwin.refresh()
+
+        self.inwin.clear()
+        self.inwin.refresh()
+
+        self.g.force = ""
 
         return cmd
 
@@ -185,8 +223,6 @@ class CurseInterface():
             self.g.doCmd(cmd)
 
             self.scr.paint()
-            
-            time.sleep(1)         
 
         curses.endwin()
 
