@@ -33,7 +33,7 @@ class Bean(game.Item):
     strings = {
         "desc": "It is a {}",
         "ground": "There are {q} {}(s) on the ground.",
-        "take": "You take a {}.",
+        "take": "You take a {}. a b c d e f g h i j k l m n o p q r s t u v w x y z",
         "drop": "You drop a {}."
     }
 

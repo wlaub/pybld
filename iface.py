@@ -78,8 +78,13 @@ class CurseScreen(Screen):
     def paint(self):
         i = 0
         for i, line in enumerate(self.buffer[-22:]):
-            self.window.addstr(i, 0, "{1}".format(i, line.upper())) 
-        self.window.addstr(i+1, 0, "{1}".format(i+1, self.line.upper()))
+            self.window.addstr(i, 0, line.upper())
+        try:
+            self.window.addstr(i+1, 0, self.line.upper())
+        except:
+            pdb.set_trace()
+            raise
+        
 
         self.window.refresh() 
         self.window.clear()           
@@ -163,8 +168,9 @@ class CurseInterface():
 
     def setScreen(self, scr):
         self.scr = scr
-        self.cmdwin = curses.newwin(23, self.scr.width, 0, 0) 
+        self.cmdwin = curses.newwin(24, self.scr.width, 0, 0) 
         self.inwin = curses.newwin(1, self.scr.width, 23, 0)
+        self.cmdwin.leaveok(1)
         self.tbox = Textbox(self.inwin)
 
     def refreshCmd(self, cmd):
