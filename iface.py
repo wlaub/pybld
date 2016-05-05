@@ -167,8 +167,6 @@ class CurseInterface():
 
     def getCmd(self, f):
         
-#        cmd = f.readline().strip().lower()
-
         curses.noecho()
         cmd = ""
         force = not self.g.force == ""

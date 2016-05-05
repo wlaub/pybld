@@ -1,7 +1,12 @@
 
 Look into curses text editing utils
 
-Figure out the text newline after running cmds
+Figure out why
+    look closer
+    take d'ldo
+    drop d'ldo
+    take text pars'r
+crashes
 
 Fix stand mechanics for stand down, etc
 

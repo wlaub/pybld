@@ -240,11 +240,14 @@ class TextParser(game.Item):
 
         speed = self.getFlag("speed")
         if speed < 2:
-            game.say("It begins to beat faster")
+            game.say("It begins to beat faster.")
             self.setFlag("speed", speed + 1)
+            if speed == 1:
+                game.say("It is ready.")
             return True
         if speed == 2:
             game.say("It is ready.")
+            return False
         return False
 
 

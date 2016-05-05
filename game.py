@@ -188,7 +188,7 @@ class Game():
     def hasItem(self, name):
         for pos in self.inv.items.values():
             for name in pos.keys():
-                return pos.keys[name].qty
+                return pos[name].qty
         return 0
 
     def getVerbs(self):
