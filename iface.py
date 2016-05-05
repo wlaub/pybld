@@ -3,7 +3,7 @@ import os, sys, time
 import readline
 import pdb
 import curses
-
+from curses.textpad import Textbox
 
 class Screen():
     width = 60
@@ -159,11 +159,13 @@ class CurseInterface():
         self.g = g 
         self.infile = sys.stdin
         self.stdscr = curses.initscr()
+        self.history = []
 
     def setScreen(self, scr):
         self.scr = scr
         self.cmdwin = curses.newwin(23, self.scr.width, 0, 0) 
         self.inwin = curses.newwin(1, self.scr.width, 23, 0)
+        self.tbox = Textbox(self.inwin)
 
     def getCmd(self, f):
         
@@ -175,14 +177,17 @@ class CurseInterface():
         self.inwin.clear()
         self.inwin.addstr(0,0, "> ")
         self.inwin.refresh()
+
         xpos = 0
+        hpos = 0
+        cmdTemp = ''
         while 1:
             char =self.inwin.getch()
             if char == 0x0a:
                 break
             elif char == -1:
                 pass
-            elif char == 127:
+            elif char == 127 or char == curses.KEY_BACKSPACE:
                 if xpos > 0 and not force:
                     cmd = cmd[:-1]
                     self.inwin.delch(0, xpos+1)
@@ -193,7 +198,26 @@ class CurseInterface():
                     cmd = ''
                     self.inwin.clear()
                     self.inwin.addstr(0,0,"> ")
-                
+            elif char == curses.KEY_UP:
+                if hpos > -len(self.history):
+                    hpos -= 1
+                    cmd = self.history[hpos]
+                    xpos = len(cmd)
+                    self.inwin.clear() 
+                    self.inwin.addstr(0,0, "> "+cmd.upper())
+            elif char == curses.KEY_DOWN:
+                if hpos < -1:
+                    hpos += 1 
+                    cmd = self.history[hpos]
+                    xpos = len(cmd)
+                    self.inwin.clear() 
+                    self.inwin.addstr(0,0, "> "+cmd.upper())
+                elif hpos == -1:
+                    hpos = 0
+                    cmd = cmdTemp
+                    xpos = len(cmd)
+                    self.inwin.clear() 
+                    self.inwin.addstr(0,0, "> "+cmd.upper())
             else:
                 if not force:
                     cmd += chr(char)
@@ -201,12 +225,15 @@ class CurseInterface():
                 xpos += 1
                 if force and xpos >= len(cmd):
                     xpos = len(cmd)-1
+                cmdTemp = cmd
             self.inwin.refresh()
 
         self.inwin.clear()
         self.inwin.refresh()
 
         self.g.force = ""
+
+        self.history.append(cmd)
 
         return cmd
 
