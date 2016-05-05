@@ -1,13 +1,4 @@
 
-Look into curses text editing utils
-
-Figure out why
-    look closer
-    take d'ldo
-    drop d'ldo
-    take text pars'r
-crashes
-
 Fix stand mechanics for stand down, etc
 
 ---------------------------------

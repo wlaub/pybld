@@ -61,7 +61,7 @@ class Screen():
 class CurseScreen(Screen):
 
     def __init__(self):
-        self.buffer=[]
+        self.buffer=[' ']*24
         self.line = ""
 
     def setWindow(self, win):
