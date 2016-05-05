@@ -167,6 +167,11 @@ class CurseInterface():
         self.inwin = curses.newwin(1, self.scr.width, 23, 0)
         self.tbox = Textbox(self.inwin)
 
+    def refreshCmd(self, cmd):
+        self.inwin.clear() 
+        self.inwin.addstr(0,0, "> "+cmd.upper())
+        return len(cmd)
+
     def getCmd(self, f):
         
         curses.noecho()
@@ -190,42 +195,28 @@ class CurseInterface():
             elif char == 127 or char == curses.KEY_BACKSPACE:
                 if xpos > 0 and not force:
                     cmd = cmd[:-1]
-                    self.inwin.delch(0, xpos+1)
-                    xpos -= 1
             elif char == 21:
                 if not force:
-                    xpos = 0
                     cmd = ''
-                    self.inwin.clear()
-                    self.inwin.addstr(0,0,"> ")
             elif char == curses.KEY_UP:
                 if hpos > -len(self.history):
                     hpos -= 1
                     cmd = self.history[hpos]
-                    xpos = len(cmd)
-                    self.inwin.clear() 
-                    self.inwin.addstr(0,0, "> "+cmd.upper())
             elif char == curses.KEY_DOWN:
                 if hpos < -1:
                     hpos += 1 
                     cmd = self.history[hpos]
-                    xpos = len(cmd)
-                    self.inwin.clear() 
-                    self.inwin.addstr(0,0, "> "+cmd.upper())
                 elif hpos == -1:
                     hpos = 0
                     cmd = cmdTemp
-                    xpos = len(cmd)
-                    self.inwin.clear() 
-                    self.inwin.addstr(0,0, "> "+cmd.upper())
             else:
                 if not force:
                     cmd += chr(char)
-                self.inwin.addstr(0, xpos+2, cmd[xpos].upper())
                 xpos += 1
                 if force and xpos >= len(cmd):
                     xpos = len(cmd)-1
                 cmdTemp = cmd
+            xpos = self.refreshCmd(cmd)
             self.inwin.refresh()
 
         self.inwin.clear()
