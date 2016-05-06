@@ -9,6 +9,7 @@ class Screen():
     width = 60
     height = 45
     cmdHeight = 23
+    txtWidth = 60
 
     def __init__(self):
         self.buffer=['']
@@ -17,7 +18,7 @@ class Screen():
         length = len(self.buffer[-1])
         if length == 0:
             return False
-        if length + len(word) > self.width -1:
+        if length + len(word) > self.txtWidth -1:
             return True
         else:
             return False
@@ -127,7 +128,8 @@ class CurseScreen(Screen):
 
     height = 24
     cmdHeight = 9
-    width = 59
+    txtWidth = 59
+    width = 60
 
     def __init__(self):
         self.buffer=[' ']
