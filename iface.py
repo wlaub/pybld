@@ -127,9 +127,10 @@ class CurseScreen(Screen):
 
     height = 24
     cmdHeight = 9
+    width = 59
 
     def __init__(self):
-        self.buffer=[' ']*self.cmdHeight
+        self.buffer=[' ']
         self.offset = 0
 
     def setWindow(self, win):
@@ -142,12 +143,19 @@ class CurseScreen(Screen):
     def lf(self):
         self.buffer.append('')
 
+    def drawScrollBar(self):
+        self.window.vline(0, self.width-1, curses.ACS_VLINE, self.cmdHeight)
+        if len(self.buffer) > self.cmdHeight:
+            pos = int((self.cmdHeight-1) * (1 - float(self.offset)/(len(self.buffer)-self.cmdHeight)))
+            char = curses.ACS_TTEE if pos == 0 else curses.ACS_BTEE if pos == self.cmdHeight -1 else curses.ACS_PLUS
+            self.window.addch(pos, self.width-1, char)
+
     def paint(self):
         i = 0
         length = len(self.buffer) - self.offset
         for i, line in enumerate(self.buffer[length-self.cmdHeight:length]):
             self.window.addstr(i, 0, line.upper())
-
+        self.drawScrollBar()
         self.window.refresh() 
         self.window.clear()           
 
@@ -195,6 +203,7 @@ class CurseInterface():
 
     def getCmd(self, f):
         
+        self.scr.paint()
         curses.noecho()
         cmd = ""
         force = not self.g.force == ""
