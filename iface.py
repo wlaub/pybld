@@ -159,6 +159,10 @@ class CurseScreen(Screen):
         self.window.refresh() 
         self.window.clear()           
 
+    def home(self):
+        self.offset = 0
+        self.paint()
+
     def page(self, amt):
         self.offset += amt
         if self.offset < 0:
@@ -244,6 +248,7 @@ class CurseInterface():
             elif char == curses.KEY_PPAGE:
                 self.scr.pageDown()
             else:
+                self.scr.home()
                 if not force:
                     cmd += chr(char)
                 xpos += 1
