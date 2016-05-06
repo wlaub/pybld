@@ -212,7 +212,7 @@ class CurseInterface():
         cmd = ""
         force = not self.g.force == ""
         if force:
-            cmd = self.g.force
+            forceCmd = self.g.force
         self.inwin.clear()
         self.inwin.addstr(0,0, "> ")
         self.inwin.refresh()
@@ -251,12 +251,17 @@ class CurseInterface():
                 self.scr.home()
                 if not force:
                     cmd += chr(char)
+                elif xpos < len(forceCmd):
+                    cmd += forceCmd[xpos]
                 xpos += 1
                 if force and xpos >= len(cmd):
                     xpos = len(cmd)-1
                 cmdTemp = cmd
             xpos = self.refreshCmd(cmd)
             self.inwin.refresh()
+
+        if force:
+            cmd = forceCmd
 
         self.inwin.clear()
         self.inwin.refresh()
