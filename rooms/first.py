@@ -8,7 +8,10 @@ class Room(game.Room):
     strings = {
     "desc": "You are sitting in a room, different from the one I am in. There is a door to the RIGHT.",
     "closer": "You take a closer look. The walls and floor are made out of MATERIALS.ACOUSTIC.002C.COLORS.00.NAME MATERIALS.ACOUSTICS.002C.NAME. The drop ceiling is made of white high-grade asbestos tile. There is a single square flourescent light in the middle of the ceiling. You stare hard at the ceiling for a few minutes to make sure it's not coated in shifting iridescent glyphs. It is not.",
-    "enter right": "You are now standing next to the door."
+    "enter right": "You are now standing next to the door.",
+    "no beans": "There are no bean(s) left in the alpha bnple.",
+    "beanup": "You increment the beancount.",
+    "beandown": "You decrement the beancount."
     }
 
     flags={
@@ -17,7 +20,25 @@ class Room(game.Room):
    
     _map = game.HalfMap()
     defPos = "left"
- 
+
+    def __init__(self, g):
+        self.verbs.extend(["beanup", "beandown"])
+        game.Room.__init__(self, g)
+
+    def beanup(self, cmd):
+        if not 'bean' in self.items['left'].keys():
+            return game.fail(self.getString("no beans"))
+        game.say(self.getString("beanup"))
+        self.items['left']['bean'].qty += 1
+        return True
+
+    def beandown(self,cmd):
+        if not 'bean' in self.items['left'].keys():
+            return game.fail(self.getString("no beans"))
+        game.say(self.getString("beandown"))
+        self.items['left']['bean'].qty -= 1       
+        return True 
+
     def sitDown(self):
         game.say("You sit down on the floor.")
         self.g.flags["sit"] = "down"
@@ -33,7 +54,7 @@ class Bean(game.Item):
     strings = {
         "desc": "It is a {}",
         "ground": "There are {q} {}(s) on the ground.",
-        "take": "You take a {}. a b c d e f g h i j k l m n o p q r s t u v w x y z",
+        "take": "You take a {}.",
         "drop": "You drop a {}."
     }
 
