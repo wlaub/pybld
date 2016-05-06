@@ -157,6 +157,12 @@ class CurseScreen(Screen):
         length = len(self.buffer) - self.offset
         for i, line in enumerate(self.buffer[length-self.cmdHeight:length]):
             self.window.addstr(i, 0, line.upper())
+            if "green" in line:
+                xpos = line.find("green")
+                while xpos != -1:
+                    self.window.addstr(i, xpos, "GREEN", curses.color_pair(1))
+                    xpos = line.find("green", xpos+5)
+ 
         self.drawScrollBar()
         self.window.refresh() 
         self.window.clear()           
@@ -201,6 +207,10 @@ class CurseInterface():
 
         self.imgwin.border()
         self.imgwin.refresh()
+
+        curses.start_color()
+        curses.use_default_colors()
+        curses.init_pair(1, curses.COLOR_GREEN, -1)
 
     def refreshCmd(self, cmd):
         self.inwin.clear() 
@@ -281,7 +291,7 @@ class CurseInterface():
             cmd = self.getCmd(self.infile)
 
             game.lf()
-            game.say("> "+cmd.upper())
+            game.say("> "+cmd)
 
             self.g.doCmd(cmd)
 
