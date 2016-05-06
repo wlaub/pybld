@@ -8,33 +8,34 @@ from curses.textpad import Textbox
 class Screen():
     width = 60
     height = 45
+    cmdHeight = 23
 
     def __init__(self):
-        self.buffer=[]
-        self.line = ""
+        self.buffer=['']
 
     def checkWord(self, word):
-        if len(self.line) == 0:
+        length = len(self.buffer[-1])
+        if length == 0:
             return False
-        if len(self.line) + len(word) > self.width -1:
+        if length + len(word) > self.width -1:
             return True
         else:
             return False
 
     def sayBit(self, data):
-        self.line += data
+        self.buffer[-1] += data
         sys.stdout.write(data.upper())
         sys.stdout.flush()
 
     def lf(self):
-        self.buffer.append(self.line)
         self.sayBit('\n')
+        self.buffer.append('')
         self.line = ''
 
     def sayWord(self, word):
         if self.checkWord(word):
             self.lf()
-        if len(self.line) > 0:
+        if len(self.buffer[-1]) > 0:
             self.sayBit(' ') 
         self.sayBit(word)
 
@@ -56,39 +57,6 @@ class Screen():
             for line in data.split('\n'):
                 self.sayLine(line)
                 self.lf()
-
-
-class CurseScreen(Screen):
-
-    def __init__(self):
-        self.buffer=[' ']*24
-        self.line = ""
-
-    def setWindow(self, win):
-        self.window = win
-
-    def sayBit(self, data):
-        self.line += data
-        self.paint()
-
-    def lf(self):
-        self.buffer.append(self.line)
-        self.line = ''
-
-    def paint(self):
-        i = 0
-        for i, line in enumerate(self.buffer[-22:]):
-            self.window.addstr(i, 0, line.upper())
-        try:
-            self.window.addstr(i+1, 0, self.line.upper())
-        except:
-            pdb.set_trace()
-            raise
-        
-
-        self.window.refresh() 
-        self.window.clear()           
- 
 
 
 class AutoCompleter():
@@ -113,7 +81,6 @@ class AutoCompleter():
 
 
 class Interface():
-
 
     def __init__(self, g):
         self.g = g
@@ -156,6 +123,33 @@ class Interface():
             self.g.doCmd(cmd)
 
 
+class CurseScreen(Screen):
+
+    height = 24
+    cmdHeight = 9
+
+    def __init__(self):
+        self.buffer=[' ']*self.cmdHeight
+
+    def setWindow(self, win):
+        self.window = win
+
+    def sayBit(self, data):
+        self.buffer[-1] += data
+        self.paint()
+
+    def lf(self):
+        self.buffer.append('')
+
+    def paint(self):
+        i = 0
+        for i, line in enumerate(self.buffer[-self.cmdHeight:]):
+            self.window.addstr(i, 0, line.upper())
+
+        self.window.refresh() 
+        self.window.clear()           
+ 
+
 class CurseInterface():
 
     cmdwin = None
@@ -168,10 +162,14 @@ class CurseInterface():
 
     def setScreen(self, scr):
         self.scr = scr
-        self.cmdwin = curses.newwin(24, self.scr.width, 0, 0) 
-        self.inwin = curses.newwin(1, self.scr.width, 23, 0)
+        self.imgwin = curses.newwin(self.scr.height-self.scr.cmdHeight-1, self.scr.width, 0,0)
+        self.cmdwin = curses.newwin(self.scr.cmdHeight+1, self.scr.width, self.scr.height-self.scr.cmdHeight-1, 0) 
+        self.inwin = curses.newwin(1, self.scr.width, self.scr.height-1, 0)
         self.cmdwin.leaveok(1)
         self.tbox = Textbox(self.inwin)
+
+        self.imgwin.border()
+        self.imgwin.refresh()
 
     def refreshCmd(self, cmd):
         self.inwin.clear() 
