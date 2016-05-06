@@ -130,6 +130,7 @@ class CurseScreen(Screen):
 
     def __init__(self):
         self.buffer=[' ']*self.cmdHeight
+        self.offset = 0
 
     def setWindow(self, win):
         self.window = win
@@ -143,12 +144,28 @@ class CurseScreen(Screen):
 
     def paint(self):
         i = 0
-        for i, line in enumerate(self.buffer[-self.cmdHeight:]):
+        length = len(self.buffer) - self.offset
+        for i, line in enumerate(self.buffer[length-self.cmdHeight:length]):
             self.window.addstr(i, 0, line.upper())
 
         self.window.refresh() 
         self.window.clear()           
- 
+
+    def page(self, amt):
+        self.offset += amt
+        if self.offset < 0:
+             self.offset = 0
+        if self.offset > len(self.buffer)-self.cmdHeight:
+            self.offset = len(self.buffer)-self.cmdHeight
+        self.paint() 
+
+    def pageUp(self):
+        self.page(-1)
+
+    def pageDown(self):
+        self.page(1)
+
+
 
 class CurseInterface():
 
@@ -213,6 +230,10 @@ class CurseInterface():
                 elif hpos == -1:
                     hpos = 0
                     cmd = cmdTemp
+            elif char == curses.KEY_NPAGE:
+                self.scr.pageUp()
+            elif char == curses.KEY_PPAGE:
+                self.scr.pageDown()
             else:
                 if not force:
                     cmd += chr(char)
