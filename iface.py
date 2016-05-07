@@ -1,5 +1,5 @@
 import game
-import os, sys, time
+import os, sys, time, re
 import readline
 import pdb
 import curses
@@ -157,11 +157,8 @@ class CurseScreen(Screen):
         length = len(self.buffer) - self.offset
         for i, line in enumerate(self.buffer[length-self.cmdHeight:length]):
             self.window.addstr(i, 0, line.upper())
-            if "green" in line:
-                xpos = line.find("green")
-                while xpos != -1:
-                    self.window.addstr(i, xpos, "GREEN", curses.color_pair(1))
-                    xpos = line.find("green", xpos+5)
+            for match in re.finditer("green", line): 
+                self.window.addstr(i, match.start(), "GREEN", curses.color_pair(1))
  
         self.drawScrollBar()
         self.window.refresh() 
@@ -209,7 +206,7 @@ class CurseInterface():
         self.imgwin.refresh()
 
         curses.start_color()
-        curses.use_default_colors()
+s       curses.use_default_colors()
         curses.init_pair(1, curses.COLOR_GREEN, -1)
 
     def refreshCmd(self, cmd):
