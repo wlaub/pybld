@@ -206,7 +206,7 @@ class CurseInterface():
         self.imgwin.refresh()
 
         curses.start_color()
-s       curses.use_default_colors()
+        curses.use_default_colors()
         curses.init_pair(1, curses.COLOR_GREEN, -1)
 
     def refreshCmd(self, cmd):

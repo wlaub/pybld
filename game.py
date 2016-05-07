@@ -187,7 +187,7 @@ class Game():
 
     def hasItem(self, name):
         for pos in self.inv.items.values():
-            for name in pos.keys():
+            if name in pos.keys():
                 return pos[name].qty
         return 0
 
