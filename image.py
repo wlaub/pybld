@@ -49,6 +49,13 @@ class Frame():
             ypos += 1
         return result
 
+    def writeLines(self, lines, raw, height, width, green):
+        for key, val in lines.iteritems():
+            val = ''.join([self.encode(x, green) for x in val])
+            for i, v in enumerate(val):
+                raw[key[0]*width + key[1] + i] = v
+        return raw
+
 
     def load(self, data, height, width):
         length = struct.unpack("B", data[0])
@@ -61,11 +68,11 @@ class Frame():
 
 
 
-    def save(self, width, height):
-        raw = [['\x00']*width]*height
-        for key, val in self.lines[1]:
-            val = ''.join([self.encode(x) for x in val])
-                
+    def save(self,  height, width):
+        raw = ['\x00']*width*height
+        for i, data in enumerate(self.lines):
+            raw = self.writeLines(data, raw, height, width, i)
+        return ''.join(raw)
 
 
     def _drawLines(self, window, lines, ypos=0, xpos=0, color = 0):
