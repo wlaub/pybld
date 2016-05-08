@@ -51,7 +51,7 @@ class Frame():
 
     def writeLines(self, lines, raw, height, width, green):
         for key, val in lines.iteritems():
-            val = ''.join([self.encode(x, green) for x in val])
+            val = ''.join([self.encode(x, green) for x in val.decode(code)])
             for i, v in enumerate(val):
                 raw[key[0]*width + key[1] + i] = v
         return raw
@@ -72,7 +72,7 @@ class Frame():
         raw = ['\x00']*width*height
         for i, data in enumerate(self.lines):
             raw = self.writeLines(data, raw, height, width, i)
-        return ''.join(raw)
+        return struct.pack("B", self.length)+''.join(raw)
 
 
     def _drawLines(self, window, lines, ypos=0, xpos=0, color = 0):
@@ -83,5 +83,45 @@ class Frame():
         for i, l in enumerate(self.lines):
             self._drawLines(window, l, ypos, xpos, i)
  
+
+class Image():
+
+    def __init__(self):
+        self.frames = []
+        self.w = 60
+        self.h = 24
+        self.t = 0
+        self.cFrame = 0
+    
+    def load(self, filename):
+        with open(filename, "rb") as f:
+            self.h, self.w = struct.unpack("HH", f.read(4))
+            fRaw = f.read(self.w*self.h+1)
+            while fRaw:
+                nFrame = Frame()
+                nFrame.load(fRaw, self.h, self.w)
+                self.frames.append(nFrame)
+                fRaw = f.read(self.w*self.h+1)
+
+    def save(self, filename):
+        with open(filename, "wb") as f:
+            f.write(struct.pack("HH", self.h, self.w))
+            for frame in self.frames:
+                raw = frame.save(self.h, self.w)
+                f.write(raw)
+
+
+    def tick(self, delta):
+        self.t += delta
+        if self.t > self.frames[cFrame].length/8.:
+            self.t -= self.frames[cFrame].length/8
+            self.cFrame += 1
+            if self.cFrame == len(self.frames):
+                self.cFrame = 0
+
+    def draw(self, window, ypos = 0, xpos = 0):
+        self.frames[self.cFrame].draw(window, ypos, xpos)
+
+
 
 

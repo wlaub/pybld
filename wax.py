@@ -3,10 +3,11 @@ import curses
 import pdb
 import image
 
+"""
 test = image.Frame()
 #test.lines[0][(0,0)] = 'TEST'
 #test.lines[1][(1,0)] = 'GREEN'
-data = """\x01\x03\x03\x03\x03\x02AB\x02\x81\xc1\xc2\x81\x20\x20\x20\x20"""
+data = "\x01\x03\x03\x03\x03\x02AB\x02\x81\xc1\xc2\x81\x20\x20\x20\x20"
 data = ['\x01']
 data.extend(['\x03']*60*6)
 data.extend(['\x02']*60*6)
@@ -17,8 +18,12 @@ data.extend(['\x00']*60*6)
 data = ''.join(data)
 test.load(data, 24,60)
 
-data = test.save(24, 60)
-print(data)
+timg = image.Image()
+timg.frames.append(test)
+timg.save("img/test.bmi")
+"""
+test = image.Image()
+test.load("img/test.bmi")
 
 try:
     window = curses.initscr()
