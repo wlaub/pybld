@@ -4,8 +4,10 @@ import locale
 locale.setlocale(locale.LC_ALL, '')
 code = locale.getpreferredencoding()
 
+
 class Frame():
     lines = [{}, {}]
+    arrays = [[],[]]
     length = 1
 
     charMap =   { 1: unichr(0x2592)
@@ -41,6 +43,7 @@ class Frame():
 
     def extractLines(self, data, width):
         ypos = 0
+        data = ''.join(data)
         result = {}
         while len(data) > 0:
             line = data[:width]
@@ -60,11 +63,11 @@ class Frame():
     def load(self, data, height, width):
         length = struct.unpack("B", data[0])
         raw = data[1:]
-        plain = ''.join([self.decode(x) if ord(x) & 0x80 == 0 else '\x00' for x in raw])
-        green = ''.join([self.decode(x) if ord(x) & 0x80 != 0 else '\x00' for x in raw])
+        self.arrays[0] = [self.decode(x) if ord(x) & 0x80 == 0 else '\x00' for x in raw]
+        self.arrays[1] = [self.decode(x) if ord(x) & 0x80 != 0 else '\x00' for x in raw]
 
-        self.lines[0] = self.extractLines(plain, width)
-        self.lines[1] = self.extractLines(green, width)
+        self.lines[0] = self.extractLines(self.arrays[0], width)
+        self.lines[1] = self.extractLines(self.arrays[1], width)
 
 
 
@@ -74,9 +77,10 @@ class Frame():
             raw = self.writeLines(data, raw, height, width, i)
         return struct.pack("B", self.length)+''.join(raw)
 
-    def write(self, y, x, val, color):
+    def write(self, y, x, w, val, color):
         #This needs to be done right
-        self.lines[color][(y,x)] = (self.decode(chr(val).upper()).encode(code))
+        self.arrays[color][y*w+x] = self.decode(chr(val).upper())
+        self.lines[color]= self.extractLines(self.arrays[color], w)
 
 
     def _drawLines(self, window, lines, ypos=0, xpos=0, color = 0):
@@ -86,6 +90,9 @@ class Frame():
     def draw(self, window, ypos=0, xpos=0):
         for i, l in enumerate(self.lines):
             self._drawLines(window, l, ypos, xpos, i)
+
+
+
  
 
 class Image():
@@ -124,7 +131,7 @@ class Image():
                 self.cFrame = 0
 
     def write(self, y, x, val, color=0):
-        self.frames[self.cFrame].write(y, x, val, color)
+        self.frames[self.cFrame].write(y, x, self.w, val, color)
 
     def draw(self, window, ypos = 0, xpos = 0):
         self.frames[self.cFrame].draw(window, ypos, xpos)

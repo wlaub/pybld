@@ -28,6 +28,7 @@ test = image.Image()
 test.load(filename)
 
 editmode = False
+drawalpha =False
 
 def validator(data):
     if data == 0x1b:
@@ -62,39 +63,45 @@ try:
 
     while 1:
         cmdStr =    [ "{mode} mode | color: {color}".format(mode = "Edit" if editmode else "Command", color= "green" if color else "normal")
-                    ,  "{name}: {w}x{h} - {cmd:04x}".format(w = test.w, h = test.h, cmd=cmd, name = filename)
+                    ,  "{name}: {w}x{h} - {cmd:04x} - ({x},{y})".format(w = test.w, h = test.h, cmd=cmd, name = filename, x = editbox.x, y = editbox.y)
                     , "i: edit | q: quit" 
                     ]
 
 
         for i, val in enumerate(cmdStr): 
             cmdwin.addstr(i,0,val)
-        
+
+        window.clear()
+        if drawalpha:
+            for y in range(test.h):
+                window.addstr(y+1, 1, ' '*test.w, curses.color_pair(2))
+
+        window.border()
         test.draw(window,1,1)        
+        if editmode:
+            window.addch(editbox.y+1, editbox.x+1, '*')
         window.refresh()
         cmdwin.refresh()
         cmdwin.clear()
 
         if editmode:
             editmode = editbox.edit(test, color)
+
         else: 
             cmd = window.getch()
 
-            if editmode:
-                if cmd == 0x1b:
-                    editmode = False
-            else:      
-                if cmd == ord('i'):
-                    editmode = True
-                elif cmd == ord('q'):
-                    break;
-                elif cmd == ord('g'):
-                    color = 1-color
-                elif cmd == ord('s'):
-                    test.save(filename)
-                elif cmd == ord('l'):
-                    test.load(filename)
-
+            if cmd == ord('i'):
+                editmode = True
+            elif cmd == ord('q'):
+                break;
+            elif cmd == ord('g'):
+                color = 1-color
+            elif cmd == ord('s'):
+                test.save(filename)
+            elif cmd == ord('l'):
+                test.load(filename)
+            elif cmd == ord('a'):
+                drawalpha = not drawalpha
 
 except:
     curses.endwin()
