@@ -86,10 +86,10 @@ class Frame():
 
 class Image():
 
-    def __init__(self):
+    def __init__(self, width = 60, height = 13):
         self.frames = []
-        self.w = 60
-        self.h = 24
+        self.w = width
+        self.h = height
         self.t = 0
         self.cFrame = 0
     
