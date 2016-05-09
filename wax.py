@@ -1,5 +1,6 @@
 import time
 import curses
+from curses.textpad import Textbox
 import pdb
 import image
 
@@ -28,6 +29,14 @@ test.load(filename)
 
 editmode = False
 
+def validator(data):
+    if data == 0x1b:
+        return 7
+    if data >= 0x010a and data <= 0x0114:
+        #Fix
+        return data-0x010a
+    return data
+
 try:
     curses.initscr()
     window = curses.newwin(test.h+2,test.w+2,0,0)
@@ -40,6 +49,7 @@ try:
     curses.use_default_colors()
     curses.init_pair(1, curses.COLOR_GREEN, -1)
 
+    editbox = Textbox(window)
  
     cmd = 0
 
@@ -58,17 +68,25 @@ try:
         cmdwin.refresh()
         cmdwin.clear()
 
-        cmd = window.getch()
-
         if editmode:
-            if cmd == 0x1b:
-                editmode = False
-        else:      
-            if cmd == ord('i'):
-                editmode = True
-            if cmd == ord('q'):
-                break;
+            data = editbox.edit(validator)
+            #create validator to apply data to image
+            editmode = False
+        else: 
+            cmd = window.getch()
 
+            if editmode:
+                if cmd == 0x1b:
+                    editmode = False
+            else:      
+                if cmd == ord('i'):
+                    editmode = True
+                elif cmd == ord('q'):
+                    break;
+                elif cmd == ord('s'):
+                    test.save(filename)
+                elif cmd == ord('l'):
+                    test.load(filename)
 
 
 except:
