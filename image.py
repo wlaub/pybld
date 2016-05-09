@@ -74,6 +74,10 @@ class Frame():
             raw = self.writeLines(data, raw, height, width, i)
         return struct.pack("B", self.length)+''.join(raw)
 
+    def write(self, y, x, val, color):
+        #This needs to be done right
+        self.lines[color][(y,x)] = (self.decode(chr(val).upper()).encode(code))
+
 
     def _drawLines(self, window, lines, ypos=0, xpos=0, color = 0):
         for pos, data in lines.iteritems():
@@ -118,6 +122,9 @@ class Image():
             self.cFrame += 1
             if self.cFrame == len(self.frames):
                 self.cFrame = 0
+
+    def write(self, y, x, val, color=0):
+        self.frames[self.cFrame].write(y, x, val, color)
 
     def draw(self, window, ypos = 0, xpos = 0):
         self.frames[self.cFrame].draw(window, ypos, xpos)

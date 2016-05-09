@@ -1,8 +1,8 @@
-import time
+import time, sys, os
 import curses
 from curses.textpad import Textbox
 import pdb
-import image
+import image, waxutil
 
 """
 test = image.Frame()
@@ -37,6 +37,9 @@ def validator(data):
         return data-0x010a
     return data
 
+
+
+
 try:
     curses.initscr()
     window = curses.newwin(test.h+2,test.w+2,0,0)
@@ -45,16 +48,20 @@ try:
     cmdwin = curses.newwin(3, 60, test.h+2, 0)
 
     curses.noecho()
+    curses.mousemask(1)
     curses.start_color()
     curses.use_default_colors()
     curses.init_pair(1, curses.COLOR_GREEN, -1)
 
-    editbox = Textbox(window)
- 
+    window.keypad(1)
+
+    editbox = waxutil.EditWindow(window.subwin(test.h, test.w, 1,1))
+
     cmd = 0
+    color = 0
 
     while 1:
-        cmdStr =    [ "{mode} mode".format(mode = "Edit" if editmode else "Command")
+        cmdStr =    [ "{mode} mode | color: {color}".format(mode = "Edit" if editmode else "Command", color= "green" if color else "normal")
                     ,  "{name}: {w}x{h} - {cmd:04x}".format(w = test.w, h = test.h, cmd=cmd, name = filename)
                     , "i: edit | q: quit" 
                     ]
@@ -69,9 +76,7 @@ try:
         cmdwin.clear()
 
         if editmode:
-            data = editbox.edit(validator)
-            #create validator to apply data to image
-            editmode = False
+            editmode = editbox.edit(test, color)
         else: 
             cmd = window.getch()
 
@@ -83,6 +88,8 @@ try:
                     editmode = True
                 elif cmd == ord('q'):
                     break;
+                elif cmd == ord('g'):
+                    color = 1-color
                 elif cmd == ord('s'):
                     test.save(filename)
                 elif cmd == ord('l'):
