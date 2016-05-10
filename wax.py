@@ -36,7 +36,18 @@ for name in sys.argv[1:]:
 currName = images[imageIdx][1]
 currImg = images[imageIdx][0]
 
+def makeWindows(image):
+    window = curses.newwin(image.h+2,image.w+2,0,0)
+    cmdwin = curses.newwin(3, 60, image.h+2, 0)
+
+    window.keypad(1)
+
+    editbox = waxutil.EditWindow(window.subwin(image.h, image.w, 1,1))
+
+    return window, cmdwin, editbox
+
 def cycleImg(val):
+    global imageIdx, currName, currImg
     imageIdx += val
     if imageIdx < 0:
         imageIdx += len(images)
@@ -44,7 +55,7 @@ def cycleImg(val):
         imageIdx -= len(images)
     currName = images[imageIdx][1]
     currImg = images[imageIdx][0]
-    #resize editbox and stuff
+    return makeWindows(currImg)
 
 
 editmode = False
@@ -75,20 +86,14 @@ selCommands =   { 'c': 'crop'
 
 try:
     curses.initscr()
-    window = curses.newwin(currImg.h+2,currImg.w+2,0,0)
-    window.border()
-
-    cmdwin = curses.newwin(3, 60, currImg.h+2, 0)
-
     curses.noecho()
     curses.mousemask(1)
     curses.start_color()
     curses.use_default_colors()
     curses.init_pair(1, curses.COLOR_GREEN, -1)
 
-    window.keypad(1)
-
-    editbox = waxutil.EditWindow(window.subwin(currImg.h, currImg.w, 1,1))
+    window, cmdwin, editbox = makeWindows(currImg)
+    listwin = curses.newwin(24, 16, 0, 62)
 
     cmd = 0
     color = 0
@@ -121,6 +126,12 @@ try:
         editbox.drawSelect()
         if editmode or selectmode:
             window.addch(editbox.y+1, editbox.x+1, '*')
+
+        listwin.clear()
+        for i, val in enumerate(images):
+            listwin.addstr(i, 0, val[1][:16], curses.A_STANDOUT if i == imageIdx else 0)
+        
+        listwin.refresh()
         window.refresh()
         cmdwin.refresh()
         cmdwin.clear()
@@ -144,6 +155,10 @@ try:
                     currImg.incFrame(1) 
                 elif cmd == curses.KEY_LEFT:
                     currImg.incFrame(-1)
+                elif cmd == curses.KEY_UP:
+                    window, cmdwin, editbox = cycleImg(-1)
+                elif cmd == curses.KEY_DOWN:
+                    window, cmdwin, editbox = cycleImg(1)
                 elif cmd == ord('q'):
                     break;
                 elif cmd == ord('g'):
