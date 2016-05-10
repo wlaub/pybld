@@ -38,10 +38,12 @@ class Frame():
 
     def encode(self, val, green = 0):
         if val in self.deMap.keys():
-            val = chr(self.deMap[val])
+            val = self.deMap[val]
+        else:
+            val = ord(val)
         if green == 1:
             val |= 0x80
-        return val
+        return chr(val)
 
     def extractStrings(self, data, ypos):
         result = {}
