@@ -27,10 +27,16 @@ timg.save(filename)
 
 filename = "img/test.bmi"
 
-if len(sys.argv) > 1 and os.path.exists(sys.argv[1]):
+if len(sys.argv) > 1:
     filename = sys.argv[1]
 
+
+
 test = image.Image()
+
+if not os.path.exists(filename):
+    test.save(filename)
+
 test.load(filename)
 
 editmode = False

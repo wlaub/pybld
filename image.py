@@ -6,9 +6,6 @@ code = locale.getpreferredencoding()
 
 
 class Frame():
-    lines = [{}, {}]
-    arrays = [[],[]]
-    length = 1
 
     charMap =   { 1: unichr(0x2592)
                 , 2: unichr(0x2593)
@@ -17,10 +14,17 @@ class Frame():
 
     deMap = {}
 
-    def __init__(self):
+    def __init__(self, height = None, width = None):
         if len(self.deMap.keys()) == 0:
             for key,val in self.charMap.iteritems():
                 self.deMap[val] = key
+        self.lines = [{}, {}]
+        self.arrays = [[],[]]
+        self.length = 1
+        if height != None and width != None:
+            for i in range(len(self.arrays)):
+                self.arrays[i] = ['\x00']*width*height
+
 
     def decode(self, val):
         val = ord(val)&0x7F
@@ -97,14 +101,16 @@ class Frame():
 
 class Image():
 
-    def __init__(self, width = 60, height = 13):
+    def __init__(self, height = 13, width = 60):
         self.frames = []
         self.w = width
         self.h = height
         self.t = 0
         self.cFrame = 0
-    
+        self.frames.append(Frame(height, width))   
+ 
     def load(self, filename):
+        self.frames = []
         with open(filename, "rb") as f:
             self.h, self.w = struct.unpack("HH", f.read(4))
             fRaw = f.read(self.w*self.h+1)
