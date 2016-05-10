@@ -99,6 +99,7 @@ try:
     curses.start_color()
     curses.use_default_colors()
     curses.init_pair(1, curses.COLOR_GREEN, -1)
+    curses.init_pair(2, curses.COLOR_RED, -1)
 
     window, cmdwin, editbox = makeWindows(currImg)
     listwin = curses.newwin(24, 16, 0, 62)
@@ -139,7 +140,10 @@ try:
         listStart = max(imageIdx-12, 0)
         listEnd = min(listStart+24, len(images))
         for i, val in enumerate(images[listStart: listEnd]):
-            listwin.addstr(i, 0, val[1][:16], curses.A_STANDOUT if i == imageIdx else 0)
+            listwin.addstr  ( i, 0, val[1][:16]
+                            , (curses.A_STANDOUT if i == imageIdx else 0)
+                            | (curses.color_pair(2) if val[0].unsaved else curses.color_pair(0))
+                            )
         
         listwin.refresh()
         window.refresh()
