@@ -87,8 +87,12 @@ class Frame():
 
     def write(self, y, x, w, val, color):
         #This needs to be done right
-        self.arrays[color][y*w+x] = self.decode(chr(val).upper())
-        self.lines[color]= self.extractLines(self.arrays[color], w)
+        for i in range(len(self.arrays)):
+            if i == color:
+                self.arrays[color][y*w+x] = self.decode(chr(val).upper())
+            else:
+                self.arrays[i][y*w+x] = '\x00'
+            self.lines[i]= self.extractLines(self.arrays[i], w)
 
 
     def _drawLines(self, window, lines, ypos=0, xpos=0, color = 0):

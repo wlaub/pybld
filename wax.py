@@ -24,20 +24,28 @@ timg.frames.append(test)
 timg.save(filename)
 """
 
+images = []
+imageIdx = 0
 
-filename = "img/test.bmi"
+for name in sys.argv[1:]:
+    tImg = image.Image()
+    if os.path.exists(name):
+        tImg.load(name)
+    images.append((tImg, name))
 
-if len(sys.argv) > 1:
-    filename = sys.argv[1]
+currName = images[imageIdx][1]
+currImg = images[imageIdx][0]
 
+def cycleImg(val):
+    imageIdx += val
+    if imageIdx < 0:
+        imageIdx += len(images)
+    if imageIdx >= len(images):
+        imageIdx -= len(images)
+    currName = images[imageIdx][1]
+    currImg = images[imageIdx][0]
+    #resize editbox and stuff
 
-
-test = image.Image()
-
-if not os.path.exists(filename):
-    test.save(filename)
-
-test.load(filename)
 
 editmode = False
 drawalpha =False
@@ -49,9 +57,11 @@ infoStrings =   [ "{name} | {w} x {h} | ({x},{y}) | {frame}/{frameCount} | {leng
 
 commands =  { 'q': 'quit'
             , 'i': 'edit'
-            , 'n': 'new frame'
+            , 'f': 'new frame'
             , 's': 'save'
             , 'l': 'load'
+            , 'o': 'open'
+            , 'n': 'new'
             , 'a': 'show alpha'
             , 'p': 'play/pause'
             , '->': 'next frame'
@@ -64,10 +74,10 @@ selCommands =   { 'c': 'crop'
 
 try:
     curses.initscr()
-    window = curses.newwin(test.h+2,test.w+2,0,0)
+    window = curses.newwin(currImg.h+2,currImg.w+2,0,0)
     window.border()
 
-    cmdwin = curses.newwin(3, 60, test.h+2, 0)
+    cmdwin = curses.newwin(3, 60, currImg.h+2, 0)
 
     curses.noecho()
     curses.mousemask(1)
@@ -77,7 +87,7 @@ try:
 
     window.keypad(1)
 
-    editbox = waxutil.EditWindow(window.subwin(test.h, test.w, 1,1))
+    editbox = waxutil.EditWindow(window.subwin(currImg.h, currImg.w, 1,1))
 
     cmd = 0
     color = 0
@@ -87,14 +97,14 @@ try:
         info =  { 'mode': "Edit" if editmode else "command"
                 , 'color': "Green" if color else "normal"
                 , 'cmd': cmd
-                , 'name': filename
-                , 'w': test.w
-                , 'h': test.h
+                , 'name': currName
+                , 'w': currImg.w
+                , 'h': currImg.h
                 , 'x': editbox.x
                 , 'y': editbox.y
-                , 'frame': test.cFrame+1
-                , 'frameCount': len(test.frames)
-                , 'length': test.frames[test.cFrame].length
+                , 'frame': currImg.cFrame+1
+                , 'frameCount': len(currImg.frames)
+                , 'length': currImg.frames[currImg.cFrame].length
                 }
 
         for i, val in enumerate(infoStrings): 
@@ -102,11 +112,11 @@ try:
 
         window.clear()
         if drawalpha:
-            for y in range(test.h):
-                window.addstr(y+1, 1, ' '*test.w, curses.color_pair(2))
+            for y in range(currImg.h):
+                window.addstr(y+1, 1, ' '*currImg.w, curses.color_pair(2))
 
         window.border()
-        test.draw(window,1,1)        
+        currImg.draw(window,1,1)        
         if editmode:
             window.addch(editbox.y+1, editbox.x+1, '*')
         window.refresh()
@@ -114,7 +124,7 @@ try:
         cmdwin.clear()
 
         if editmode:
-            editmode = editbox.edit(test, color)
+            editmode = editbox.edit(currImg, color)
 
         else: 
             cmd = window.getch()
@@ -122,22 +132,22 @@ try:
             if cmd == ord('i'):
                 editmode = True
             elif cmd == curses.KEY_RIGHT:
-                test.incFrame(1) 
+                currImg.incFrame(1) 
             elif cmd == curses.KEY_LEFT:
-                test.incFrame(-1)
+                currImg.incFrame(-1)
             elif cmd == ord('q'):
                 break;
             elif cmd == ord('g'):
                 color = 1-color
             elif cmd == ord('s'):
-                test.save(filename)
+                currImg.save(filename)
             elif cmd == ord('l'):
-                test.load(filename)
+                currImg.load(filename)
             elif cmd == ord('a'):
                 drawalpha = not drawalpha
-            elif cmd == ord('n'):
-                test.addFrame(test.cFrame)
-                test.cFrame += 1
+            elif cmd == ord('f'):
+                currImg.addFrame(test.cFrame)
+                currImg.cFrame += 1
 
 except:
     curses.endwin()
