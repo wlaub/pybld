@@ -120,6 +120,9 @@ try:
                 test.load(filename)
             elif cmd == ord('a'):
                 drawalpha = not drawalpha
+            elif cmd == ord('n'):
+                test.addFrame(test.cFrame)
+                test.cFrame += 1
 
 except:
     curses.endwin()

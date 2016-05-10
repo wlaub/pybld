@@ -25,6 +25,10 @@ class Frame():
             for i in range(len(self.arrays)):
                 self.arrays[i] = ['\x00']*width*height
 
+    def copy(self, src):
+        self.lines = list(src.lines)
+        self.arrays = list(src.arrays)
+        self.length = src.length
 
     def decode(self, val):
         val = ord(val)&0x7F
@@ -72,8 +76,6 @@ class Frame():
 
         self.lines[0] = self.extractLines(self.arrays[0], width)
         self.lines[1] = self.extractLines(self.arrays[1], width)
-
-
 
     def save(self,  height, width):
         raw = ['\x00']*width*height
@@ -133,6 +135,11 @@ class Image():
             self.cFrame += len(self.frames)
         if self.cFrame >= len(self.frames):
             self.cFrame -= len(self.frames)
+
+    def addFrame(self, pos):
+        nFrame = Frame(self.h, self.w)
+        nFrame.copy(self.frames[pos])
+        self.frames.insert(pos+1, nFrame)
 
     def tick(self, delta):
         self.t += delta
