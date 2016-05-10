@@ -64,7 +64,7 @@ def getFileName(inwin):
     namewin.addstr(0,7,"ENTER NAME")
     namewin.refresh()
     tbox = Textbox(namewin.subwin(1, 23, cy+1, cx+1))
-    return tbox.edit()
+    return tbox.edit().strip()
 
 editmode = False
 selectmode = False
