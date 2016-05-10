@@ -42,10 +42,25 @@ test.load(filename)
 editmode = False
 drawalpha =False
 
-infoStrings =   [ "{mode} mode | Color: {color}"
-                , "{name} | {w} x {h} | ({x},{y}) | {frame}/{frameCount} | {length}"
+infoStrings =   [ "{name} | {w} x {h} | ({x},{y}) | {frame}/{frameCount} | {length}"
+                , "{mode} mode | Color: {color}"
                 , "i: edit | q: quit | 0x{cmd:04x}"
                 ]
+
+commands =  { 'q': 'quit'
+            , 'i': 'edit'
+            , 'n': 'new frame'
+            , 's': 'save'
+            , 'l': 'load'
+            , 'a': 'show alpha'
+            , 'p': 'play/pause'
+            , '->': 'next frame'
+            , '<-': 'prev frame'
+            , 'v': 'select'
+            }
+selCommands =   { 'c': 'crop'
+                , 'f': 'fill' 
+                }
 
 try:
     curses.initscr()

@@ -41,7 +41,7 @@ class EditWindow():
         elif char >= curses.KEY_F2 and char <= curses.KEY_F4:
             image.write(self.y, self.x, char-curses.KEY_F1, color)
         elif char == curses.KEY_BACKSPACE:
-            image.write(self.y, self.x, 0, 0)
+            image.write(self.y, self.x, 0, color)
         elif char == 0x1b:
             return False
         return True
