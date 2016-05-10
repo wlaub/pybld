@@ -36,6 +36,13 @@ for name in sys.argv[1:]:
 currName = images[imageIdx][1]
 currImg = images[imageIdx][0]
 
+def clamp(val, _min, _max):
+    if val < _min:
+        return _min
+    if val > _max:
+        return _max
+    return val
+
 def makeWindows(image):
     window = curses.newwin(image.h+2,image.w+2,0,0)
     cmdwin = curses.newwin(3, 60, image.h+2, 0)
@@ -128,7 +135,9 @@ try:
             window.addch(editbox.y+1, editbox.x+1, '*')
 
         listwin.clear()
-        for i, val in enumerate(images):
+        listStart = max(imageIdx-12, 0)
+        listEnd = min(listStart+24, len(images))
+        for i, val in enumerate(images[listStart: listEnd]):
             listwin.addstr(i, 0, val[1][:16], curses.A_STANDOUT if i == imageIdx else 0)
         
         listwin.refresh()
