@@ -4,25 +4,6 @@ from curses.textpad import Textbox
 import pdb
 import image, waxutil
 
-"""
-test = image.Frame()
-data = "\x01\x03\x03\x03\x03\x02AB\x02\x81\xc1\xc2\x81\x20\x20\x20\x20"
-data = ['\x01']
-data.extend(['\x03']*60*3)
-data.extend(['\x02']*60*3)
-data.extend(['\x01']*60*3)
-data.extend(['\x00']*60*3)
-
-
-data = ''.join(data)
-test.load(data, 13,60)
-
-
-filename = "img/test.bmi"
-timg = image.Image()
-timg.frames.append(test)
-timg.save(filename)
-"""
 
 images = []
 imageIdx = 0
@@ -64,6 +45,19 @@ def cycleImg(val):
     currImg = images[imageIdx][0]
     return makeWindows(currImg)
 
+def getFileName(inwin):
+    t, l = inwin.getbegyx()
+    b, r = inwin.getmaxyx()
+    b+= t
+    r+= l
+    cy = clamp((b+t)/2-1, t, b)
+    cx = clamp((l+r)/2-12, l, r)
+    namewin = curses.newwin(3, 25, cy, cx)
+    namewin.border()
+    namewin.addstr(0,7,"ENTER NAME")
+    namewin.refresh()
+    tbox = Textbox(namewin.subwin(1, 23, cy+1, cx+1))
+    return tbox.edit()
 
 editmode = False
 selectmode = False
@@ -183,6 +177,8 @@ try:
                     currImg.cFrame += 1
                 elif cmd == ord('v'):
                     selectmode = True
+                elif cmd == ord('o'):
+                    getFileName(window)
 
 except:
     curses.endwin()
