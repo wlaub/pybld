@@ -132,7 +132,7 @@ try:
             cmd = window.getch()
 
             if selectmode:
-                if editbox.select(cmd):
+                if editbox.select(cmd, currImg, color):
                     pass
                 else:
                     selectmode = False

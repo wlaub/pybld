@@ -15,7 +15,7 @@ class EditWindow():
         self.h, self.w = self.win.getmaxyx()
         self.sx = 0
         self.sy = 0
-        self.selectmode = False
+        self.selectmode = None
 
     def moveCursor(self, y, x):
         self.y += y
@@ -54,25 +54,40 @@ class EditWindow():
     def _stopSelect(self):
         self.selectmode = False
 
-    def select(self, cmd):
+    def _selectRange(self):
+        left = min(self.x, self.sx)
+        right = max(self.x, self.sx)
+        top = min(self.y, self.sy)
+        bottom = max(self.y, self.sy)
+        return left, right, top, bottom
+
+    def select(self, cmd, image, color):
         self.win.move(self.y, self.x)
         self._startSelect()
+        l, r, t, b = self._selectRange()
         if self.handleCursors(cmd):
             return True
         elif cmd == ord('f'):
+            for x in range(l, r+1):
+                for y in range(t, b+1):
+                    self.win.addch(y, x, curses.ACS_BULLET, curses.color_pair(color))
+            self.win.refresh()  
             fill = self.win.getch()
             char = self.cmdToChar(fill)
             if char != None:
-                for x in range(self.sx, self.x):
-                    for y in range(self.sy, self.y):
-                        pass
+                for x in range(l, r+1):
+                    for y in range(t, b+1):
+                        image.write(y, x, char, color)
+            else:
+                return True
         self._stopSelect()
         return False
 
 
     def drawSelect(self):
         if self.selectmode:
-            curses.textpad.rectangle(self.win, self.sy, self.sx, self.y, self.x)
+            l, r, t, b = self._selectRange()
+            curses.textpad.rectangle(self.win, t, l, b, r)
 
     def edit(self, image, color):
         self.win.move(self.y, self.x)
