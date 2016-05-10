@@ -121,6 +121,12 @@ class Image():
                 raw = frame.save(self.h, self.w)
                 f.write(raw)
 
+    def incFrame(self, val):
+        self.cFrame += val
+        if self.cFrame < 0:
+            self.cFrame += len(self.frames)
+        if self.cFrame >= len(self.frames):
+            self.cFrame -= len(self.frames)
 
     def tick(self, delta):
         self.t += delta

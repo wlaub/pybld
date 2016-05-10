@@ -36,16 +36,10 @@ test.load(filename)
 editmode = False
 drawalpha =False
 
-def validator(data):
-    if data == 0x1b:
-        return 7
-    if data >= 0x010a and data <= 0x0114:
-        #Fix
-        return data-0x010a
-    return data
-
-
-
+infoStrings =   [ "{mode} mode | Color: {color}"
+                , "{name} | {w} x {h} | ({x},{y}) | {frame}/{frameCount} | {length}"
+                , "i: edit | q: quit | 0x{cmd:04x}"
+                ]
 
 try:
     curses.initscr()
@@ -68,14 +62,22 @@ try:
     color = 0
 
     while 1:
-        cmdStr =    [ "{mode} mode | color: {color}".format(mode = "Edit" if editmode else "Command", color= "green" if color else "normal")
-                    ,  "{name}: {w}x{h} - {cmd:04x} - ({x},{y})".format(w = test.w, h = test.h, cmd=cmd, name = filename, x = editbox.x, y = editbox.y)
-                    , "i: edit | q: quit" 
-                    ]
 
+        info =  { 'mode': "Edit" if editmode else "command"
+                , 'color': "Green" if color else "normal"
+                , 'cmd': cmd
+                , 'name': filename
+                , 'w': test.w
+                , 'h': test.h
+                , 'x': editbox.x
+                , 'y': editbox.y
+                , 'frame': test.cFrame+1
+                , 'frameCount': len(test.frames)
+                , 'length': test.frames[test.cFrame].length
+                }
 
-        for i, val in enumerate(cmdStr): 
-            cmdwin.addstr(i,0,val)
+        for i, val in enumerate(infoStrings): 
+            cmdwin.addstr(i,0,val.format(**info))
 
         window.clear()
         if drawalpha:
@@ -98,6 +100,10 @@ try:
 
             if cmd == ord('i'):
                 editmode = True
+            elif cmd == curses.KEY_RIGHT:
+                test.incFrame(1) 
+            elif cmd == curses.KEY_LEFT:
+                test.incFrame(-1)
             elif cmd == ord('q'):
                 break;
             elif cmd == ord('g'):
