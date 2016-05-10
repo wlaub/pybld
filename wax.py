@@ -5,14 +5,21 @@ import pdb
 import image, waxutil
 
 
+
+
 images = []
 imageIdx = 0
 
-for name in sys.argv[1:]:
+def addFile(filename):
+    global images, imageIdx
     tImg = image.Image()
-    if os.path.exists(name):
-        tImg.load(name)
+    if os.path.exists(filename):
+        tImg.load(filename)
     images.append((tImg, name))
+
+
+for name in sys.argv[1:]:
+    addFile(name)
 
 currName = images[imageIdx][1]
 currImg = images[imageIdx][0]
@@ -167,9 +174,9 @@ try:
                 elif cmd == ord('g'):
                     color = 1-color
                 elif cmd == ord('s'):
-                    currImg.save(filename)
+                    currImg.save(currName)
                 elif cmd == ord('l'):
-                    currImg.load(filename)
+                    currImg.load(currName)
                 elif cmd == ord('a'):
                     drawalpha = not drawalpha
                 elif cmd == ord('f'):
@@ -178,7 +185,9 @@ try:
                 elif cmd == ord('v'):
                     selectmode = True
                 elif cmd == ord('o'):
-                    getFileName(window)
+                    name = getFileName(window)
+                    addFile(name)
+
 
 except:
     curses.endwin()

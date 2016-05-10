@@ -116,6 +116,7 @@ class Image():
         self.t = 0
         self.cFrame = 0
         self.frames.append(Frame(height, width))   
+        self.unsaved = True
  
     def load(self, filename):
         self.frames = []
@@ -127,13 +128,16 @@ class Image():
                 nFrame.load(fRaw, self.h, self.w)
                 self.frames.append(nFrame)
                 fRaw = f.read(self.w*self.h+1)
+            self.unsaved = False
 
     def save(self, filename):
+        
         with open(filename, "wb") as f:
             f.write(struct.pack("HH", self.h, self.w))
             for frame in self.frames:
                 raw = frame.save(self.h, self.w)
                 f.write(raw)
+            self.unsaved = False
 
     def incFrame(self, val):
         self.cFrame += val
@@ -156,6 +160,7 @@ class Image():
                 self.cFrame = 0
 
     def write(self, y, x, val, color=0):
+        self.unsaved = True
         self.frames[self.cFrame].write(y, x, self.w, val, color)
 
     def draw(self, window, ypos = 0, xpos = 0):
