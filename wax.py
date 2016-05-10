@@ -23,7 +23,13 @@ timg = image.Image()
 timg.frames.append(test)
 timg.save(filename)
 """
+
+
 filename = "img/test.bmi"
+
+if len(sys.argv) > 1 and os.path.exists(sys.argv[1]):
+    filename = sys.argv[1]
+
 test = image.Image()
 test.load(filename)
 

@@ -32,8 +32,9 @@ class EditWindow():
             self.moveCursor(0,1)
         elif char == curses.KEY_MOUSE:
             mouse = curses.getmouse() 
-            self.y = mouse[2]-1
-            self.x = mouse[1]-1
+            if self.win.enclose(mouse[2], mouse[1]):
+                self.y = mouse[2]-1
+                self.x = mouse[1]-1
         elif curses.ascii.isprint(char):
             image.write(self.y, self.x, char, color)
             self.moveCursor(0,1)
