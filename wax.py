@@ -48,6 +48,7 @@ def cycleImg(val):
 
 
 editmode = False
+selectmode = False
 drawalpha =False
 
 infoStrings =   [ "{name} | {w} x {h} | ({x},{y}) | {frame}/{frameCount} | {length}"
@@ -94,7 +95,7 @@ try:
 
     while 1:
 
-        info =  { 'mode': "Edit" if editmode else "command"
+        info =  { 'mode': "Edit" if editmode else "select" if selectmode else "command"
                 , 'color': "Green" if color else "normal"
                 , 'cmd': cmd
                 , 'name': currName
@@ -116,8 +117,9 @@ try:
                 window.addstr(y+1, 1, ' '*currImg.w, curses.color_pair(2))
 
         window.border()
-        currImg.draw(window,1,1)        
-        if editmode:
+        currImg.draw(window,1,1)
+        editbox.drawSelect()
+        if editmode or selectmode:
             window.addch(editbox.y+1, editbox.x+1, '*')
         window.refresh()
         cmdwin.refresh()
@@ -129,25 +131,34 @@ try:
         else: 
             cmd = window.getch()
 
-            if cmd == ord('i'):
-                editmode = True
-            elif cmd == curses.KEY_RIGHT:
-                currImg.incFrame(1) 
-            elif cmd == curses.KEY_LEFT:
-                currImg.incFrame(-1)
-            elif cmd == ord('q'):
-                break;
-            elif cmd == ord('g'):
-                color = 1-color
-            elif cmd == ord('s'):
-                currImg.save(filename)
-            elif cmd == ord('l'):
-                currImg.load(filename)
-            elif cmd == ord('a'):
-                drawalpha = not drawalpha
-            elif cmd == ord('f'):
-                currImg.addFrame(test.cFrame)
-                currImg.cFrame += 1
+            if selectmode:
+                if editbox.select(cmd):
+                    pass
+                else:
+                    selectmode = False
+
+            else:
+                if cmd == ord('i'):
+                    editmode = True
+                elif cmd == curses.KEY_RIGHT:
+                    currImg.incFrame(1) 
+                elif cmd == curses.KEY_LEFT:
+                    currImg.incFrame(-1)
+                elif cmd == ord('q'):
+                    break;
+                elif cmd == ord('g'):
+                    color = 1-color
+                elif cmd == ord('s'):
+                    currImg.save(filename)
+                elif cmd == ord('l'):
+                    currImg.load(filename)
+                elif cmd == ord('a'):
+                    drawalpha = not drawalpha
+                elif cmd == ord('f'):
+                    currImg.addFrame(test.cFrame)
+                    currImg.cFrame += 1
+                elif cmd == ord('v'):
+                    selectmode = True
 
 except:
     curses.endwin()
