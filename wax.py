@@ -59,7 +59,7 @@ def cycleImg(val):
     currImg = images[imageIdx][0]
     return makeWindows(currImg)
 
-def getString(inwin, title):
+def getString(inwin, title, init = None):
     t, l = inwin.getbegyx()
     b, r = inwin.getmaxyx()
     b+= t
@@ -69,8 +69,11 @@ def getString(inwin, title):
     namewin = curses.newwin(3, 25, cy, cx)
     namewin.border()
     namewin.addstr(0,12-len(title)/2, title)
+    editwin = namewin.subwin(1,23,cy+1,cx+1) 
+    if init != None:
+        editwin.addstr(0,0,init)
     namewin.refresh()
-    tbox = Textbox(namewin.subwin(1, 23, cy+1, cx+1))
+    tbox = Textbox(editwin)
     return tbox.edit().strip()
 
 def getInt(inwin, title):
@@ -123,7 +126,7 @@ try:
     curses.init_pair(1, curses.COLOR_GREEN, -1)
     curses.init_pair(2, curses.COLOR_RED, -1)
 
-    window, cmdwin, editbox = makeWindows(currImg)
+    makeWindows(currImg)
     listwin = curses.newwin(24, 16, 0, 62)
 
     cmd = 0
@@ -216,13 +219,13 @@ try:
                     twidth, theight = getSize(window)
                     #resize image here
                 elif cmd == ord('n'):
-                    name = getString(window, "ENTER NAME")
+                    name = getString(window, "ENTER NAME", "img/")
                     twidth, theight = getSize(window)
                     nImg = image.Image(theight, twidth)
                     images.append((nImg, name))
 
                 elif cmd == ord('o'):
-                    name = getString(window, "ENTER NAME")
+                    name = getString(window, "ENTER NAME", "img/")
                     if not os.path.exists(name):
                         #Do something about it
                         pass
