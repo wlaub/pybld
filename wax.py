@@ -57,7 +57,17 @@ def cycleImg(val):
         imageIdx -= len(images)
     currName = images[imageIdx][1]
     currImg = images[imageIdx][0]
-    return makeWindows(currImg)
+    clearWindows()
+    makeWindows(currImg)
+
+def closeImg():
+    global imageIdx, currName, currImg
+    del images[imageIdx]
+    imageIdx = clamp(imageIdx, 0, len(images)-1)
+    currName = images[imageIdx][1]
+    currImage = images[imageIdx][0]
+    clearWindows()
+    makeWindows(currImg)
 
 def centerWin(inwin, h, w):
     t, l = inwin.getbegyx()
@@ -225,10 +235,8 @@ try:
                 elif cmd == curses.KEY_LEFT:
                     currImg.incFrame(-1)
                 elif cmd == curses.KEY_UP:
-                    clearWindows()
                     cycleImg(-1)
                 elif cmd == curses.KEY_DOWN:
-                    clearWindows()
                     cycleImg(1)
                 elif cmd == ord('q'):
                     break;
@@ -262,7 +270,9 @@ try:
                     else:
                         addFile(name)
                 elif cmd == ord('c'):
-                    getConfirm(window, "Are you sure?")
+                    if getConfirm(window, "Are you sure?"):
+                        closeImg()
+                        
 
 except:
     curses.endwin()
