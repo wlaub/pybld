@@ -59,14 +59,18 @@ def cycleImg(val):
     currImg = images[imageIdx][0]
     return makeWindows(currImg)
 
-def getString(inwin, title, init = None):
+def centerWin(inwin, h, w):
     t, l = inwin.getbegyx()
     b, r = inwin.getmaxyx()
     b+= t
     r+= l
-    cy = clamp((b+t)/2-1, t, b)
-    cx = clamp((l+r)/2-12, l, r)
-    namewin = curses.newwin(3, 25, cy, cx)
+    cy = clamp((b+t)/2-h/2, t, b)
+    cx = clamp((l+r)/2-w/2, l, r)
+    nwin = curses.newwin(h, w, cy, cx)
+    return nwin, cy, cx
+
+def getString(inwin, title, init = None):
+    namewin, cy, cx = centerWin(inwin, 3, 25)
     namewin.border()
     namewin.addstr(0,12-len(title)/2, title)
     editwin = namewin.subwin(1,23,cy+1,cx+1) 
@@ -75,6 +79,7 @@ def getString(inwin, title, init = None):
     namewin.refresh()
     tbox = Textbox(editwin)
     return tbox.edit().strip()
+
 
 def getInt(inwin, title, init=None):
     i = None
