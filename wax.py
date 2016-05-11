@@ -1,11 +1,8 @@
-import time, sys, os
+import time, sys, os, thread
 import curses
 from curses.textpad import Textbox
 import pdb
 import image, waxutil
-
-
-
 
 images = []
 imageIdx = 0
@@ -130,6 +127,17 @@ def getSize(inwin, initw = None, inith = None):
 
     return w,h
 
+def animate():
+    global currImg, play, window
+    while 1:
+        time.sleep(.16)
+        if play:
+            currImg.tick(.16)
+            currImg.draw(window, 1, 1)
+            window.refresh()
+
+
+play = False
 editmode = False
 selectmode = False
 drawalpha =False
@@ -171,6 +179,8 @@ try:
 
     cmd = 0
     color = 0
+
+    thread.start_new_thread(animate, ())
 
     while 1:
 
@@ -254,6 +264,8 @@ try:
                     currImg.cFrame += 1
                 elif cmd == ord('v'):
                     selectmode = True
+                elif cmd == ord('p'):
+                    play = not play
                 elif cmd == ord('r'):
                     twidth, theight = getSize(window)
                     #resize image here

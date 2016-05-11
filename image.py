@@ -153,8 +153,8 @@ class Image():
 
     def tick(self, delta):
         self.t += delta
-        if self.t > self.frames[cFrame].length/8.:
-            self.t -= self.frames[cFrame].length/8
+        if self.t > self.frames[self.cFrame].length/8.:
+            self.t -= self.frames[self.cFrame].length/8.
             self.cFrame += 1
             if self.cFrame == len(self.frames):
                 self.cFrame = 0
