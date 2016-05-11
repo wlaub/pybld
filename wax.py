@@ -66,6 +66,21 @@ def getString(inwin, title):
     tbox = Textbox(namewin.subwin(1, 23, cy+1, cx+1))
     return tbox.edit().strip()
 
+def getInt(inwin, title):
+    i = None
+    while i == None:
+        try:
+            i = int(getString(inwin, title))
+        except:
+            pass
+    return i
+ 
+def getSize(inwin):
+    w = getInt(inwin, "ENTER WIDTH")
+    h = getInt(inwin, "ENTER HEIGHT")
+
+    return w,h
+
 editmode = False
 selectmode = False
 drawalpha =False
@@ -190,19 +205,7 @@ try:
                     selectmode = True
                 elif cmd == ord('n'):
                     name = getString(window, "ENTER NAME")
-                    twidth = None
-                    while twidth == None:
-                        try:
-                            twidth = int(getString(window, "ENTER WIDTH"))
-                        except:
-                            pdb.set_trace()
-                            pass
-                    theight = None
-                    while theight == None:
-                        try:
-                            theight = int(getString(window, "ENTER HEIGHT"))
-                        except:
-                            pass
+                    twidth, theight = getSize(window)
                     nImg = image.Image(twidth, theight)
                     images.append((nImg, name))
 
