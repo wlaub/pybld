@@ -52,7 +52,7 @@ def cycleImg(val):
     currImg = images[imageIdx][0]
     return makeWindows(currImg)
 
-def getFileName(inwin):
+def getString(inwin, title):
     t, l = inwin.getbegyx()
     b, r = inwin.getmaxyx()
     b+= t
@@ -61,7 +61,7 @@ def getFileName(inwin):
     cx = clamp((l+r)/2-12, l, r)
     namewin = curses.newwin(3, 25, cy, cx)
     namewin.border()
-    namewin.addstr(0,7,"ENTER NAME")
+    namewin.addstr(0,12-len(title)/2, title)
     namewin.refresh()
     tbox = Textbox(namewin.subwin(1, 23, cy+1, cx+1))
     return tbox.edit().strip()
@@ -128,7 +128,7 @@ try:
         window.clear()
         if drawalpha:
             for y in range(currImg.h):
-                window.addstr(y+1, 1, ' '*currImg.w, curses.color_pair(2))
+                window.addstr(y+1, 1, ' '*currImg.w, curses.color_pair(3))
 
         window.border()
         currImg.draw(window,1,1)
@@ -188,9 +188,31 @@ try:
                     currImg.cFrame += 1
                 elif cmd == ord('v'):
                     selectmode = True
+                elif cmd == ord('n'):
+                    name = getString(window, "ENTER NAME")
+                    twidth = None
+                    while twidth == None:
+                        try:
+                            twidth = int(getString(window, "ENTER WIDTH"))
+                        except:
+                            pdb.set_trace()
+                            pass
+                    theight = None
+                    while theight == None:
+                        try:
+                            theight = int(getString(window, "ENTER HEIGHT"))
+                        except:
+                            pass
+                    nImg = image.Image(twidth, theight)
+                    images.append((nImg, name))
+
                 elif cmd == ord('o'):
-                    name = getFileName(window)
-                    addFile(name)
+                    name = getString(window, "ENTER NAME")
+                    if not os.path.exists(name):
+                        #Do something about it
+                        pass
+                    else:
+                        addFile(name)
 
 
 except:
