@@ -76,18 +76,18 @@ def getString(inwin, title, init = None):
     tbox = Textbox(editwin)
     return tbox.edit().strip()
 
-def getInt(inwin, title):
+def getInt(inwin, title, init=None):
     i = None
     while i == None:
         try:
-            i = int(getString(inwin, title))
+            i = int(getString(inwin, title, init))
         except:
             pass
     return i
  
-def getSize(inwin):
-    w = getInt(inwin, "ENTER WIDTH")
-    h = getInt(inwin, "ENTER HEIGHT")
+def getSize(inwin, initw = None, inith = None):
+    w = getInt(inwin, "ENTER WIDTH", initw)
+    h = getInt(inwin, "ENTER HEIGHT", inith)
 
     return w,h
 
