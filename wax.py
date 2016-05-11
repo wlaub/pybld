@@ -79,12 +79,12 @@ def centerWin(inwin, h, w):
     nwin = curses.newwin(h, w, cy, cx)
     return nwin, cy, cx
 
-def getConfirm(inwin, title, yes="yes", no="NO"):
+def getConfirm(inwin, title, yes="yes", no="NO", default = True):
     width = max(len(title) + 2, len(yes)+len(no)+3)
     window, cy, cx = centerWin(inwin, 4, width)
     window.keypad(1)
     window.leaveok(1)
-    sel = True
+    sel = default
     while 1:
         window.clear()
         window.border()
@@ -239,7 +239,8 @@ try:
                 elif cmd == curses.KEY_DOWN:
                     cycleImg(1)
                 elif cmd == ord('q'):
-                    break;
+                    if getConfirm(window, "Are you sure?", default = False):
+                        break;
                 elif cmd == ord('g'):
                     color = 1-color
                 elif cmd == ord('s'):
