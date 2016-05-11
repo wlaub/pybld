@@ -260,7 +260,7 @@ try:
                 elif cmd == ord('a'):
                     drawalpha = not drawalpha
                 elif cmd == ord('f'):
-                    currImg.addFrame(test.cFrame)
+                    currImg.addFrame(currImg.cFrame)
                     currImg.cFrame += 1
                 elif cmd == ord('v'):
                     selectmode = True
