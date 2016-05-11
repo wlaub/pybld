@@ -132,9 +132,12 @@ def animate():
     while 1:
         time.sleep(.16)
         if play:
+            window.leaveok(1)
             currImg.tick(.16)
+            window.clear()
             currImg.draw(window, 1, 1)
             window.refresh()
+            window.leaveok(0)
 
 
 play = False
