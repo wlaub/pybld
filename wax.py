@@ -32,14 +32,21 @@ def clamp(val, _min, _max):
     return val
 
 def makeWindows(image):
+    global window, cmdwin, editbox
     window = curses.newwin(image.h+2,image.w+2,0,0)
-    cmdwin = curses.newwin(3, 60, image.h+2, 0)
+    cmdwin = curses.newwin(5, 62, image.h+2, 0)
 
     window.keypad(1)
 
     editbox = waxutil.EditWindow(window.subwin(image.h, image.w, 1,1))
 
-    return window, cmdwin, editbox
+
+def clearWindows():
+    global window, cmdwin
+    window.clear()
+    window.refresh()
+    cmdwin.clear()
+    cmdwin.refresh()
 
 def cycleImg(val):
     global imageIdx, currName, currImg
@@ -185,9 +192,11 @@ try:
                 elif cmd == curses.KEY_LEFT:
                     currImg.incFrame(-1)
                 elif cmd == curses.KEY_UP:
-                    window, cmdwin, editbox = cycleImg(-1)
+                    clearWindows()
+                    cycleImg(-1)
                 elif cmd == curses.KEY_DOWN:
-                    window, cmdwin, editbox = cycleImg(1)
+                    clearWindows()
+                    cycleImg(1)
                 elif cmd == ord('q'):
                     break;
                 elif cmd == ord('g'):
