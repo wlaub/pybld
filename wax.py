@@ -69,6 +69,30 @@ def centerWin(inwin, h, w):
     nwin = curses.newwin(h, w, cy, cx)
     return nwin, cy, cx
 
+def getConfirm(inwin, title, yes="yes", no="NO"):
+    width = max(len(title) + 2, len(yes)+len(no)+3)
+    window, cy, cx = centerWin(inwin, 4, width)
+    window.keypad(1)
+    window.leaveok(1)
+    sel = True
+    while 1:
+        window.clear()
+        window.border()
+        window.addstr(1, width/2 - len(title)/2, title)
+        window.addstr(2, 1, yes, curses.A_STANDOUT if sel == True else 0)
+        window.addstr(2, width-1-len(no), no, curses.A_STANDOUT if sel == False else 0)
+        window.refresh()
+        cmd = window.getch()
+        if cmd == curses.KEY_LEFT:
+            sel = True
+        elif cmd == curses.KEY_RIGHT:
+            sel = False
+        elif cmd == 0x0a:
+            break
+ 
+    return sel
+
+
 def getString(inwin, title, init = None):
     namewin, cy, cx = centerWin(inwin, 3, 25)
     namewin.border()
@@ -112,6 +136,7 @@ commands =  { 'q': 'quit'
             , 'l': 'load'
             , 'o': 'open'
             , 'n': 'new'
+            , 'c': 'close'
             , 'a': 'show alpha'
             , 'p': 'play/pause'
             , '->': 'next frame'
@@ -236,7 +261,8 @@ try:
                         pass
                     else:
                         addFile(name)
-
+                elif cmd == ord('c'):
+                    getConfirm(window, "Are you sure?")
 
 except:
     curses.endwin()
