@@ -203,10 +203,13 @@ try:
                     currImg.cFrame += 1
                 elif cmd == ord('v'):
                     selectmode = True
+                elif cmd == ord('r'):
+                    twidth, theight = getSize(window)
+                    #resize image here
                 elif cmd == ord('n'):
                     name = getString(window, "ENTER NAME")
                     twidth, theight = getSize(window)
-                    nImg = image.Image(twidth, theight)
+                    nImg = image.Image(theight, twidth)
                     images.append((nImg, name))
 
                 elif cmd == ord('o'):
