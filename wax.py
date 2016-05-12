@@ -144,6 +144,11 @@ def animate():
             window.refresh()
             window.leaveok(0)
 
+def curseName(val):
+    for key,v in curses.__dict__.iteritems():
+        if v == val:
+            return key
+
 
 play = False
 editmode = False
@@ -189,7 +194,6 @@ try:
     color = 0
 
     thread.start_new_thread(animate, ())
-
     while 1:
 
         info =  { 'mode': "Edit" if editmode else "select" if selectmode else "command"
@@ -293,6 +297,9 @@ try:
                 elif cmd == ord('c'):
                     if getConfirm(window, "Are you sure?"):
                         closeImg()
+                elif cmd == ord('~'):
+                    pdb.set_trace()
+                    
                         
 
 except:

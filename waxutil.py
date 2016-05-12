@@ -32,6 +32,14 @@ class EditWindow():
             self.moveCursor(0,-1)
         elif char == curses.KEY_RIGHT:
             self.moveCursor(0,1)
+        elif char == curses.KEY_SRIGHT:
+            self.x = self.w-1
+        elif char == curses.KEY_SLEFT:
+            self.x = 0
+        elif char == curses.KEY_SF:
+            self.y = self.h-1
+        elif char == curses.KEY_SR:
+            self.y = 0
         else:
             return False
         return True

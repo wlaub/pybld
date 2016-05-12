@@ -1,6 +1,5 @@
 
-Image resizing
-Image cropping
+Figure out how to catch F1 in curses
 Bucket fill?
 cursor move mode
 
