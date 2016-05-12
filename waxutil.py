@@ -12,6 +12,7 @@ class EditWindow():
         self.x = 0
         self.y = 0
         self.win.keypad(1)
+        self.win.leaveok(1)
         self.h, self.w = self.win.getmaxyx()
         self.sx = 0
         self.sy = 0
@@ -32,6 +33,14 @@ class EditWindow():
             self.moveCursor(0,-1)
         elif char == curses.KEY_RIGHT:
             self.moveCursor(0,1)
+        elif char == 0x20D: #ctrl+down
+            self.moveCursor(3,0)
+        elif char == 0x236: #ctrl+up
+            self.moveCursor(-3,0)
+        elif char == 0x221: #ctrl+left
+            self.moveCursor(0,-5)
+        elif char == 0x230: #ctrl+right
+            self.moveCursor(0,5)
         elif char == curses.KEY_SRIGHT:
             self.x = self.w-1
         elif char == curses.KEY_SLEFT:

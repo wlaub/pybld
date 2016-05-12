@@ -178,6 +178,7 @@ selCommands =   { 'c': 'crop'
                 , 'f': 'fill' 
                 }
 
+
 try:
     curses.initscr()
     curses.noecho()
