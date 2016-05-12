@@ -45,6 +45,11 @@ def clearWindows():
     cmdwin.clear()
     cmdwin.refresh()
 
+def remakeWindows():
+    global currImg
+    clearWindows()
+    makeWindows(currImg)
+
 def cycleImg(val):
     global imageIdx, currName, currImg
     imageIdx += val
@@ -239,7 +244,7 @@ try:
                     pass
                 else:
                     selectmode = False
-
+                    remakeWindows()
             else:
                 if cmd == ord('i'):
                     editmode = True

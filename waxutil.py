@@ -80,6 +80,9 @@ class EditWindow():
                         image.write(y, x, char, color)
             else:
                 return True
+        elif cmd == ord('c'):
+            image.resize(l, r+1, t, b+1)
+            return False
         self._stopSelect()
         return False
 

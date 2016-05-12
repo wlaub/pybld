@@ -86,7 +86,6 @@ class Frame():
         return struct.pack("B", self.length)+''.join(raw)
 
     def write(self, y, x, w, val, color):
-        #This needs to be done right
         for i in range(len(self.arrays)):
             if i == color:
                 self.arrays[color][y*w+x] = self.decode(chr(val).upper())
@@ -94,6 +93,19 @@ class Frame():
                 self.arrays[i][y*w+x] = '\x00'
             self.lines[i]= self.extractLines(self.arrays[i], w)
 
+    def resizeArray(self, data, h, w, l, r, t, b):
+        chunks = []
+        while len(data) > 0:
+            chunks.extend(data[l:r])
+            data = data[w:]
+        chunks = chunks[t*(r-l):b*(r-l)]
+        return chunks
+
+    def resize(self, h, w, l, r, t, b):
+        for i in range(len(self.arrays)):
+            self.arrays[i] = self.resizeArray(self.arrays[i], h, w, l, r, t, b)
+            self.lines[i] = self.extractLines(self.arrays[i], r-l)
+    
 
     def _drawLines(self, window, lines, ypos=0, xpos=0, color = 0):
         for pos, data in lines.iteritems():
@@ -138,6 +150,13 @@ class Image():
                 raw = frame.save(self.h, self.w)
                 f.write(raw)
             self.unsaved = False
+
+    def resize(self, l, r, t, b):
+        for f in self.frames:
+            f.resize(self.h, self.w, l, r, t, b)
+        self.h = b-t
+        self.w = r-l
+        self.unsaved = True
 
     def incFrame(self, val):
         self.cFrame += val

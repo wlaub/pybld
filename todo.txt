@@ -1,4 +1,11 @@
 
+Image resizing
+Image cropping
+Bucket fill?
+cursor move mode
+
+---------------------------------
+
 Fix stand mechanics for stand down, etc
 
 ---------------------------------
