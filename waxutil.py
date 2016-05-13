@@ -17,6 +17,7 @@ class EditWindow():
         self.sx = 0
         self.sy = 0
         self.selectmode = None
+        self.cchar = 1
 
     def moveCursor(self, y, x):
         self.y += y
@@ -62,6 +63,15 @@ class EditWindow():
             return 0
         return None
  
+    def pickChar(self):
+        cmd = self.win.getch()
+        char = self.cmdToChar(cmd)
+        if char != None:
+            self.cchar = char
+
+    def getChar(self):
+        return self.cchar
+
     def _startSelect(self):
         if not self.selectmode:
             self.selectmode = True
@@ -78,6 +88,9 @@ class EditWindow():
         bottom = max(self.y, self.sy)
         return left, right, top, bottom
 
+    def bucket(self, image, color):
+       image.bucket(self.y, self.x, self.getChar(), color) 
+
     def select(self, cmd, image, color):
         self.win.move(self.y, self.x)
         self._startSelect()
@@ -85,18 +98,9 @@ class EditWindow():
         if self.handleCursors(cmd):
             return True
         elif cmd == ord('f'):
-            for x in range(l, r+1):
+           for x in range(l, r+1):
                 for y in range(t, b+1):
-                    self.win.addch(y, x, curses.ACS_BULLET, curses.color_pair(color))
-            self.win.refresh()  
-            fill = self.win.getch()
-            char = self.cmdToChar(fill)
-            if char != None:
-                for x in range(l, r+1):
-                    for y in range(t, b+1):
-                        image.write(y, x, char, color)
-            else:
-                return True
+                    image.write(y, x, self.cchar, color)
         elif cmd == ord('c'):
             image.resize(l, r+1, t, b+1)
             return False

@@ -156,7 +156,7 @@ selectmode = False
 drawalpha =False
 
 infoStrings =   [ "{name} | {w} x {h} | ({x},{y}) | {frame}/{frameCount} | {length}"
-                , "{mode} mode | Color: {color}"
+                , "{mode} mode | Color: {color} | Char: {char}"
                 , "i: edit | q: quit | 0x{cmd:04x}"
                 ]
 
@@ -197,6 +197,7 @@ try:
     thread.start_new_thread(animate, ())
     while 1:
 
+        
         info =  { 'mode': "Edit" if editmode else "select" if selectmode else "command"
                 , 'color': "Green" if color else "normal"
                 , 'cmd': cmd
@@ -207,8 +208,9 @@ try:
                 , 'y': editbox.y
                 , 'frame': currImg.cFrame+1
                 , 'frameCount': len(currImg.frames)
-                , 'length': currImg.frames[currImg.cFrame].length
+                , 'length': currImg.frames[currImg.cFrame].length,
                 }
+        info['char'] = currImg.frames[0].transcode(editbox.getChar())
 
         for i, val in enumerate(infoStrings): 
             cmdwin.addstr(i,0,val.format(**info))
@@ -222,7 +224,7 @@ try:
         currImg.draw(window,1,1)
         editbox.drawSelect()
         if editmode or selectmode:
-            window.addch(editbox.y+1, editbox.x+1, '*')
+            window.addstr(editbox.y+1, editbox.x+1, info['char'], curses.color_pair(2))
 
         listwin.clear()
         listStart = max(imageIdx-12, 0)
@@ -276,9 +278,11 @@ try:
                     currImg.addFrame(currImg.cFrame)
                     currImg.cFrame += 1
                 elif cmd == ord('b'):
-                    currImg.bucket(editbox.y, editbox.x, '*', color)
+                    editbox.bucket(currImg, color)
                 elif cmd == ord('v'):
                     selectmode = True
+                elif cmd == ord('\\'):
+                    editbox.pickChar()
                 elif cmd == ord('p'):
                     play = not play
                 elif cmd == ord('r'):

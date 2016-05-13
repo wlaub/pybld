@@ -45,6 +45,12 @@ class Frame():
             val |= 0x80
         return chr(val)
 
+    def transcode(self, val):
+        result = chr(val).upper()
+        result = self.decode(result)
+        result = result.encode(code)
+        return result
+
     def extractStrings(self, data, ypos):
         result = {}
         for m in re.finditer('[^\x00]+', data):
@@ -61,6 +67,7 @@ class Frame():
             result.update(self.extractStrings(line, ypos))
             ypos += 1
         return result
+
 
     def writeLines(self, lines, raw, height, width, green):
         for key, val in lines.iteritems():
@@ -129,7 +136,7 @@ class Frame():
 
         #Do replaces
         for ty, tx in search:
-            self.write(ty, tx, w, ord(val), color)
+            self.write(ty, tx, w, val, color)
 
 
 
