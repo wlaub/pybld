@@ -275,6 +275,8 @@ try:
                 elif cmd == ord('f'):
                     currImg.addFrame(currImg.cFrame)
                     currImg.cFrame += 1
+                elif cmd == ord('b'):
+                    currImg.bucket(editbox.y, editbox.x, '*', color)
                 elif cmd == ord('v'):
                     selectmode = True
                 elif cmd == ord('p'):

@@ -93,6 +93,46 @@ class Frame():
                 self.arrays[i][y*w+x] = '\x00'
             self.lines[i]= self.extractLines(self.arrays[i], w)
 
+    def _bucketCheck(self, y, x, w, val, replace, color, search):
+        if (y,x) in search:
+            return False
+        if x < 0 or x >= w or y < 0:
+            return False
+        if y*w+x >= len(self.arrays[0]):
+            return False
+        for i, arr in enumerate(self.arrays):
+            if i == color:
+                if arr[y*w+x] != replace:
+                    return False
+            elif arr[y*w+x] != '\x00':
+                return False
+        return True
+
+    def bucket(self, y, x, w, val, color):
+        replace = '\x00'
+        for i, arr in enumerate(self.arrays):
+            temp = arr[y*w+x]
+            if temp != '\x00':
+                replace = temp
+                recolor = i
+        if replace == '\x00':
+            recolor = color 
+        search = [(y,x)]
+        found = True
+        while found:
+            found = False
+            for sy,sx in search:
+                for ty, tx in [(sy,sx+1),(sy,sx-1),(sy+1,sx),(sy-1,sx)]:
+                    if self._bucketCheck(ty, tx, w, val, replace, recolor, search):
+                        search.append((ty,tx))
+                        found = True
+
+        #Do replaces
+        for ty, tx in search:
+            self.write(ty, tx, w, ord(val), color)
+
+
+
     def resizeArray(self, data, h, w, l, r, t, b):
         chunks = []
         while len(data) > 0:
@@ -181,6 +221,9 @@ class Image():
     def write(self, y, x, val, color=0):
         self.unsaved = True
         self.frames[self.cFrame].write(y, x, self.w, val, color)
+
+    def bucket(self, y, x, val, color):
+        self.frames[self.cFrame].bucket(y, x, self.w, val, color)
 
     def draw(self, window, ypos = 0, xpos = 0):
         self.frames[self.cFrame].draw(window, ypos, xpos)
