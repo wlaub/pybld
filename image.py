@@ -1,4 +1,5 @@
 import struct, re
+import pdb
 import curses
 import locale
 locale.setlocale(locale.LC_ALL, '')
@@ -145,10 +146,18 @@ class Frame():
 
     def resizeArray(self, data, h, w, l, r, t, b):
         chunks = []
+        padx = []
+        sr = r
+        if r > w:
+            padx = ['\x00']*(r-w) 
+            sr = w
         while len(data) > 0:
-            chunks.extend(data[l:r])
+            chunks.extend(data[l:sr])
+            chunks.extend(padx)
             data = data[w:]
         chunks = chunks[t*(r-l):b*(r-l)]
+        if b > h:
+            chunks.extend(['\x00']*(r-l)*(b-h))
         return chunks
 
     def resize(self, h, w, l, r, t, b):

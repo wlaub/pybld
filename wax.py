@@ -128,7 +128,11 @@ def getInt(inwin, title, init=None):
  
 def getSize(inwin, initw = None, inith = None):
     w = getInt(inwin, "ENTER WIDTH", initw)
+    if w == -1:
+        return None, None
     h = getInt(inwin, "ENTER HEIGHT", inith)
+    if h == -1:
+        return None, None
 
     return w,h
 
@@ -287,12 +291,16 @@ try:
                     play = not play
                 elif cmd == ord('r'):
                     twidth, theight = getSize(window)
+                    if twidth != None:
+                        currImg.resize(0,twidth,0, theight)
+                        remakeWindows()
                     #resize image here
                 elif cmd == ord('n'):
                     name = getString(window, "ENTER NAME", "img/")
                     twidth, theight = getSize(window)
-                    nImg = image.Image(theight, twidth)
-                    images.append((nImg, name))
+                    if twidth != None:
+                        nImg = image.Image(theight, twidth)
+                        images.append((nImg, name))
 
                 elif cmd == ord('o'):
                     name = getString(window, "ENTER NAME", "img/")
