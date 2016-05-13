@@ -29,9 +29,10 @@ def clamp(val, _min, _max):
     return val
 
 def makeWindows(image):
-    global window, cmdwin, editbox
+    global window, cmdwin, editbox, helpwin
     window = curses.newwin(image.h+2,image.w+2,0,0)
-    cmdwin = curses.newwin(5, 62, image.h+2, 0)
+    cmdwin = curses.newwin(2, 62, image.h+2, 0)
+    helpwin = curses.newwin(7, 62, image.h+2+2, 0)
 
     window.keypad(1)
 
@@ -172,27 +173,8 @@ selectmode = False
 drawalpha =False
 
 infoStrings =   [ "{name} | {w} x {h} | ({x},{y}) | {frame}/{frameCount} | {length}"
-                , "{mode} mode | Color: {color} | Char: {char}"
-                , "i: edit | q: quit | 0x{cmd:04x}"
+                , "{mode} mode | Color: {color} | Char: {char} | 0x{cmd:04x}"
                 ]
-
-commands =  { 'q': 'quit'
-            , 'i': 'edit'
-            , 'f': 'new frame'
-            , 's': 'save'
-            , 'l': 'load'
-            , 'o': 'open'
-            , 'n': 'new'
-            , 'c': 'close'
-            , 'a': 'show alpha'
-            , 'p': 'play/pause'
-            , '->': 'next frame'
-            , '<-': 'prev frame'
-            , 'v': 'select'
-            }
-selCommands =   { 'c': 'crop'
-                , 'f': 'fill' 
-                }
 
 
 try:
@@ -209,6 +191,29 @@ try:
 
     cmd = 0
     color = 0
+    commands = [{ 'n': 'new'
+                , 's': 'save'
+                , 'l': 'load'
+                , 'o': 'open'
+                , 'c': 'close'
+                , 'q': 'quit'
+                },
+                { 'i': 'edit'
+                , 'v': 'select'
+                ,  'f': 'new frame'
+                , 'r': 'resize'
+                , '\\': 'set char'
+                },
+                { 'a': 'show alpha'
+                , 'p': 'play/pause'
+                , curses.ACS_LARROW: 'next frame'
+                , curses.ACS_RARROW: 'prev frame'
+                }]
+    selCommands =  [{ 'c': 'crop'
+                    , 'f': 'fill'
+                    , 'y': 'copy'
+                    }]
+
 
     thread.start_new_thread(animate, ())
     while 1:
@@ -252,6 +257,16 @@ try:
                             )
         
         listwin.refresh()
+
+        helpwin.clear()
+       
+        currCmds = selCommands if selectmode else commands 
+        for i, cmds in enumerate(currCmds):
+            for y, key in enumerate(cmds.keys()):
+                helpwin.addch(y, i*20, key, curses.A_STANDOUT)
+                helpwin.addstr(y, i*20+2, cmds[key][:])
+        helpwin.refresh()
+
         window.refresh()
         cmdwin.refresh()
         cmdwin.clear()
