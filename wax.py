@@ -154,6 +154,12 @@ def animate():
             window.refresh()
             window.leaveok(0)
 
+def validateName(name):
+    if os.path.exists(name):
+        if os.path.isdir(name):
+            return False 
+    return True
+
 def curseName(val):
     for key,v in curses.__dict__.iteritems():
         if v == val:
@@ -303,7 +309,7 @@ try:
                     #resize image here
                 elif cmd == ord('n'):
                     name = getString(window, "ENTER NAME", "img/")
-                    if name != None:
+                    if name != None and validateName(name):
                         twidth, theight = getSize(window)
                         if twidth != None:
                             nImg = image.Image(theight, twidth)
