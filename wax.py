@@ -105,7 +105,7 @@ def getConfirm(inwin, title, yes="yes", no="NO", default = True):
     return sel
 
 
-def getString(inwin, title, init = None):
+def getString(inwin, title, init = None, default = None):
     namewin, cy, cx = centerWin(inwin, 3, 25)
     namewin.border()
     namewin.addstr(0,12-len(title)/2, title)
@@ -114,14 +114,20 @@ def getString(inwin, title, init = None):
         editwin.addstr(0,0,init)
     namewin.refresh()
     tbox = Textbox(editwin)
-    return tbox.edit().strip()
+    result = tbox.edit().strip()
+    namewin.clear()
+    namewin.refresh()
+    if len(result) == 0:
+        return default
+    return result
+    
 
 
 def getInt(inwin, title, init=None):
     i = None
     while i == None:
         try:
-            i = int(getString(inwin, title, init))
+            i = int(getString(inwin, title, init, default = '-1'))
         except:
             pass
     return i
