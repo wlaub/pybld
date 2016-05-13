@@ -122,6 +122,8 @@ class Frame():
             if temp != '\x00':
                 replace = temp
                 recolor = i
+        if replace == val:
+            return False
         if replace == '\x00':
             recolor = color 
         search = [(y,x)]
@@ -138,6 +140,7 @@ class Frame():
         for ty, tx in search:
             self.write(ty, tx, w, val, color)
 
+        return True
 
 
     def resizeArray(self, data, h, w, l, r, t, b):
@@ -230,7 +233,8 @@ class Image():
         self.frames[self.cFrame].write(y, x, self.w, val, color)
 
     def bucket(self, y, x, val, color):
-        self.frames[self.cFrame].bucket(y, x, self.w, val, color)
+        if self.frames[self.cFrame].bucket(y, x, self.w, val, color):
+            self.unsaved = True
 
     def draw(self, window, ypos = 0, xpos = 0):
         self.frames[self.cFrame].draw(window, ypos, xpos)

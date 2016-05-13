@@ -1,7 +1,7 @@
 
 Fix lower right corner selection crash
 Figure out how to catch F1 in curses
-mark unsaved on bucket fill
+toggle cursor display in cmd mode
 cursor move mode
 
 
