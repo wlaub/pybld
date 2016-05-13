@@ -303,10 +303,11 @@ try:
                     #resize image here
                 elif cmd == ord('n'):
                     name = getString(window, "ENTER NAME", "img/")
-                    twidth, theight = getSize(window)
-                    if twidth != None:
-                        nImg = image.Image(theight, twidth)
-                        images.append((nImg, name))
+                    if name != None:
+                        twidth, theight = getSize(window)
+                        if twidth != None:
+                            nImg = image.Image(theight, twidth)
+                            images.append((nImg, name))
 
                 elif cmd == ord('o'):
                     name = getString(window, "ENTER NAME", "img/")
