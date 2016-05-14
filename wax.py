@@ -186,7 +186,7 @@ def parseCommand(cmd, commands):
     if cmd in commands.keys():
         data = commands[cmd]
         return parseCommandData(cmd, data)
-
+    return None, None, None
 
 def parseCommandName(name, commands):
     for key, data in commands.iteritems():
