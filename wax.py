@@ -265,8 +265,8 @@ try:
                 
                 , ord('a'): ['alpha', 'show alpha']
                 , ord('p'): ['play', 'play/pause']
-                , curses.KEY_LEFT: ['next frame']
-                , curses.KEY_RIGHT: ['prev frame']
+                , curses.KEY_RIGHT: ['next frame']
+                , curses.KEY_LEFT: ['prev frame']
                 , ord('?'): ['frame length']
                 , ord('\t'): ['cursor', 'toggle show cursor']
                 , ord('1'): ['scopy', 'toggle show copy' ]
