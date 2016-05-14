@@ -245,8 +245,8 @@ try:
 
     commandBlocks = [ ['new', 'save', 'load', 'open', 'close', 'quit']
                     , ['edit', 'select', 'frame', 'resize', 'char', 'paste', 'bucket']
-                    , ['alpha', 'play', 'next frame', 'prev frame', 'frame length', 'cursor', 'scopy']
-                    , ['prev img', 'next img']
+                    , ['alpha', 'play', 'frame length', 'cursor', 'scopy']
+                    , ['prev frame', 'next frame','prev img', 'next img']
                     ]
     commands = { ord('n'): ['new']
                 , ord('s'): ['save']
@@ -255,7 +255,7 @@ try:
                 , ord('c'): ['close']
                 , ord('q'): ['quit']
                 
-                ,  ord('i'): ['edit']
+                , ord('i'): ['edit']
                 , ord('v'): ['select']
                 , ord('f'): ['frame', 'new frame']
                 , ord('r'): ['resize']
