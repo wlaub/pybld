@@ -184,12 +184,16 @@ class Frame():
 
     def _drawLines(self, window, lines, ypos=0, xpos=0, color = 0):
         for pos, data in lines.iteritems():
-            window.addstr(pos[0]+ypos, pos[1]+xpos, data, curses.color_pair(color)) 
+            try:
+                window.addstr(pos[0]+ypos, pos[1]+xpos, data, curses.color_pair(color))
+            except:
+                pass
 
     def draw(self, window, ypos=0, xpos=0):
         for i, l in enumerate(self.lines):
             self._drawLines(window, l, ypos, xpos, i)
 
+    
 
 
  
