@@ -1,7 +1,6 @@
 
 Fix lower right corner selection crash
 
-Figure out how to catch F1 in curses
 cursor move mode
 set frame length
 

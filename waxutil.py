@@ -64,8 +64,10 @@ class EditWindow():
     def cmdToChar(self, cmd):
         if curses.ascii.isprint(cmd):
             return cmd
-        elif cmd >= curses.KEY_F2 and cmd <= curses.KEY_F4:
-            return cmd-curses.KEY_F1
+        elif cmd >= curses.KEY_F6 and cmd <= curses.KEY_F8:
+            return cmd -curses.KEY_F5
+        elif cmd == curses.KEY_F5:
+            return ord(' ')
         elif cmd == curses.KEY_BACKSPACE:
             return 0
         return None
