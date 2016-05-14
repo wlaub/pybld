@@ -17,7 +17,7 @@ learn to select area in vim
 learn to comment selection in vim
 figure out how to tell if a thing exists yet
 mark unsaved in paste
-make past overwrite colors
+fix paste offsets
 
 ---------------------------------
 

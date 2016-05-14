@@ -171,13 +171,14 @@ class Frame():
 
     def paste(self, yoff, xoff, h, w, nFrame, nh, nw):
         colorCount = min(len(self.arrays), len(nFrame.arrays))
-        for i in range(colorCount):
-            for y in range(nh):
-                for x in range(nw):
-                    if y < h and x < w:
+        for y in range(nh):
+            for x in range(nw):
+                if y < h and x < w:
+                    for i in range(colorCount):
                         val = nFrame.arrays[i][y*nw+x]
                         if val != '\x00':
-                            self.arrays[i][(y+yoff)*w+(x+xoff)] = val
+                            for j in range(colorCount):
+                                self.arrays[j][(y+yoff)*w+(x+xoff)] = val if i == j else '\x00'
         self.updateLines(w)
 
 
