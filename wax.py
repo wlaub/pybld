@@ -268,8 +268,8 @@ try:
                 , curses.KEY_RIGHT: ['next frame']
                 , curses.KEY_LEFT: ['prev frame']
                 , ord('?'): ['frame length']
-                , ord('\t'): ['cursor', 'toggle show cursor']
-                , ord('1'): ['scopy', 'toggle show copy' ]
+                , ord('\t'): ['cursor', 'show cursor']
+                , ord('1'): ['scopy', 'show copy' ]
                 
                 , curses.KEY_UP: ['prev img']
                 , curses.KEY_DOWN: ['next img']
