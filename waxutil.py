@@ -7,17 +7,24 @@ import image
 
 class EditWindow():
 
-    def __init__(self, window):
+    cchar = 1
+    copyFrame = None
+    copyW = 0
+    copyH = 0
+    x = 0
+    y = 0
+
+    def reset(self, window):
         self.win = window
-        self.x = 0
-        self.y = 0
         self.win.keypad(1)
         self.win.leaveok(1)
         self.h, self.w = self.win.getmaxyx()
         self.sx = 0
         self.sy = 0
         self.selectmode = None
-        self.cchar = 1
+
+    def __init__(self, window):
+        self.reset(window)
 
     def moveCursor(self, y, x):
         self.y += y
@@ -89,7 +96,11 @@ class EditWindow():
         return left, right, top, bottom
 
     def bucket(self, image, color):
-       image.bucket(self.y, self.x, self.getChar(), color) 
+        image.bucket(self.y, self.x, self.getChar(), color) 
+ 
+    def paste(self, image):
+        if self.copyFrame != None:
+            image.paste(self.y, self.x, self.copyFrame, self.copyH, self.copyW)
 
     def select(self, cmd, image, color):
         self.win.move(self.y, self.x)
@@ -104,6 +115,8 @@ class EditWindow():
         elif cmd == ord('c'):
             image.resize(l, r+1, t, b+1)
             return False
+        elif cmd == ord('y'):
+            self.copyFrame, self.copyH, self.copyW = image.copyArea(l, r+1, t, b+1)
         self._stopSelect()
         return False
 

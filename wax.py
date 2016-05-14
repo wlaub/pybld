@@ -20,6 +20,7 @@ for name in sys.argv[1:]:
 
 currName = images[imageIdx][1]
 currImg = images[imageIdx][0]
+editbox = None
 
 def clamp(val, _min, _max):
     if val < _min:
@@ -36,15 +37,19 @@ def makeWindows(image):
 
     window.keypad(1)
 
-    editbox = waxutil.EditWindow(window.subwin(image.h, image.w, 1,1))
+    if not editbox:
+        editbox = waxutil.EditWindow(window.subwin(image.h, image.w, 1,1))       
+    editbox.reset(window.subwin(image.h, image.w, 1,1))
 
 
 def clearWindows():
-    global window, cmdwin
+    global window, cmdwin, helpwin
     window.clear()
     window.refresh()
     cmdwin.clear()
     cmdwin.refresh()
+    helpwin.clear()
+    helpwin.refresh()
 
 def remakeWindows():
     global currImg
@@ -208,6 +213,7 @@ try:
                 , 'p': 'play/pause'
                 , curses.ACS_LARROW: 'next frame'
                 , curses.ACS_RARROW: 'prev frame'
+                , '?': 'frame length'
                 }]
     selCommands =  [{ 'c': 'crop'
                     , 'f': 'fill'
@@ -310,6 +316,8 @@ try:
                     currImg.cFrame += 1
                 elif cmd == ord('b'):
                     editbox.bucket(currImg, color)
+                elif cmd == ord('d'):
+                    editbox.paste(currImg)
                 elif cmd == ord('v'):
                     selectmode = True
                 elif cmd == ord('\\'):

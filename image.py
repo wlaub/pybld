@@ -69,6 +69,10 @@ class Frame():
             ypos += 1
         return result
 
+    def updateLines(self, width):
+        for i in range(len(self.arrays)):
+            self.lines[i] = self.extractLines(self.arrays[i], width)
+
 
     def writeLines(self, lines, raw, height, width, green):
         for key, val in lines.iteritems():
@@ -164,7 +168,18 @@ class Frame():
         for i in range(len(self.arrays)):
             self.arrays[i] = self.resizeArray(self.arrays[i], h, w, l, r, t, b)
             self.lines[i] = self.extractLines(self.arrays[i], r-l)
-    
+
+    def paste(self, yoff, xoff, h, w, nFrame, nh, nw):
+        colorCount = min(len(self.arrays), len(nFrame.arrays))
+        for i in range(colorCount):
+            for y in range(nh):
+                for x in range(nw):
+                    if y < h and x < w:
+                        val = nFrame.arrays[i][y*nw+x]
+                        if val != '\x00':
+                            self.arrays[i][(y+yoff)*w+(x+xoff)] = val
+        self.updateLines(w)
+
 
     def _drawLines(self, window, lines, ypos=0, xpos=0, color = 0):
         for pos, data in lines.iteritems():
@@ -244,6 +259,15 @@ class Image():
     def bucket(self, y, x, val, color):
         if self.frames[self.cFrame].bucket(y, x, self.w, val, color):
             self.unsaved = True
+
+    def copyArea(self, l, r, t, b):
+        nFrame = Frame(self.h, self.w)
+        nFrame.copy(self.frames[self.cFrame])
+        nFrame.resize(self.h, self.w, l, r, t, b)
+        return nFrame, b-t, r-l
+
+    def paste(self, y, x, nFrame, nh, nw):
+        self.frames[self.cFrame].paste(y, x, self.h, self.w, nFrame, nh, nw)
 
     def draw(self, window, ypos = 0, xpos = 0):
         self.frames[self.cFrame].draw(window, ypos, xpos)
