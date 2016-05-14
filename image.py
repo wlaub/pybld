@@ -273,6 +273,7 @@ class Image():
 
     def paste(self, y, x, nFrame, nh, nw):
         self.frames[self.cFrame].paste(y, x, self.h, self.w, nFrame, nh, nw)
+        self.unsaved = True
 
     def draw(self, window, ypos = 0, xpos = 0):
         self.frames[self.cFrame].draw(window, ypos, xpos)

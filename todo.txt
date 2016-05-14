@@ -1,22 +1,26 @@
 
 Fix lower right corner selection crash
+
 Figure out how to catch F1 in curses
-toggle cursor display in cmd mode
 cursor move mode
-copy and paste
 set frame length
+
 refactor updateLines into things
+
 Unsaved confirmation dialogs:
     load
     close
-Draw copies region somewhere  
+
 Refresh borders while playing
-Add paste command to help
+
 command dictionary with cmd name as key and button as value
-learn to select area in vim
-learn to comment selection in vim
-figure out how to tell if a thing exists yet
-mark unsaved in paste
+
+
+Add frame comparison
+Add image comparison
+change image to maintain last saved version, do comparisons to determine unsaved
+replace self.unsaved = True with self.checkSaved()
+
 
 ---------------------------------
 
