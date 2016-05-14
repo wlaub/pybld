@@ -166,6 +166,23 @@ def validateName(name):
             return False 
     return True
 
+
+def parseCommand(cmd, commands):
+    global charMap
+    for cmdSet in commands:
+        if cmd in cmdSet.keys():
+            data = cmdSet[cmd]
+            name = data[0]
+            if cmd in charMap.keys():
+                char = charMap[cmd]
+            else:
+                char = chr(cmd)
+            if len(data) > 1:
+                desc = data[1]
+            else:
+                desc = name
+            return name, char, desc
+
 def curseName(val):
     for key,v in curses.__dict__.iteritems():
         if v == val:
@@ -202,6 +219,10 @@ try:
 
     commands =  { 'new': ['n']
                 , 'save': ['s']
+                , 'load': ['l']
+                , 'open': ['o']
+                , 'close': ['c']
+                , 'quit': ['q']
                 }
 
     charMap =   { curses.KEY_LEFT: curses.ACS_LARROW
@@ -209,33 +230,37 @@ try:
                 , curses.KEY_UP: curses.ACS_UARROW
                 , curses.KEY_DOWN: curses.ACS_DARROW
                 }
-    charMap['\t'] =  unichr(0x21A6).encode(image.code)
+    charMap[ord('\t')] =  unichr(0x21A6).encode(image.code)
 
-    commands = [{ 'n': 'new'
-                , 's': 'save'
-                , 'l': 'load'
-                , 'o': 'open'
-                , 'c': 'close'
-                , 'q': 'quit'
+    commands = [{ ord('n'): ['new']
+                , ord('s'): ['save']
+                , ord('l'): ['load']
+                , ord('o'): ['open']
+                , ord('c'): ['close']
+                , ord('q'): ['quit']
                 },
-                { 'i': 'edit'
-                , 'v': 'select'
-                , 'f': 'new frame'
-                , 'r': 'resize'
-                , '\\':'set char'
-                , 'd': 'paste'
+                { ord('i'): ['edit']
+                , ord('v'): ['select']
+                , ord('f'): ['frame', 'new frame']
+                , ord('r'): ['resize']
+                , ord('\\'): ['char', 'set char']
+                , ord('d'): ['paste']
+                , ord('b'): ['bucket', 'bucket fill']
                 },
-                { 'a': 'show alpha'
-                , 'p': 'play/pause'
-                , curses.ACS_LARROW: 'next frame'
-                , curses.ACS_RARROW: 'prev frame'
-                , '?': 'frame length'
-                , charMap['\t']: 'toggle show cursor'
-                , '1': 'toggle show copy' 
+                { ord('a'): ['alpha', 'show alpha']
+                , ord('p'): ['play', 'play/pause']
+                , curses.KEY_LEFT: ['next frame']
+                , curses.KEY_RIGHT: ['prev frame']
+                , ord('?'): ['frame length']
+                , ord('\t'): ['cursor', 'toggle show cursor']
+                , ord('1'): ['scopy', 'toggle show copy' ]
+                },
+                { curses.KEY_UP: ['prev img']
+                , curses.KEY_DOWN: ['next img']
                 }]
-    selCommands =  [{ 'c': 'crop'
-                    , 'f': 'fill'
-                    , 'y': 'copy'
+    selCommands =  [{ ord('c'): ['crop']
+                    , ord('f'): ['fill']
+                    , ord('y'): ['copy']
                     }]
 
 
@@ -289,15 +314,20 @@ try:
         listwin.refresh()
 
         helpwin.clear()
-       
+      
+        hspace = 15 
         currCmds = selCommands if selectmode else commands 
         for i, cmds in enumerate(currCmds):
             for y, key in enumerate(cmds.keys()):
+                name, char, desc = parseCommand(key, currCmds)
                 try:
-                    helpwin.addch(y, i*20, key, curses.color_pair(4))
+                    helpwin.addch(y, i*hspace, char, curses.color_pair(4))
                 except:
-                    helpwin.addstr(y, i*20, key, curses.color_pair(4))
-                helpwin.addstr(y, i*20+2, cmds[key][:])
+                    helpwin.addstr(y, i*hspace, char, curses.color_pair(4))
+                try:
+                    helpwin.addstr(y, i*hspace+2, desc)
+                except:
+                    pass
         helpwin.refresh()
 
         window.refresh()
@@ -317,51 +347,52 @@ try:
                     selectmode = False
                     remakeWindows()
             else:
-                if cmd == ord('i'):
+                name, _, _ = parseCommand(cmd, commands)
+                if name == 'edit':
                     editmode = True
-                elif cmd == curses.KEY_RIGHT:
+                elif name == 'next frame':
                     currImg.incFrame(1) 
-                elif cmd == curses.KEY_LEFT:
+                elif name == 'prev frame':
                     currImg.incFrame(-1)
-                elif cmd == curses.KEY_UP:
+                elif name == 'prev img':
                     cycleImg(-1)
-                elif cmd == curses.KEY_DOWN:
+                elif name == 'next img':
                     cycleImg(1)
-                elif cmd == ord('q'):
+                elif name == 'quit':
                     if getConfirm(window, "Are you sure?", default = False):
                         break;
-                elif cmd == ord('g'):
+                elif name == 'color':
                     color = 1-color
-                elif cmd == ord('s'):
+                elif name == 'save':
                     currImg.save(currName)
-                elif cmd == ord('l'):
+                elif name == 'load':
                     currImg.load(currName)
-                elif cmd == ord('a'):
+                elif name == 'alpha':
                     drawalpha = not drawalpha
-                elif cmd == ord('f'):
+                elif name == 'frame':
                     currImg.addFrame(currImg.cFrame)
                     currImg.cFrame += 1
-                elif cmd == ord('b'):
+                elif name == 'bucket':
                     editbox.bucket(currImg, color)
-                elif cmd == ord('d'):
+                elif name == 'paste':
                     editbox.paste(currImg)
-                elif cmd == ord('v'):
+                elif name == 'select':
                     selectmode = True
-                elif cmd == ord('\t'):
+                elif name == 'cursor':
                     showcursor = not showcursor
-                elif cmd == ord('1'):
+                elif name == 'scopy':
                     showcopy = not showcopy
-                elif cmd == ord('\\'):
+                elif name == 'char':
                     editbox.pickChar()
-                elif cmd == ord('p'):
+                elif name == 'play':
                     play = not play
-                elif cmd == ord('r'):
+                elif name == 'resize':
                     twidth, theight = getSize(window)
                     if twidth != None:
                         currImg.resize(0,twidth,0, theight)
                         remakeWindows()
                     #resize image here
-                elif cmd == ord('n'):
+                elif name == 'new':
                     name = getString(window, "ENTER NAME", "img/")
                     if name != None and validateName(name):
                         twidth, theight = getSize(window)
@@ -369,17 +400,17 @@ try:
                             nImg = image.Image(theight, twidth)
                             images.append((nImg, name))
 
-                elif cmd == ord('o'):
+                elif name == 'open':
                     name = getString(window, "ENTER NAME", "img/")
                     if not os.path.exists(name):
                         #Do something about it
                         pass
                     else:
                         addFile(name)
-                elif cmd == ord('c'):
+                elif name == 'close':
                     if getConfirm(window, "Are you sure?"):
                         closeImg()
-                elif cmd == ord('~'):
+                elif name == 'debug':
                     pdb.set_trace()
                     
                         

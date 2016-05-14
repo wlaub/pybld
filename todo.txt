@@ -15,6 +15,7 @@ Refresh borders while playing
 
 command dictionary with cmd name as key and button as value
 
+make open check to see if already open
 
 Add frame comparison
 Add image comparison
