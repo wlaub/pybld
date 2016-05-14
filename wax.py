@@ -167,21 +167,32 @@ def validateName(name):
     return True
 
 
+def parseCommandData(cmd, data):
+    global charMap
+    name = data[0]
+    if cmd in charMap.keys():
+        char = charMap[cmd]
+    else:
+        char = chr(cmd)
+    if len(data) > 1:
+        desc = data[1]
+    else:
+        desc = name
+    return name, char, desc
+
+
 def parseCommand(cmd, commands):
     global charMap
-    for cmdSet in commands:
-        if cmd in cmdSet.keys():
-            data = cmdSet[cmd]
-            name = data[0]
-            if cmd in charMap.keys():
-                char = charMap[cmd]
-            else:
-                char = chr(cmd)
-            if len(data) > 1:
-                desc = data[1]
-            else:
-                desc = name
-            return name, char, desc
+    if cmd in commands.keys():
+        data = commands[cmd]
+        return parseCommandData(cmd, data)
+
+
+def parseCommandName(name, commands):
+    for key, data in commands.iteritems():
+        if data[0] == name:
+            return parseCommandData(key, data)
+
 
 def curseName(val):
     for key,v in curses.__dict__.iteritems():
@@ -232,36 +243,43 @@ try:
                 }
     charMap[ord('\t')] =  unichr(0x21A6).encode(image.code)
 
-    commands = [{ ord('n'): ['new']
+    commandBlocks = [ ['new', 'save', 'load', 'open', 'close', 'quit']
+                    , ['edit', 'select', 'frame', 'resize', 'char', 'paste', 'bucket']
+                    , ['alpha', 'play', 'next frame', 'prev frame', 'frame length', 'cursor', 'scopy']
+                    , ['prev img', 'next img']
+                    ]
+    commands = { ord('n'): ['new']
                 , ord('s'): ['save']
                 , ord('l'): ['load']
                 , ord('o'): ['open']
                 , ord('c'): ['close']
                 , ord('q'): ['quit']
-                },
-                { ord('i'): ['edit']
+                
+                ,  ord('i'): ['edit']
                 , ord('v'): ['select']
                 , ord('f'): ['frame', 'new frame']
                 , ord('r'): ['resize']
                 , ord('\\'): ['char', 'set char']
                 , ord('d'): ['paste']
                 , ord('b'): ['bucket', 'bucket fill']
-                },
-                { ord('a'): ['alpha', 'show alpha']
+                
+                , ord('a'): ['alpha', 'show alpha']
                 , ord('p'): ['play', 'play/pause']
                 , curses.KEY_LEFT: ['next frame']
                 , curses.KEY_RIGHT: ['prev frame']
                 , ord('?'): ['frame length']
                 , ord('\t'): ['cursor', 'toggle show cursor']
                 , ord('1'): ['scopy', 'toggle show copy' ]
-                },
-                { curses.KEY_UP: ['prev img']
+                
+                , curses.KEY_UP: ['prev img']
                 , curses.KEY_DOWN: ['next img']
-                }]
-    selCommands =  [{ ord('c'): ['crop']
+                }
+
+    selBlocks = [['crop', 'fill', 'copy']]
+    selCommands =   { ord('c'): ['crop']
                     , ord('f'): ['fill']
                     , ord('y'): ['copy']
-                    }]
+                    }
 
 
     thread.start_new_thread(animate, ())
@@ -316,14 +334,15 @@ try:
         helpwin.clear()
       
         hspace = 15 
-        currCmds = selCommands if selectmode else commands 
-        for i, cmds in enumerate(currCmds):
-            for y, key in enumerate(cmds.keys()):
-                name, char, desc = parseCommand(key, currCmds)
+        currBlocks = selBlocks if selectmode else commandBlocks 
+        currCmds = selCommands if selectmode else commands
+        for i, block in enumerate(currBlocks):
+            for y, n in enumerate(block):
+                n, sym, desc = parseCommandName(n, currCmds)
                 try:
-                    helpwin.addch(y, i*hspace, char, curses.color_pair(4))
+                    helpwin.addch(y, i*hspace, sym, curses.color_pair(4))
                 except:
-                    helpwin.addstr(y, i*hspace, char, curses.color_pair(4))
+                    helpwin.addstr(y, i*hspace, sym, curses.color_pair(4))
                 try:
                     helpwin.addstr(y, i*hspace+2, desc)
                 except:
