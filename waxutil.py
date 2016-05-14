@@ -126,6 +126,10 @@ class EditWindow():
             l, r, t, b = self._selectRange()
             curses.textpad.rectangle(self.win, t, l, b, r)
 
+    def drawCopy(self):
+        if self.copyFrame != None:
+            self.copyFrame.draw(self.win, self.y, self.x)
+
     def edit(self, image, color):
         self.win.move(self.y, self.x)
         cmd = self.win.getch()

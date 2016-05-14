@@ -176,6 +176,8 @@ play = False
 editmode = False
 selectmode = False
 drawalpha =False
+showcopy = False
+showcursor = False
 
 infoStrings =   [ "{name} | {w} x {h} | ({x},{y}) | {frame}/{frameCount} | {length}"
                 , "{mode} mode | Color: {color} | Char: {char} | 0x{cmd:04x}"
@@ -208,12 +210,15 @@ try:
                 ,  'f': 'new frame'
                 , 'r': 'resize'
                 , '\\': 'set char'
+                , 'd': 'paste'
                 },
                 { 'a': 'show alpha'
                 , 'p': 'play/pause'
                 , curses.ACS_LARROW: 'next frame'
                 , curses.ACS_RARROW: 'prev frame'
                 , '?': 'frame length'
+                , 'T': 'toggle show cursor'
+                , '1': 'toggle show copy' 
                 }]
     selCommands =  [{ 'c': 'crop'
                     , 'f': 'fill'
@@ -250,8 +255,10 @@ try:
         window.border()
         currImg.draw(window,1,1)
         editbox.drawSelect()
-        if editmode or selectmode:
+        if showcursor or editmode or selectmode:
             window.addstr(editbox.y+1, editbox.x+1, info['char'], curses.color_pair(2))
+        if showcopy:
+            editbox.drawCopy()
 
         listwin.clear()
         listStart = max(imageIdx-12, 0)
@@ -320,6 +327,10 @@ try:
                     editbox.paste(currImg)
                 elif cmd == ord('v'):
                     selectmode = True
+                elif cmd == ord('\t'):
+                    showcursor = not showcursor
+                elif cmd == ord('1'):
+                    showcopy = not showcopy
                 elif cmd == ord('\\'):
                     editbox.pickChar()
                 elif cmd == ord('p'):
