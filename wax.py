@@ -192,12 +192,25 @@ try:
     curses.use_default_colors()
     curses.init_pair(1, curses.COLOR_GREEN, -1)
     curses.init_pair(2, curses.COLOR_RED, -1)
+    curses.init_pair(4, curses.COLOR_BLUE, -1)
 
     makeWindows(currImg)
     listwin = curses.newwin(24, 16, 0, 62)
 
     cmd = 0
     color = 0
+
+    commands =  { 'new': ['n']
+                , 'save': ['s']
+                }
+
+    charMap =   { curses.KEY_LEFT: curses.ACS_LARROW
+                , curses.KEY_RIGHT: curses.ACS_RARROW
+                , curses.KEY_UP: curses.ACS_UARROW
+                , curses.KEY_DOWN: curses.ACS_DARROW
+                }
+    charMap['\t'] =  unichr(0x21A6).encode(image.code)
+
     commands = [{ 'n': 'new'
                 , 's': 'save'
                 , 'l': 'load'
@@ -207,9 +220,9 @@ try:
                 },
                 { 'i': 'edit'
                 , 'v': 'select'
-                ,  'f': 'new frame'
+                , 'f': 'new frame'
                 , 'r': 'resize'
-                , '\\': 'set char'
+                , '\\':'set char'
                 , 'd': 'paste'
                 },
                 { 'a': 'show alpha'
@@ -217,7 +230,7 @@ try:
                 , curses.ACS_LARROW: 'next frame'
                 , curses.ACS_RARROW: 'prev frame'
                 , '?': 'frame length'
-                , 'T': 'toggle show cursor'
+                , charMap['\t']: 'toggle show cursor'
                 , '1': 'toggle show copy' 
                 }]
     selCommands =  [{ 'c': 'crop'
@@ -260,6 +273,10 @@ try:
         if showcopy:
             editbox.drawCopy()
 
+#        for key in curses.__dict__.keys():
+#            if 'ACS' in key:
+#                window.addch(curses.__dict__[key])
+
         listwin.clear()
         listStart = max(imageIdx-12, 0)
         listEnd = min(listStart+24, len(images))
@@ -276,7 +293,10 @@ try:
         currCmds = selCommands if selectmode else commands 
         for i, cmds in enumerate(currCmds):
             for y, key in enumerate(cmds.keys()):
-                helpwin.addch(y, i*20, key, curses.A_STANDOUT)
+                try:
+                    helpwin.addch(y, i*20, key, curses.color_pair(4))
+                except:
+                    helpwin.addstr(y, i*20, key, curses.color_pair(4))
                 helpwin.addstr(y, i*20+2, cmds[key][:])
         helpwin.refresh()
 
