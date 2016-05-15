@@ -209,7 +209,7 @@ class Image():
         self.frames.append(Frame(height, width))   
         self.unsaved = True
 
-    def checkSaved():
+    def checkSaved(self):
         self.unsaved = True
  
     def load(self, filename):
