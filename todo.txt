@@ -1,8 +1,9 @@
 
 Fix lower right corner selection crash
 
-cursor move mode
 set frame length
+
+Better solutin for freshing images after command
 
 refactor updateLines into things
 

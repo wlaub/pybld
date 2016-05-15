@@ -110,6 +110,16 @@ def getConfirm(inwin, title, yes="yes", no="NO", default = True):
  
     return sel
 
+def confirmUnsaved(curr = False):
+    global window, images, currImg
+    if curr:
+        if currImg.unsaved:
+            return getConfirm(window, "DISCARD CHANGES?", default = False)
+    else:
+        for img, name in images:
+            if img.unsaved:
+                return getConfirm(window, "DISCARD CHANGES?", default = False)
+    return True
 
 def getString(inwin, title, init = None, default = None):
     namewin, cy, cx = centerWin(inwin, 3, 25)
@@ -388,14 +398,15 @@ try:
                 elif name == 'next img':
                     cycleImg(1)
                 elif name == 'quit':
-                    if getConfirm(window, "Are you sure?", default = False):
+                    if confirmUnsaved():
                         break;
                 elif name == 'color':
                     color = 1-color
                 elif name == 'save':
                     currImg.save(currName)
                 elif name == 'load':
-                    currImg.load(currName)
+                    if confirmUnsaved(True):
+                        currImg.load(currName)
                 elif name == 'alpha':
                     drawalpha = not drawalpha
                 elif name == 'frame':
@@ -430,8 +441,7 @@ try:
                 elif name == 'open':
                     name = getString(window, "ENTER NAME", "img/")
                     if not os.path.exists(name):
-                        #Do something about it
-                        pass
+                        getConfirm(window, "Does not exist", "ok", "OK")
                     else:
                         addFile(name)
                 elif name == 'up':
@@ -443,7 +453,7 @@ try:
                 elif name == 'right':
                     editbox.moveCursor(0,1)
                 elif name == 'close':
-                    if getConfirm(window, "Are you sure?"):
+                    if confirmUnsaved(True):
                         closeImg()
                 elif name == 'debug':
                     pdb.set_trace()
