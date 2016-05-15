@@ -126,7 +126,22 @@ class EditWindow():
     def drawSelect(self):
         if self.selectmode:
             l, r, t, b = self._selectRange()
-            curses.textpad.rectangle(self.win, t, l, b, r)
+            try:
+                self.win.leaveok(1)
+
+                if r>l:
+                    self.win.hline(t, l+1, curses.ACS_HLINE, r - l - 1)
+                    self.win.hline(b, l+1, curses.ACS_HLINE, r - l - 1)
+                if b > t:
+                    self.win.vline(t+1, l, curses.ACS_VLINE, b - t - 1)
+                    self.win.vline(t+1, r, curses.ACS_VLINE, b - t - 1)
+                self.win.addch(t, l, curses.ACS_PLUS)
+                self.win.addch(t, r, curses.ACS_PLUS)
+
+                self.win.addch(b, l, curses.ACS_PLUS)
+                self.win.addch(b, r, curses.ACS_PLUS)
+            except:
+                pass
 
     def drawCopy(self):
         if self.copyFrame != None:
