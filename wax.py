@@ -176,34 +176,6 @@ def validateName(name):
             return False 
     return True
 
-
-def parseCommandData(cmd, data):
-    global charMap
-    name = data[0]
-    if cmd in charMap.keys():
-        char = charMap[cmd]
-    else:
-        char = chr(cmd)
-    if len(data) > 1:
-        desc = data[1]
-    else:
-        desc = name
-    return name, char, desc
-
-
-def parseCommand(cmd, commands):
-    global charMap
-    if cmd in commands.keys():
-        data = commands[cmd]
-        return parseCommandData(cmd, data)
-    return None, None, None
-
-def parseCommandName(name, commands):
-    for key, data in commands.iteritems():
-        if data[0] == name:
-            return parseCommandData(key, data)
-
-
 def curseName(val):
     for key,v in curses.__dict__.iteritems():
         if v == val:
@@ -238,69 +210,8 @@ try:
     cmd = 0
     color = 0
 
-    commands =  { 'new': ['n']
-                , 'save': ['s']
-                , 'load': ['l']
-                , 'open': ['o']
-                , 'close': ['c']
-                , 'quit': ['q']
-                }
-
-    charMap =   { curses.KEY_LEFT: curses.ACS_LARROW
-                , curses.KEY_RIGHT: curses.ACS_RARROW
-                , curses.KEY_UP: curses.ACS_UARROW
-                , curses.KEY_DOWN: curses.ACS_DARROW
-                , curses.KEY_SLEFT: curses.ACS_LARROW
-                , curses.KEY_SRIGHT: curses.ACS_RARROW
-                , curses.KEY_SR: curses.ACS_UARROW
-                , curses.KEY_SF: curses.ACS_DARROW
-
-                }
-    charMap[ord('\t')] =  unichr(0x21A6).encode(image.code)
-
-    commandBlocks = [ ['new', 'save', 'load', 'open', 'close', 'quit']
-                    , ['edit', 'select', 'paste', 'char', 'color', 'bucket', 'resize']
-                    , ['frame', 'frame length', 'next frame', 'prev frame']
-                    , ['play', 'alpha', 'cursor', 'scopy', 'prev img', 'next img']
-                    ]
-    commands = { ord('n'): ['new']
-                , ord('s'): ['save']
-                , ord('l'): ['load']
-                , ord('o'): ['open']
-                , ord('c'): ['close']
-                , ord('q'): ['quit']
-                
-                , ord('i'): ['edit']
-                , ord('v'): ['select']
-                , ord('f'): ['frame', 'new frame']
-                , ord('r'): ['resize']
-                , ord('\\'): ['char', 'set char']
-                , ord('d'): ['paste']
-                , ord('b'): ['bucket', 'bucket fill']
-                , ord('g'): ['color', 'toggle color']
-                
-                , ord('a'): ['alpha', 'show alpha']
-                , ord('p'): ['play', 'play/pause']
-                , curses.KEY_RIGHT: ['next frame']
-                , curses.KEY_LEFT: ['prev frame']
-                , ord('?'): ['frame length']
-                , ord('\t'): ['cursor', 'show cursor']
-                , ord('1'): ['scopy', 'show copy' ]
-                
-                , curses.KEY_UP: ['prev img']
-                , curses.KEY_DOWN: ['next img']
-                , curses.KEY_SR: ['up']
-                , curses.KEY_SF: ['down']
-                , curses.KEY_SLEFT: ['left']
-                , curses.KEY_SRIGHT: ['right']
-                }
-
-    selBlocks = [['crop', 'fill', 'copy']]
-    selCommands =   { ord('c'): ['crop']
-                    , ord('f'): ['fill']
-                    , ord('y'): ['copy']
-                    }
-
+    commands = waxutil.CommandMap()
+    selCommands = waxutil.SelMap()
 
     thread.start_new_thread(animate, ())
     while 1:
@@ -352,21 +263,10 @@ try:
         listwin.refresh()
 
         helpwin.clear()
-      
-        hspace = 15 
-        currBlocks = selBlocks if selectmode else commandBlocks 
+
         currCmds = selCommands if selectmode else commands
-        for i, block in enumerate(currBlocks):
-            for y, n in enumerate(block):
-                n, sym, desc = parseCommandName(n, currCmds)
-                try:
-                    helpwin.addch(y, i*hspace, sym, curses.color_pair(4))
-                except:
-                    helpwin.addstr(y, i*hspace, sym, curses.color_pair(4))
-                try:
-                    helpwin.addstr(y, i*hspace+2, desc)
-                except:
-                    pass
+        currCmds.draw(helpwin)      
+
         helpwin.refresh()
 
         window.refresh()
@@ -386,7 +286,7 @@ try:
                     selectmode = False
                     remakeWindows()
             else:
-                name, _, _ = parseCommand(cmd, commands)
+                name, _, _ = commands.parseCommand(cmd)
                 if name == 'edit':
                     editmode = True
                 elif name == 'next frame':
