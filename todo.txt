@@ -17,8 +17,57 @@ make open check to see if already open
 Add frame comparison
 Add image comparison
 change image to maintain last saved version, do comparisons to determine unsaved
+add image edit buffer
 replace self.unsaved = True with self.checkSaved()
+map command blocks to keyboard blocks better
 
+Save
+loaD
+neW
+opEn
+Quit
+Close
+
+8 File operations
+save, load, new, open, close, quit
+next image, prev image
+
+q   Quit
+w   neW
+e   opEn
+s   Save
+d   loaD
+c   Close
+a
+z
+x
+
+7 Edit operations
+edit, select, resize, set char, paste, fill
+undo/redo?
+
+t   ediT
+v   v(select)
+r   Resize
+f   Fill
+y   Get char
+b   (paste)
+g    color
+
+4 Structure operations
+add frame, frame length, prev, next frame
+n   New frame
+h   lengHt
+
+
+Configuration operations
+play, alpha, show cursor, show copy
+
+p   Play
+o   copy
+l
+i   alpha
+k   cursor
 
 ---------------------------------
 

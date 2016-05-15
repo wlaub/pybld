@@ -244,9 +244,9 @@ try:
     charMap[ord('\t')] =  unichr(0x21A6).encode(image.code)
 
     commandBlocks = [ ['new', 'save', 'load', 'open', 'close', 'quit']
-                    , ['edit', 'select', 'frame', 'resize', 'char', 'paste', 'bucket']
-                    , ['alpha', 'play', 'frame length', 'cursor', 'scopy']
-                    , ['prev frame', 'next frame','prev img', 'next img']
+                    , ['edit', 'select', 'paste', 'char', 'color', 'bucket', 'resize']
+                    , ['frame', 'frame length', 'next frame', 'prev frame']
+                    , ['play', 'alpha', 'cursor', 'scopy', 'prev img', 'next img']
                     ]
     commands = { ord('n'): ['new']
                 , ord('s'): ['save']
@@ -262,6 +262,7 @@ try:
                 , ord('\\'): ['char', 'set char']
                 , ord('d'): ['paste']
                 , ord('b'): ['bucket', 'bucket fill']
+                , ord('g'): ['color', 'toggle color']
                 
                 , ord('a'): ['alpha', 'show alpha']
                 , ord('p'): ['play', 'play/pause']
