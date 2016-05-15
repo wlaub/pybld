@@ -240,6 +240,11 @@ try:
                 , curses.KEY_RIGHT: curses.ACS_RARROW
                 , curses.KEY_UP: curses.ACS_UARROW
                 , curses.KEY_DOWN: curses.ACS_DARROW
+                , curses.KEY_SLEFT: curses.ACS_LARROW
+                , curses.KEY_SRIGHT: curses.ACS_RARROW
+                , curses.KEY_SR: curses.ACS_UARROW
+                , curses.KEY_SF: curses.ACS_DARROW
+
                 }
     charMap[ord('\t')] =  unichr(0x21A6).encode(image.code)
 
@@ -274,6 +279,10 @@ try:
                 
                 , curses.KEY_UP: ['prev img']
                 , curses.KEY_DOWN: ['next img']
+                , curses.KEY_SR: ['up']
+                , curses.KEY_SF: ['down']
+                , curses.KEY_SLEFT: ['left']
+                , curses.KEY_SRIGHT: ['right']
                 }
 
     selBlocks = [['crop', 'fill', 'copy']]
@@ -411,7 +420,6 @@ try:
                     if twidth != None:
                         currImg.resize(0,twidth,0, theight)
                         remakeWindows()
-                    #resize image here
                 elif name == 'new':
                     name = getString(window, "ENTER NAME", "img/")
                     if name != None and validateName(name):
@@ -419,7 +427,6 @@ try:
                         if twidth != None:
                             nImg = image.Image(theight, twidth)
                             images.append((nImg, name))
-
                 elif name == 'open':
                     name = getString(window, "ENTER NAME", "img/")
                     if not os.path.exists(name):
@@ -427,6 +434,14 @@ try:
                         pass
                     else:
                         addFile(name)
+                elif name == 'up':
+                    editbox.moveCursor(-1,0)
+                elif name == 'down':
+                    editbox.moveCursor(1,0)
+                elif name == 'left':
+                    editbox.moveCursor(0,-1)
+                elif name == 'right':
+                    editbox.moveCursor(0,1)
                 elif name == 'close':
                     if getConfirm(window, "Are you sure?"):
                         closeImg()

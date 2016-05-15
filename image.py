@@ -222,7 +222,7 @@ class Image():
                 nFrame.load(fRaw, self.h, self.w)
                 self.frames.append(nFrame)
                 fRaw = f.read(self.w*self.h+1)
-            self.markChanged()
+            self.unsaved = False
 
     def save(self, filename):
         
