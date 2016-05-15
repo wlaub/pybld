@@ -209,7 +209,7 @@ class Image():
         self.frames.append(Frame(height, width))   
         self.unsaved = True
 
-    def checkSaved(self):
+    def markChanged(self):
         self.unsaved = True
  
     def load(self, filename):
@@ -222,7 +222,7 @@ class Image():
                 nFrame.load(fRaw, self.h, self.w)
                 self.frames.append(nFrame)
                 fRaw = f.read(self.w*self.h+1)
-            self.checkSaved()
+            self.markChanged()
 
     def save(self, filename):
         
@@ -238,7 +238,7 @@ class Image():
             f.resize(self.h, self.w, l, r, t, b)
         self.h = b-t
         self.w = r-l
-        self.checkSaved()
+        self.markChanged()
 
     def incFrame(self, val):
         self.cFrame += val
@@ -262,11 +262,11 @@ class Image():
 
     def write(self, y, x, val, color=0):
         self.frames[self.cFrame].write(y, x, self.w, val, color)
-        self.checkSaved()
+        self.markChanged()
 
     def bucket(self, y, x, val, color):
         if self.frames[self.cFrame].bucket(y, x, self.w, val, color):
-            self.checkSaved()
+            self.markChanged()
 
     def copyArea(self, l, r, t, b):
         nFrame = Frame(self.h, self.w)
@@ -276,7 +276,7 @@ class Image():
 
     def paste(self, y, x, nFrame, nh, nw):
         self.frames[self.cFrame].paste(y, x, self.h, self.w, nFrame, nh, nw)
-        self.checkSaved()
+        self.markChanged()
 
     def draw(self, window, ypos = 0, xpos = 0):
         self.frames[self.cFrame].draw(window, ypos, xpos)
