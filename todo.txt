@@ -18,7 +18,8 @@ Add frame comparison
 Add image comparison
 change image to maintain last saved version, do comparisons to determine unsaved
 add image edit buffer
-replace self.unsaved = True with self.checkSaved()
+
+
 map command blocks to keyboard blocks better
 
 Save
