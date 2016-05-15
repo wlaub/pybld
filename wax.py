@@ -210,7 +210,7 @@ try:
     cmd = 0
     color = 0
 
-    commands = waxutil.CommandMap()
+    commands = waxutil.SymMap()
     selCommands = waxutil.SelMap()
 
     thread.start_new_thread(animate, ())

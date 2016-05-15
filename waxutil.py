@@ -181,43 +181,6 @@ class CommandMap():
                     }
         self.charMap[ord('\t')] =  unichr(0x21A6).encode(image.code)
 
-        self.blocks = [ ['new', 'save', 'load', 'open', 'close', 'quit']
-                        , ['edit', 'select', 'paste', 'char', 'color', 'bucket', 'resize']
-                        , ['frame', 'frame length', 'next frame', 'prev frame']
-                        , ['play', 'alpha', 'cursor', 'scopy', 'prev img', 'next img']
-                        ]
-        self.commands = { ord('n'): ['new']
-                    , ord('s'): ['save']
-                    , ord('l'): ['load']
-                    , ord('o'): ['open']
-                    , ord('c'): ['close']
-                    , ord('q'): ['quit']
-                    
-                    , ord('i'): ['edit']
-                    , ord('v'): ['select']
-                    , ord('f'): ['frame', 'new frame']
-                    , ord('r'): ['resize']
-                    , ord('\\'): ['char', 'set char']
-                    , ord('d'): ['paste']
-                    , ord('b'): ['bucket', 'bucket fill']
-                    , ord('g'): ['color', 'toggle color']
-                    
-                    , ord('a'): ['alpha', 'show alpha']
-                    , ord('p'): ['play', 'play/pause']
-                    , curses.KEY_RIGHT: ['next frame']
-                    , curses.KEY_LEFT: ['prev frame']
-                    , ord('?'): ['frame length']
-                    , ord('\t'): ['cursor', 'show cursor']
-                    , ord('1'): ['scopy', 'show copy' ]
-                    
-                    , curses.KEY_UP: ['prev img']
-                    , curses.KEY_DOWN: ['next img']
-                    , curses.KEY_SR: ['up']
-                    , curses.KEY_SF: ['down']
-                    , curses.KEY_SLEFT: ['left']
-                    , curses.KEY_SRIGHT: ['right']
-                    }
-
 
     def parseCommandData(self,cmd, data):
         name = data[0]
@@ -257,7 +220,87 @@ class CommandMap():
                     window.addstr(y, i*hspace+2, desc)
                 except:
                     pass
-        
+       
+class DefMap(CommandMap): 
+    def __init__(self):
+        CommandMap.__init__(self)
+        self.blocks = [ ['new', 'save', 'load', 'open', 'close', 'quit']
+                        , ['edit', 'select', 'paste', 'char', 'color', 'bucket', 'resize']
+                        , ['frame', 'frame length', 'next frame', 'prev frame']
+                        , ['play', 'alpha', 'cursor', 'scopy', 'prev img', 'next img']
+                        ]
+        self.commands = { ord('n'): ['new']
+                        , ord('s'): ['save']
+                        , ord('l'): ['load']
+                        , ord('o'): ['open']
+                        , ord('c'): ['close']
+                        , ord('q'): ['quit']
+                        
+                        , ord('i'): ['edit']
+                        , ord('v'): ['select']
+                        , ord('f'): ['frame', 'new frame']
+                        , ord('r'): ['resize']
+                        , ord('\\'): ['char', 'set char']
+                        , ord('d'): ['paste']
+                        , ord('b'): ['bucket', 'bucket fill']
+                        , ord('g'): ['color', 'toggle color']
+                        
+                        , ord('a'): ['alpha', 'show alpha']
+                        , ord('p'): ['play', 'play/pause']
+                        , curses.KEY_RIGHT: ['next frame']
+                        , curses.KEY_LEFT: ['prev frame']
+                        , ord('?'): ['frame length']
+                        , ord('\t'): ['cursor', 'show cursor']
+                        , ord('1'): ['scopy', 'show copy' ]
+                        
+                        , curses.KEY_UP: ['prev img']
+                        , curses.KEY_DOWN: ['next img']
+                        , curses.KEY_SR: ['up']
+                        , curses.KEY_SF: ['down']
+                        , curses.KEY_SLEFT: ['left']
+                        , curses.KEY_SRIGHT: ['right']
+                        }
+
+class SymMap(CommandMap):
+    def __init__(self):
+        CommandMap.__init__(self)
+        self.blocks = [ ['new', 'save', 'load', 'open', 'close', 'quit']
+                        , ['edit', 'select', 'paste', 'char', 'color', 'bucket', 'resize']
+                        , ['frame', 'frame length', 'next frame', 'prev frame']
+                        , ['play', 'alpha', 'cursor', 'scopy', 'prev img', 'next img']
+                        ]
+        self.commands = { ord('w'): ['new']
+                        , ord('s'): ['save']
+                        , ord('d'): ['load']
+                        , ord('e'): ['open']
+                        , ord('c'): ['close']
+                        , ord('q'): ['quit']
+                        
+                        , ord('t'): ['edit']
+                        , ord('v'): ['select']
+                        , ord('n'): ['frame', 'new frame']
+                        , ord('r'): ['resize']
+                        , ord('y'): ['char', 'set char']
+                        , ord('b'): ['paste']
+                        , ord('f'): ['bucket', 'bucket fill']
+                        , ord('g'): ['color', 'toggle color']
+                        
+                        , ord('i'): ['alpha', 'show alpha']
+                        , ord('p'): ['play', 'play/pause']
+                        , curses.KEY_RIGHT: ['next frame']
+                        , curses.KEY_LEFT: ['prev frame']
+                        , ord('h'): ['frame length']
+                        , ord('k'): ['cursor', 'show cursor']
+                        , ord('o'): ['scopy', 'show copy' ]
+                        
+                        , curses.KEY_UP: ['prev img']
+                        , curses.KEY_DOWN: ['next img']
+                        , curses.KEY_SR: ['up']
+                        , curses.KEY_SF: ['down']
+                        , curses.KEY_SLEFT: ['left']
+                        , curses.KEY_SRIGHT: ['right']
+                        }
+
 
 
 class SelMap(CommandMap):
@@ -266,8 +309,8 @@ class SelMap(CommandMap):
         CommandMap.__init__(self)
         self.blocks = [['crop', 'fill', 'copy']]
         self.commands =   { ord('c'): ['crop']
-                        , ord('f'): ['fill']
-                        , ord('y'): ['copy']
-                        }
+                            , ord('f'): ['fill']
+                            , ord('y'): ['copy']
+                            }
 
         
