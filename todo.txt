@@ -1,13 +1,10 @@
 
 set frame length
 
-Better solutin for freshing images after command
+Better solution for refreshing images after command
+refresh images after close
 
 refactor updateLines into things
-
-Unsaved confirmation dialogs:
-    load
-    close
 
 Refresh borders while playing
 

@@ -26,10 +26,12 @@ class Frame():
             for i in range(len(self.arrays)):
                 self.arrays[i] = ['\x00']*width*height
 
-    def copy(self, src):
-        self.lines = list(src.lines)
-        self.arrays = list(src.arrays)
-        self.length = src.length
+    def copy(self):
+        nFrame = Frame()
+        nFrame.lines = list(self.lines)
+        nFrame.arrays = list(self.arrays)
+        nFrame.length = self.length
+        return nFrame
 
     def decode(self, val):
         val = ord(val)&0x7F
@@ -233,6 +235,12 @@ class Image():
                 f.write(raw)
             self.unsaved = False
 
+    def copy(self):
+        nImage = Image(self.height, self.width)
+        for f in self.frames:
+            nImage.frames.append(f.copy())
+        return nImage
+
     def resize(self, l, r, t, b):
         for f in self.frames:
             f.resize(self.h, self.w, l, r, t, b)
@@ -248,8 +256,7 @@ class Image():
             self.cFrame -= len(self.frames)
 
     def addFrame(self, pos):
-        nFrame = Frame(self.h, self.w)
-        nFrame.copy(self.frames[pos])
+        nFrame = self.frames[pos].copy()
         self.frames.insert(pos+1, nFrame)
 
     def tick(self, delta):
@@ -269,8 +276,7 @@ class Image():
             self.markChanged()
 
     def copyArea(self, l, r, t, b):
-        nFrame = Frame(self.h, self.w)
-        nFrame.copy(self.frames[self.cFrame])
+        nFrame = self.frames[self.cFrame].copy()
         nFrame.resize(self.h, self.w, l, r, t, b)
         return nFrame, b-t, r-l
 
@@ -281,6 +287,22 @@ class Image():
     def draw(self, window, ypos = 0, xpos = 0):
         self.frames[self.cFrame].draw(window, ypos, xpos)
 
+
+
+
+class History():
+    
+    def __init__(self, image, filename):
+        nImage = Image()
+        nImage.load(filename)
+        self.buffer = [nImage]
+        self.future = []
+
+
+    def change(self, func, *args, **kwargs):
+        nImage = self.buffer[-1].copy()
+        nImage.func(*arg, **kwargs)
+        self.buffers.append(nImage)
 
 
 
