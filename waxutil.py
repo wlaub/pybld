@@ -97,14 +97,18 @@ class EditWindow():
         bottom = max(self.y, self.sy)
         return left, right, top, bottom
 
-    def bucket(self, image, color):
-        image.bucket(self.y, self.x, self.getChar(), color) 
+    def bucket(self, hist, color):
+        image = hist.getImage()
+        hist.change('bucket', self.y, self.x, self.getChar(), color)
+#        image.bucket(self.y, self.x, self.getChar(), color) 
  
-    def paste(self, image):
+    def paste(self, hist):
+        image = hist.getImage()
         if self.copyFrame != None:
             image.paste(self.y, self.x, self.copyFrame, self.copyH, self.copyW)
 
-    def select(self, cmd, image, color):
+    def select(self, cmd, hist, color):
+        image = hist.getimage()
         self.win.move(self.y, self.x)
         self._startSelect()
         l, r, t, b = self._selectRange()
@@ -147,7 +151,8 @@ class EditWindow():
         if self.copyFrame != None:
             self.copyFrame.draw(self.win, self.y, self.x)
 
-    def edit(self, image, color):
+    def edit(self, hist, color):
+        image = hist.getImage()
         self.win.move(self.y, self.x)
         cmd = self.win.getch()
         char = self.cmdToChar(cmd)
@@ -299,6 +304,8 @@ class SymMap(CommandMap):
                         , curses.KEY_SF: ['down']
                         , curses.KEY_SLEFT: ['left']
                         , curses.KEY_SRIGHT: ['right']
+
+                        , ord('~'): ['debug']
                         }
 
 

@@ -7,19 +7,27 @@ import image, waxutil
 images = []
 imageIdx = 0
 
-def addFile(filename):
+def addFile(filename, height=13, width = 60):
     global images, imageIdx
-    tImg = image.Image()
+    tImg = image.Image(height, width)
     if os.path.exists(filename):
         tImg.load(filename)
-    images.append((tImg, name))
+    hist = image.History(tImg, name)
+    images.append((hist, name))
 
 
 for name in sys.argv[1:]:
     addFile(name)
 
-currName = images[imageIdx][1]
-currImg = images[imageIdx][0]
+def updateImage():
+    global images, currName, currImg, currHist
+    currName = images[imageIdx][1]
+    currHist = images[imageIdx][0]
+    currname = currHist.filename
+    currImg = images[imageIdx][0].getImage()
+
+updateImage()
+
 editbox = None
 
 def clamp(val, _min, _max):
@@ -63,8 +71,7 @@ def cycleImg(val):
         imageIdx += len(images)
     if imageIdx >= len(images):
         imageIdx -= len(images)
-    currName = images[imageIdx][1]
-    currImg = images[imageIdx][0]
+    updateImage()
     clearWindows()
     makeWindows(currImg)
 
@@ -72,8 +79,7 @@ def closeImg():
     global imageIdx, currName, currImg
     del images[imageIdx]
     imageIdx = clamp(imageIdx, 0, len(images)-1)
-    currName = images[imageIdx][1]
-    currImage = images[imageIdx][0]
+    updateImg()
     clearWindows()
     makeWindows(currImg)
 
@@ -113,11 +119,12 @@ def getConfirm(inwin, title, yes="yes", no="NO", default = True):
 def confirmUnsaved(curr = False):
     global window, images, currImg
     if curr:
+#HERE
         if currImg.unsaved:
             return getConfirm(window, "DISCARD CHANGES?", default = False)
     else:
         for img, name in images:
-            if img.unsaved:
+            if img.getImage().unsaved:
                 return getConfirm(window, "DISCARD CHANGES?", default = False)
     return True
 
@@ -255,9 +262,11 @@ try:
         listStart = max(imageIdx-12, 0)
         listEnd = min(listStart+24, len(images))
         for i, val in enumerate(images[listStart: listEnd]):
-            listwin.addstr  ( i, 0, val[1][:16]
+            img = val[0].getImage()
+            name = val[0].filename
+            listwin.addstr  ( i, 0, name[:16]
                             , (curses.A_STANDOUT if i == imageIdx else 0)
-                            | (curses.color_pair(2) if val[0].unsaved else curses.color_pair(0))
+                            | (curses.color_pair(2) if img.unsaved else curses.color_pair(0))
                             )
         
         listwin.refresh()
@@ -274,13 +283,13 @@ try:
         cmdwin.clear()
 
         if editmode:
-            editmode = editbox.edit(currImg, color)
+            editmode = editbox.edit(currHist, color)
 
         else: 
             cmd = window.getch()
 
             if selectmode:
-                if editbox.select(cmd, currImg, color):
+                if editbox.select(cmd, currHist, color):
                     pass
                 else:
                     selectmode = False
@@ -303,19 +312,22 @@ try:
                 elif name == 'color':
                     color = 1-color
                 elif name == 'save':
+#HERE
                     currImg.save(currName)
                 elif name == 'load':
+#HERE
                     if confirmUnsaved(True):
                         currImg.load(currName)
                 elif name == 'alpha':
                     drawalpha = not drawalpha
                 elif name == 'frame':
+#HERE
                     currImg.addFrame(currImg.cFrame)
                     currImg.cFrame += 1
                 elif name == 'bucket':
-                    editbox.bucket(currImg, color)
+                    editbox.bucket(currHist, color)
                 elif name == 'paste':
-                    editbox.paste(currImg)
+                    editbox.paste(currHist)
                 elif name == 'select':
                     selectmode = True
                 elif name == 'cursor':
@@ -327,6 +339,7 @@ try:
                 elif name == 'play':
                     play = not play
                 elif name == 'resize':
+#HERE
                     twidth, theight = getSize(window)
                     if twidth != None:
                         currImg.resize(0,twidth,0, theight)
@@ -336,8 +349,9 @@ try:
                     if name != None and validateName(name):
                         twidth, theight = getSize(window)
                         if twidth != None:
-                            nImg = image.Image(theight, twidth)
-                            images.append((nImg, name))
+                            addFile(name, theight, twidth)
+#                            nImg = image.Image(theight, twidth)
+#                            images.append((nImg, name))
                 elif name == 'open':
                     name = getString(window, "ENTER NAME", "img/")
                     if not os.path.exists(name):

@@ -236,7 +236,8 @@ class Image():
             self.unsaved = False
 
     def copy(self):
-        nImage = Image(self.height, self.width)
+        nImage = Image(self.h, self.w)
+        nImage.frames = []
         for f in self.frames:
             nImage.frames.append(f.copy())
         return nImage
@@ -293,16 +294,22 @@ class Image():
 class History():
     
     def __init__(self, image, filename):
-        nImage = Image()
-        nImage.load(filename)
-        self.buffer = [nImage]
+        self.buffer = [image]
         self.future = []
+        self.filename = filename
 
+    def draw(self, window, ypos=0, xpos=0):
+        self.buffer[-1].draw(window, ypos, xpos)
 
-    def change(self, func, *args, **kwargs):
+    def getImage(self):
+        return self.buffer[-1]
+
+    def change(self, funcName, *args, **kwargs):
         nImage = self.buffer[-1].copy()
-        nImage.func(*arg, **kwargs)
-        self.buffers.append(nImage)
+        func = Image.__dict__[funcName]
+        func(nImage, *args, **kwargs)
+        #compare images for diffs
+        self.buffer.append(nImage)
 
 
 
