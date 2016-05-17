@@ -292,7 +292,9 @@ class SymMap(CommandMap):
                         , ord('h'): ['frame length']
                         , ord('k'): ['cursor', 'show cursor']
                         , ord('o'): ['scopy', 'show copy' ]
-                        
+                        , ord('z'): ['undo'] 
+                        , ord('x'): ['redo']
+
                         , curses.KEY_UP: ['prev img']
                         , curses.KEY_DOWN: ['next img']
                         , curses.KEY_SR: ['up']

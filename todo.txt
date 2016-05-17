@@ -1,4 +1,6 @@
 
+Current tast:
+
 set frame length
 
 Better solution for refreshing images after command
@@ -6,14 +8,9 @@ refresh images after close
 
 refactor updateLines into things
 
-Refresh borders while playing
+#Refresh borders while playing
 
 make open check to see if already open
-
-Add frame comparison
-Add image comparison
-change image to maintain last saved version, do comparisons to determine unsaved
-add image edit buffer
 
 ---------------------------------
 

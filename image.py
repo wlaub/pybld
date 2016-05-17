@@ -1,4 +1,4 @@
-import struct, re
+import struct, re, copy
 import pdb
 import curses
 import locale
@@ -26,10 +26,16 @@ class Frame():
             for i in range(len(self.arrays)):
                 self.arrays[i] = ['\x00']*width*height
 
+    def compare(self, frame):
+        for arr1, arr2 in zip(self.arrays, frame.arrays):
+            if arr1 != arr2:
+                return False
+        return True
+
     def copy(self):
         nFrame = Frame()
-        nFrame.lines = list(self.lines)
-        nFrame.arrays = list(self.arrays)
+        nFrame.lines = copy.deepcopy(self.lines)
+        nFrame.arrays = copy.deepcopy(self.arrays)
         nFrame.length = self.length
         return nFrame
 
@@ -286,6 +292,11 @@ class Image():
             for y in range(t, b):
                 self.write(y, x, char, color)
     
+    def compare(self, img):
+        for f1, f2 in zip(self.frames, img.frames):
+            if not f1.compare(f2):
+                return False
+        return True
 
     def paste(self, y, x, nFrame, nh, nw):
         self.frames[self.cFrame].paste(y, x, self.h, self.w, nFrame, nh, nw)
@@ -304,6 +315,33 @@ class History():
         self.future = []
         self.filename = filename
         self.eImage = None
+        self.unsaved = False
+        self.lastSave = image
+
+    def save(self):
+        self.unsaved = False
+        self.lastSave = self.buffer[-1]
+        self.lastSave.save(self.filename)
+
+    def load(self):
+        self.unsaved=False
+        self.startEdit()
+        self.eImage.load(self.filename)
+        self.endEdit()
+
+    def undo(self):
+        if len(self.buffer) <= 1:
+            return
+        fut = self.buffer.pop()
+        self.future.append(fut)
+        self.checkSaved()
+
+    def redo(self):
+        if len(self.future) == 0:
+            return
+        back = self.future.pop()
+        self.buffer.append(back)
+        self.checkSaved()
 
     def draw(self, window, ypos=0, xpos=0):
         self.buffer[-1].draw(window, ypos, xpos)
@@ -313,6 +351,11 @@ class History():
             return self.eImage
         return self.buffer[-1]
 
+    def checkSaved(self):
+        self.unsaved = True
+        if self.lastSave.compare(self.buffer[-1]):
+            self.unsaved = False
+
     def startEdit(self):
         if self.eImage == None:
             self.eImage = self.buffer[-1].copy()
@@ -320,8 +363,10 @@ class History():
     def endEdit(self):        
         if self.eImage == None:
             return
-        #compar images for diffs
-        self.buffer.append(self.eImage)
+        if not self.eImage.compare(self.buffer[-1]):
+            self.buffer.append(self.eImage)
+        self.checkSaved()
+
         self.eImage = None
 
     def partChange(self, funcName, *args, **kwargs):

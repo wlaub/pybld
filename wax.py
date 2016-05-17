@@ -37,17 +37,18 @@ def clamp(val, _min, _max):
         return _max
     return val
 
-def makeWindows(image):
-    global window, cmdwin, editbox, helpwin
-    window = curses.newwin(image.h+2,image.w+2,0,0)
-    cmdwin = curses.newwin(2, 62, image.h+2, 0)
-    helpwin = curses.newwin(7, 62, image.h+2+2, 0)
+def makeWindows():
+    global window, cmdwin, editbox, helpwin, currImg
+    
+    window = curses.newwin(currImg.h+2,currImg.w+2,0,0)
+    cmdwin = curses.newwin(2, 62, currImg.h+2, 0)
+    helpwin = curses.newwin(7, 62, currImg.h+2+2, 0)
 
     window.keypad(1)
 
     if not editbox:
-        editbox = waxutil.EditWindow(window.subwin(image.h, image.w, 1,1))       
-    editbox.reset(window.subwin(image.h, image.w, 1,1))
+        editbox = waxutil.EditWindow(window.subwin(currImg.h, currImg.w, 1,1))
+    editbox.reset(window.subwin(currImg.h, currImg.w, 1,1))
 
 
 def clearWindows():
@@ -60,12 +61,11 @@ def clearWindows():
     helpwin.refresh()
 
 def remakeWindows():
-    global currImg
     clearWindows()
-    makeWindows(currImg)
+    makeWindows()
 
 def cycleImg(val):
-    global imageIdx, currName, currImg
+    global imageIdx
     imageIdx += val
     if imageIdx < 0:
         imageIdx += len(images)
@@ -73,15 +73,15 @@ def cycleImg(val):
         imageIdx -= len(images)
     updateImage()
     clearWindows()
-    makeWindows(currImg)
+    makeWindows()
 
 def closeImg():
-    global imageIdx, currName, currImg
+    global imageIdx
     del images[imageIdx]
     imageIdx = clamp(imageIdx, 0, len(images)-1)
     updateImg()
     clearWindows()
-    makeWindows(currImg)
+    makeWindows()
 
 def centerWin(inwin, h, w):
     t, l = inwin.getbegyx()
@@ -119,12 +119,11 @@ def getConfirm(inwin, title, yes="yes", no="NO", default = True):
 def confirmUnsaved(curr = False):
     global window, images, currImg
     if curr:
-#HERE
         if currImg.unsaved:
             return getConfirm(window, "DISCARD CHANGES?", default = False)
     else:
-        for img, name in images:
-            if img.getImage().unsaved:
+        for hist, name in images:
+            if hist.getImage().unsaved:
                 return getConfirm(window, "DISCARD CHANGES?", default = False)
     return True
 
@@ -174,6 +173,7 @@ def animate():
             currImg.tick(.16)
             window.clear()
             currImg.draw(window, 1, 1)
+            window.border
             window.refresh()
             window.leaveok(0)
 
@@ -197,7 +197,7 @@ showcopy = False
 showcursor = False
 
 infoStrings =   [ "{name} | {w} x {h} | ({x},{y}) | {frame}/{frameCount} | {length}"
-                , "{mode} mode | Color: {color} | Char: {char} | 0x{cmd:04x}"
+                , "{mode} mode | Color: {color} | Char: {char} | 0x{cmd:04x} | {past}/{future}"
                 ]
 
 
@@ -211,7 +211,7 @@ try:
     curses.init_pair(2, curses.COLOR_RED, -1)
     curses.init_pair(4, curses.COLOR_BLUE, -1)
 
-    makeWindows(currImg)
+    makeWindows()
     listwin = curses.newwin(24, 16, 0, 62)
 
     cmd = 0
@@ -234,7 +234,9 @@ try:
                 , 'y': editbox.y
                 , 'frame': currImg.cFrame+1
                 , 'frameCount': len(currImg.frames)
-                , 'length': currImg.frames[currImg.cFrame].length,
+                , 'length': currImg.frames[currImg.cFrame].length
+                , 'past': len(currHist.buffer)
+                , 'future': len(currHist.future)
                 }
         info['char'] = currImg.frames[0].transcode(editbox.getChar())
 
@@ -266,7 +268,7 @@ try:
             name = val[0].filename
             listwin.addstr  ( i, 0, name[:16]
                             , (curses.A_STANDOUT if i == imageIdx else 0)
-                            | (curses.color_pair(2) if img.unsaved else curses.color_pair(0))
+                            | (curses.color_pair(2) if val[0].unsaved else curses.color_pair(0))
                             )
         
         listwin.refresh()
@@ -306,18 +308,20 @@ try:
                     cycleImg(-1)
                 elif name == 'next img':
                     cycleImg(1)
+                elif name == 'undo':
+                    currHist.undo()
+                elif name == 'redo':
+                    currHist.redo()
                 elif name == 'quit':
                     if confirmUnsaved():
                         break;
                 elif name == 'color':
                     color = 1-color
                 elif name == 'save':
-#HERE
-                    currImg.save(currName)
+                    currHist.save()
                 elif name == 'load':
-#HERE
                     if confirmUnsaved(True):
-                        currImg.load(currName)
+                        currHist.load()
                 elif name == 'alpha':
                     drawalpha = not drawalpha
                 elif name == 'frame':
