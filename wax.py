@@ -12,12 +12,15 @@ def addFile(filename, height=13, width = 60):
     tImg = image.Image(height, width)
     if os.path.exists(filename):
         tImg.load(filename)
-    hist = image.History(tImg, name)
-    images.append((hist, name))
+    hist = image.History(tImg, filename)
+    images.append((hist, filename))
 
 
 for name in sys.argv[1:]:
     addFile(name)
+
+if len(sys.argv) < 2:
+    addFile('img/tmp.bmi')
 
 def updateImage():
     global images, currName, currImg, currHist
@@ -120,7 +123,7 @@ def getConfirm(inwin, title, yes="yes", no="NO", default = True):
 def confirmUnsaved(curr = False):
     global window, images, currImg
     if curr:
-        if currImg.unsaved:
+        if currHist.unsaved:
             return getConfirm(window, "DISCARD CHANGES?", default = False)
     else:
         for hist, name in images:
