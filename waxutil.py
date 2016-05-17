@@ -112,11 +112,7 @@ class EditWindow():
         if self.handleCursors(cmd):
             return True
         elif cmd == ord('f'):
-           # move fill to image
            hist.change('fillArea', l, r+1, t, b+1, self.cchar, color)
-#           for x in range(l, r+1):
-#                for y in range(t, b+1):
-#                    image.write(y, x, self.cchar, color)
         elif cmd == ord('c'):
             hist.change('resize', l, r+1, t, b+1)
             return False
@@ -151,7 +147,6 @@ class EditWindow():
             self.copyFrame.draw(self.win, self.y, self.x)
 
     def edit(self, hist, color):
-        image = hist.getImage()
         self.win.move(self.y, self.x)
         cmd = self.win.getch()
         char = self.cmdToChar(cmd)
@@ -163,7 +158,7 @@ class EditWindow():
                 self.y = mouse[2]-1
                 self.x = mouse[1]-1
         elif char != None:
-            image.write(self.y, self.x, char, color) 
+            hist.change('write', self.y, self.x, char, color) 
             self.moveCursor(0,1)
         elif cmd == 0x1b:
             return False
