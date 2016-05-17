@@ -315,7 +315,7 @@ class History():
         self.future = []
         self.filename = filename
         self.eImage = None
-        self.unsaved = False
+        self.unsaved = True
         self.lastSave = image
 
     def save(self):

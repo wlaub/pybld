@@ -10,11 +10,12 @@ imageIdx = 0
 def addFile(filename, height=13, width = 60):
     global images, imageIdx
     tImg = image.Image(height, width)
-    if os.path.exists(filename):
-        tImg.load(filename)
     hist = image.History(tImg, filename)
     images.append((hist, filename))
-
+    if os.path.exists(filename):
+        tImg.load(filename)
+        hist.unsaved = False
+ 
 
 for name in sys.argv[1:]:
     addFile(name)
