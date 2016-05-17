@@ -98,28 +98,27 @@ class EditWindow():
         return left, right, top, bottom
 
     def bucket(self, hist, color):
-        image = hist.getImage()
         hist.change('bucket', self.y, self.x, self.getChar(), color)
-#        image.bucket(self.y, self.x, self.getChar(), color) 
  
     def paste(self, hist):
-        image = hist.getImage()
         if self.copyFrame != None:
-            image.paste(self.y, self.x, self.copyFrame, self.copyH, self.copyW)
+            hist.change('paste', self.y, self.x, self.copyFrame, self.copyH, self.copyW)
 
     def select(self, cmd, hist, color):
-        image = hist.getimage()
+        image = hist.getImage()
         self.win.move(self.y, self.x)
         self._startSelect()
         l, r, t, b = self._selectRange()
         if self.handleCursors(cmd):
             return True
         elif cmd == ord('f'):
+           # move fill to image
+#           hist.change('fill', l, r+1, t, b, self.cchar, color)
            for x in range(l, r+1):
                 for y in range(t, b+1):
                     image.write(y, x, self.cchar, color)
         elif cmd == ord('c'):
-            image.resize(l, r+1, t, b+1)
+            hist.change('resize', l, r+1, t, b+1)
             return False
         elif cmd == ord('y'):
             self.copyFrame, self.copyH, self.copyW = image.copyArea(l, r+1, t, b+1)
