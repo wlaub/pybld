@@ -281,6 +281,12 @@ class Image():
         nFrame.resize(self.h, self.w, l, r, t, b)
         return nFrame, b-t, r-l
 
+    def fillArea(self, l, r, t, b, char, color):
+        for x in range(l, r):
+            for y in range(t, b):
+                self.write(y, x, char, color)
+    
+
     def paste(self, y, x, nFrame, nh, nw):
         self.frames[self.cFrame].paste(y, x, self.h, self.w, nFrame, nh, nw)
         self.markChanged()

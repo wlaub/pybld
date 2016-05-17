@@ -113,10 +113,10 @@ class EditWindow():
             return True
         elif cmd == ord('f'):
            # move fill to image
-#           hist.change('fill', l, r+1, t, b, self.cchar, color)
-           for x in range(l, r+1):
-                for y in range(t, b+1):
-                    image.write(y, x, self.cchar, color)
+           hist.change('fillArea', l, r+1, t, b+1, self.cchar, color)
+#           for x in range(l, r+1):
+#                for y in range(t, b+1):
+#                    image.write(y, x, self.cchar, color)
         elif cmd == ord('c'):
             hist.change('resize', l, r+1, t, b+1)
             return False
