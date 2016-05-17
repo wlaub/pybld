@@ -79,7 +79,7 @@ def closeImg():
     global imageIdx
     del images[imageIdx]
     imageIdx = clamp(imageIdx, 0, len(images)-1)
-    updateImg()
+    updateImage()
     clearWindows()
     makeWindows()
 
