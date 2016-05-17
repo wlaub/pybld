@@ -303,19 +303,35 @@ class History():
         self.buffer = [image]
         self.future = []
         self.filename = filename
+        self.eImage = None
 
     def draw(self, window, ypos=0, xpos=0):
         self.buffer[-1].draw(window, ypos, xpos)
 
     def getImage(self):
+        if self.eImage != None:
+            return self.eImage
         return self.buffer[-1]
 
-    def change(self, funcName, *args, **kwargs):
-        nImage = self.buffer[-1].copy()
+    def startEdit(self):
+        if self.eImage == None:
+            self.eImage = self.buffer[-1].copy()
+
+    def endEdit(self):        
+        if self.eImage == None:
+            return
+        #compar images for diffs
+        self.buffer.append(self.eImage)
+        self.eImage = None
+
+    def partChange(self, funcName, *args, **kwargs):
+        self.startEdit()
         func = Image.__dict__[funcName]
-        func(nImage, *args, **kwargs)
-        #compare images for diffs
-        self.buffer.append(nImage)
+        func(self.eImage, *args, **kwargs)
+
+    def change(self, funcName, *args, **kwargs):
+        self.partChange(funcName, *args, **kwargs)
+        self.endEdit()
 
 
 

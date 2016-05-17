@@ -247,7 +247,7 @@ try:
                 window.addstr(y+1, 1, ' '*currImg.w, curses.color_pair(3))
 
         window.border()
-        currImg.draw(window,1,1)
+        currHist.getImage().draw(window,1,1)
         editbox.drawSelect()
         if showcursor or editmode or selectmode:
             window.addstr(editbox.y+1, editbox.x+1, info['char'], curses.color_pair(2))

@@ -158,9 +158,10 @@ class EditWindow():
                 self.y = mouse[2]-1
                 self.x = mouse[1]-1
         elif char != None:
-            hist.change('write', self.y, self.x, char, color) 
+            hist.partChange('write', self.y, self.x, char, color) 
             self.moveCursor(0,1)
         elif cmd == 0x1b:
+            hist.endEdit()
             return False
         return True
 
