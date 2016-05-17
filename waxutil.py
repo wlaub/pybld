@@ -264,7 +264,7 @@ class DefMap(CommandMap):
 class SymMap(CommandMap):
     def __init__(self):
         CommandMap.__init__(self)
-        self.blocks = [ ['new', 'save', 'load', 'open', 'close', 'quit']
+        self.blocks = [ ['new', 'save', 'load', 'open', 'close', 'undo', 'redo']
                         , ['edit', 'select', 'paste', 'char', 'color', 'bucket', 'resize']
                         , ['frame', 'frame length', 'next frame', 'prev frame']
                         , ['play', 'alpha', 'cursor', 'scopy', 'prev img', 'next img']

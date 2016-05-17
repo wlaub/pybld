@@ -1,9 +1,9 @@
 
-Current tast:
+Current task:
+
+
 
 set frame length
-
-Better solution for refreshing images after command
 
 refactor updateLines into things
 

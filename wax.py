@@ -113,7 +113,8 @@ def getConfirm(inwin, title, yes="yes", no="NO", default = True):
             sel = False
         elif cmd == 0x0a:
             break
- 
+    window.clear()
+    window.refresh()
     return sel
 
 def confirmUnsaved(curr = False):
@@ -193,8 +194,8 @@ play = False
 editmode = False
 selectmode = False
 drawalpha =False
-showcopy = False
-showcursor = False
+showcopy = True
+showcursor = True
 
 infoStrings =   [ "{name} | {w} x {h} | ({x},{y}) | {frame}/{frameCount} | {length}"
                 , "{mode} mode | Color: {color} | Char: {char} | 0x{cmd:04x} | {past}/{future}"
@@ -356,10 +357,12 @@ try:
                             addFile(name, theight, twidth)
 #                            nImg = image.Image(theight, twidth)
 #                            images.append((nImg, name))
+                    else:
+                        getConfirm(window, "Invalid name", "ok", "OKAY")
                 elif name == 'open':
                     name = getString(window, "ENTER NAME", "img/")
                     if not os.path.exists(name):
-                        getConfirm(window, "Does not exist", "ok", "OK")
+                        getConfirm(window, "Does not exist", "ok", "OKAY")
                     else:
                         addFile(name)
                 elif name == 'up':
