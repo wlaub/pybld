@@ -97,9 +97,7 @@ class Frame():
         raw = data[1:]
         self.arrays[0] = [self.decode(x) if ord(x) & 0x80 == 0 else '\x00' for x in raw]
         self.arrays[1] = [self.decode(x) if ord(x) & 0x80 != 0 else '\x00' for x in raw]
-
-        self.lines[0] = self.extractLines(self.arrays[0], width)
-        self.lines[1] = self.extractLines(self.arrays[1], width)
+        self.updateLines(width)
 
     def save(self,  height, width):
         raw = ['\x00']*width*height
@@ -177,7 +175,7 @@ class Frame():
     def resize(self, h, w, l, r, t, b):
         for i in range(len(self.arrays)):
             self.arrays[i] = self.resizeArray(self.arrays[i], h, w, l, r, t, b)
-            self.lines[i] = self.extractLines(self.arrays[i], r-l)
+        self.updateLines(r-l)
 
     def paste(self, yoff, xoff, h, w, nFrame, nh, nw):
         colorCount = min(len(self.arrays), len(nFrame.arrays))

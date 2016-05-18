@@ -1,8 +1,6 @@
 
 Current task:
 
-refactor updateLines into things
-
 ---------------------------------
 
 Fix stand mechanics for stand down, etc
