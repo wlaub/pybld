@@ -294,7 +294,8 @@ try:
             cmd = window.getch()
 
             if selectmode:
-                if editbox.select(cmd, currHist, color):
+                name, _, _ = selCommands.parseCommand(cmd)
+                if editbox.select(cmd, name, currHist, color):
                     pass
                 else:
                     selectmode = False

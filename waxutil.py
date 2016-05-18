@@ -104,21 +104,24 @@ class EditWindow():
         if self.copyFrame != None:
             hist.change('paste', self.y, self.x, self.copyFrame, self.copyH, self.copyW)
 
-    def select(self, cmd, hist, color):
+    def select(self, cmd, name, hist, color):
         image = hist.getImage()
         self.win.move(self.y, self.x)
         self._startSelect()
         l, r, t, b = self._selectRange()
         if self.handleCursors(cmd):
             return True
-        elif cmd == ord('f'):
-           hist.change('fillArea', l, r+1, t, b+1, self.cchar, color)
-        elif cmd == ord('c'):
+        elif name == 'fill':
+            hist.change('fillArea', l, r+1, t, b+1, self.cchar, color)
+        elif name == 'crop':
             hist.change('resize', l, r+1, t, b+1)
             return False
-        elif cmd == ord('y'):
+        elif name == 'copy':
             self.copyFrame, self.copyH, self.copyW = image.copyArea(l, r+1, t, b+1)
-        elif cmd == ord('d'):
+        elif name == 'delete':
+            hist.change('fillArea', l, r+1, t, b+1, 0, color)
+        elif name == 'cut':
+            self.copyFrame, self.copyH, self.copyW = image.copyArea(l, r+1, t, b+1)
             hist.change('fillArea', l, r+1, t, b+1, 0, color)
         self._stopSelect()
         return False
@@ -323,11 +326,12 @@ class SelMap(CommandMap):
    
     def __init__(self):
         CommandMap.__init__(self)
-        self.blocks = [['crop', 'fill', 'copy', 'delete']]
+        self.blocks = [['crop', 'fill', 'copy', 'delete', 'cut']]
         self.commands =   { ord('c'): ['crop']
                             , ord('f'): ['fill']
                             , ord('y'): ['copy']
                             , ord('d'): ['delete']
+                            , ord('x'): ['cut']
                             }
 
         

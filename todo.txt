@@ -1,5 +1,6 @@
 
 Current task:
+move selection commands to object
 
 ---------------------------------
 
