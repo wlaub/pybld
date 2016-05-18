@@ -327,9 +327,7 @@ try:
                 elif name == 'alpha':
                     drawalpha = not drawalpha
                 elif name == 'frame':
-#HERE
-                    currImg.addFrame(currImg.cFrame)
-                    currImg.cFrame += 1
+                    currHist.change('addFrame')
                 elif name == 'bucket':
                     editbox.bucket(currHist, color)
                 elif name == 'paste':

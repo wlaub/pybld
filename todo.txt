@@ -1,8 +1,6 @@
 
 Current task:
 
-make comparison check number of frames
-
 refactor updateLines into things
 
 ---------------------------------

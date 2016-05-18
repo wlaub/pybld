@@ -264,9 +264,11 @@ class Image():
         if self.cFrame >= len(self.frames):
             self.cFrame -= len(self.frames)
 
-    def addFrame(self, pos):
+    def addFrame(self):
+        pos = self.cFrame
         nFrame = self.frames[pos].copy()
         self.frames.insert(pos+1, nFrame)
+        self.cFrame = pos+1
 
     def tick(self, delta):
         self.t += delta
@@ -298,6 +300,8 @@ class Image():
                 self.write(y, x, char, color)
     
     def compare(self, img):
+        if len(self.frames) != len(img.frames):
+            return False
         for f1, f2 in zip(self.frames, img.frames):
             if not f1.compare(f2):
                 return False
