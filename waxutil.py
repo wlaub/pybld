@@ -165,20 +165,30 @@ class EditWindow():
             return False
         return True
 
+class Validator():
+    def __init__(self):
+        self.abort = False 
+
+    def validate(self, val):
+        if val == 0x1b:
+            self.abort = True
+            return 0x07
+        return val
+
 
 class CommandMap():
 
     def __init__(self):
-        self.charMap =   { curses.KEY_LEFT: curses.ACS_LARROW
-                    , curses.KEY_RIGHT: curses.ACS_RARROW
-                    , curses.KEY_UP: curses.ACS_UARROW
-                    , curses.KEY_DOWN: curses.ACS_DARROW
-                    , curses.KEY_SLEFT: curses.ACS_LARROW
-                    , curses.KEY_SRIGHT: curses.ACS_RARROW
-                    , curses.KEY_SR: curses.ACS_UARROW
-                    , curses.KEY_SF: curses.ACS_DARROW
+        self.charMap =  { curses.KEY_LEFT: curses.ACS_LARROW
+                        , curses.KEY_RIGHT: curses.ACS_RARROW
+                        , curses.KEY_UP: curses.ACS_UARROW
+                        , curses.KEY_DOWN: curses.ACS_DARROW
+                        , curses.KEY_SLEFT: curses.ACS_LARROW
+                        , curses.KEY_SRIGHT: curses.ACS_RARROW
+                        , curses.KEY_SR: curses.ACS_UARROW
+                        , curses.KEY_SF: curses.ACS_DARROW
 
-                    }
+                        }
         self.charMap[ord('\t')] =  unichr(0x21A6).encode(image.code)
 
 

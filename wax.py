@@ -138,10 +138,11 @@ def getString(inwin, title, init = None, default = None):
         editwin.addstr(0,0,init)
     namewin.refresh()
     tbox = Textbox(editwin)
-    result = tbox.edit().strip()
+    validator = waxutil.Validator()
+    result = tbox.edit(validator.validate).strip()
     namewin.clear()
     namewin.refresh()
-    if len(result) == 0:
+    if len(result) == 0 or validator.abort:
         return default
     return result
     
