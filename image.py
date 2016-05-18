@@ -27,6 +27,8 @@ class Frame():
                 self.arrays[i] = ['\x00']*width*height
 
     def compare(self, frame):
+        if self.length != frame.length:
+            return False
         for arr1, arr2 in zip(self.arrays, frame.arrays):
             if arr1 != arr2:
                 return False
@@ -281,6 +283,9 @@ class Image():
     def bucket(self, y, x, val, color):
         if self.frames[self.cFrame].bucket(y, x, self.w, val, color):
             self.markChanged()
+
+    def frameLen(self, nLen):
+        self.frames[self.cFrame].length = nLen
 
     def copyArea(self, l, r, t, b):
         nFrame = self.frames[self.cFrame].copy()

@@ -65,6 +65,7 @@ def clearWindows():
     helpwin.refresh()
 
 def remakeWindows():
+    updateImage()
     clearWindows()
     makeWindows()
 
@@ -75,17 +76,13 @@ def cycleImg(val):
         imageIdx += len(images)
     if imageIdx >= len(images):
         imageIdx -= len(images)
-    updateImage()
-    clearWindows()
-    makeWindows()
+    remakeWindows()
 
 def closeImg():
     global imageIdx
     del images[imageIdx]
     imageIdx = clamp(imageIdx, 0, len(images)-1)
-    updateImage()
-    clearWindows()
-    makeWindows()
+    remakeWindows()
 
 def centerWin(inwin, h, w):
     t, l = inwin.getbegyx()
@@ -347,20 +344,22 @@ try:
                     editbox.pickChar()
                 elif name == 'play':
                     play = not play
+                elif name == 'frame length':
+                    nLength = getInt(window, "NEW LENGTH")
+                    if nLength > 0:
+                        currHist.change('frameLen', nLength)
+                    else:
+                        getConfirm(window, "Invalid Length", "ok", "OKAY")
                 elif name == 'resize':
-#HERE
                     twidth, theight = getSize(window)
                     if twidth != None:
-                        currImg.resize(0,twidth,0, theight)
-                        remakeWindows()
+                        currHist.change('resize', 0, twidth, 0, theight)
                 elif name == 'new':
                     name = getString(window, "ENTER NAME", "img/")
                     if name != None and validateName(name):
                         twidth, theight = getSize(window)
                         if twidth != None:
                             addFile(name, theight, twidth)
-#                            nImg = image.Image(theight, twidth)
-#                            images.append((nImg, name))
                     else:
                         getConfirm(window, "Invalid name", "ok", "OKAY")
                 elif name == 'open':
@@ -383,7 +382,8 @@ try:
                 elif name == 'debug':
                     pdb.set_trace()
                     
-                        
+                remakeWindows()                    
+    
 
 except:
     curses.endwin()

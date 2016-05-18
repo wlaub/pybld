@@ -1,13 +1,9 @@
 
 Current task:
 
-
-
-set frame length
+make comparison check number of frames
 
 refactor updateLines into things
-
-make open check to see if already open
 
 ---------------------------------
 
