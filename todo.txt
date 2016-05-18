@@ -3,6 +3,10 @@ Current task:
 
 ---------------------------------
 
+Make starting room image
+
+Add image support to pybld
+
 Fix stand mechanics for stand down, etc
 
 ---------------------------------

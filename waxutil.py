@@ -118,6 +118,8 @@ class EditWindow():
             return False
         elif cmd == ord('y'):
             self.copyFrame, self.copyH, self.copyW = image.copyArea(l, r+1, t, b+1)
+        elif cmd == ord('d'):
+            hist.change('fillArea', l, r+1, t, b+1, 0, color)
         self._stopSelect()
         return False
 
@@ -321,10 +323,11 @@ class SelMap(CommandMap):
    
     def __init__(self):
         CommandMap.__init__(self)
-        self.blocks = [['crop', 'fill', 'copy']]
+        self.blocks = [['crop', 'fill', 'copy', 'delete']]
         self.commands =   { ord('c'): ['crop']
                             , ord('f'): ['fill']
                             , ord('y'): ['copy']
+                            , ord('d'): ['delete']
                             }
 
         
