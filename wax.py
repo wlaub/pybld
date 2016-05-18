@@ -356,7 +356,7 @@ try:
                 elif name == 'new':
                     name = getString(window, "ENTER NAME", "img/")
                     if name != None and validateName(name):
-                        twidth, theight = getSize(window)
+                        twidth, theight = getSize(window, '60', '13')
                         if twidth != None:
                             addFile(name, theight, twidth)
                     else:
