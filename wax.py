@@ -169,10 +169,10 @@ def getSize(inwin, initw = None, inith = None):
 def animate():
     global currImg, play, window
     while 1:
-        time.sleep(.16)
+        time.sleep(.333)
         if play:
             window.leaveok(1)
-            currImg.tick(.16)
+            currImg.tick()
             window.clear()
             currImg.draw(window, 1, 1)
             window.border

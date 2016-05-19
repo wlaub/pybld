@@ -277,10 +277,10 @@ class Image():
         self.frames.insert(pos+1, nFrame)
         self.cFrame = pos+1
 
-    def tick(self, delta):
-        self.t += delta
-        if self.t > self.frames[self.cFrame].length/8.:
-            self.t -= self.frames[self.cFrame].length/8.
+    def tick(self):
+        self.t += 1
+        if self.t >= self.frames[self.cFrame].length:
+            self.t -= self.frames[self.cFrame].length
             self.cFrame += 1
             if self.cFrame == len(self.frames):
                 self.cFrame = 0

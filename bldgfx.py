@@ -32,8 +32,8 @@ class Sprite():
         self.name = name
         pass
 
-    def tick(self, man, delta):
-        man.getImage(self.name).tick(delta)
+    def tick(self, man):
+        man.getImage(self.name).tick()
         pass
 
     def draw(self, man, window):
@@ -63,7 +63,7 @@ class Renderer():
     def tick(self, delta):
         for layer in self.sprites.values():
             for sprite in layer:
-                sprite.tick(self.man, delta)
+                sprite.tick(self.man)
 
     def draw(self):
         self.win.clear()
