@@ -1,5 +1,5 @@
 import time, sys, os
-import rooms, game, iface
+import rooms, game, iface, bldgfx
 import readline
 import curses
 
@@ -19,7 +19,15 @@ if __name__ == "__main__":
         screen = iface.CurseScreen()
         interface.setScreen(screen)
         screen.setWindow(interface.cmdwin)
+
+        rend = bldgfx.Renderer(interface.imgwin)
+
+        testSprite = bldgfx.Sprite('img/flashy.bmi', 0, 0)
+        rend.addSprite(testSprite)
+
         game.scr = screen
+
+        
 
         interface.commandLoop()
     except:

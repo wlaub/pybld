@@ -197,6 +197,7 @@ class CurseInterface():
     def setScreen(self, scr):
         self.scr = scr
         self.imgwin = curses.newwin(self.scr.height-self.scr.cmdHeight-1, self.scr.width, 0,0)
+
         self.cmdwin = curses.newwin(self.scr.cmdHeight+1, self.scr.width, self.scr.height-self.scr.cmdHeight-1, 0) 
         self.inwin = curses.newwin(1, self.scr.width, self.scr.height-1, 0)
         self.cmdwin.leaveok(1)

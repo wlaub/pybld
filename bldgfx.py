@@ -7,10 +7,13 @@ import image
 class Manager():
 
     def __init__(self):
-        pass
+        self.images = {}
 
     def getImage(self, name):
-        pass
+        if not name in self.images.keys():
+            nImage = image.Image(filename = name)
+            self.images[name] = nImage
+        return self.images[name]
 
     def loadImage(self, name):
         """
@@ -29,10 +32,12 @@ class Sprite():
         self.name = name
         pass
 
-    def tick(self, delta):
+    def tick(self, man, delta):
+        man.getImage(self.name).tick(delta)
         pass
 
-    def draw(self, window):
+    def draw(self, man, window):
+        man.getImage(self.name).draw(window, self.y, self.x)
         pass
 
 
@@ -42,23 +47,61 @@ class Renderer():
         self.win = window
         self.rate = rate
         self.play = True
+        self.sprites = {}
+        self.man = Manager()
         #spawn thread?
+        thread.start_new_thread(self.thread,())
+
+
+    def thread(self):
+        while 1:
+            time.sleep(self.rate)
+            if self.play:
+                self.tick(self.rate)
+            self.draw()
+
+    def tick(self, delta):
+        for layer in self.sprites.values():
+            for sprite in layer:
+                sprite.tick(self.man, delta)
+
+    def draw(self):
+        self.win.clear()
+        self.win.leaveok(1)
+        keys = self.sprites.keys()
+        keys.sort()
+        for layer in keys:
+            for sprite in self.sprites[layer]:
+                sprite.draw(self.man, self.win) 
+        self.win.refresh()
 
     def play(self, playing):
         self.play = playing
 
     def addSprite(self, sprite):
         """
-        Adds a sprite to the buffer so it will be drawn
-        after the next call to refresh().
+        Add the sprite to the render dictionary
         """
-        pass
+        if not sprite.layer in self.sprites.keys():
+            self.sprites[sprite.layer] = []
+        if not sprite in self.sprites[sprite.layer]:
+            self.sprites[sprite.layer].append(sprite)
+
+    def removeSprite(self, sprite):
+        """
+        Removes the sprite from the render dictionary
+        """
+        try:
+            self.sprites[sprite.layer].remove(sprite)
+        except:
+            pass
 
     def clear(self):
         """
         Clears the current draw dictionary so nothing
         will be drawn.
         """
+        self.sprites = {}
         pass
 
     def refresh(self):

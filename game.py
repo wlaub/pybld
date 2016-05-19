@@ -3,6 +3,7 @@ import importlib, inspect
 import pickle
 from gmap import *
 import iface
+import bldgfx
 
 import pdb
 
