@@ -1,4 +1,5 @@
 import struct, re, copy
+import os, sys
 import pdb
 import curses
 import locale
@@ -208,15 +209,23 @@ class Frame():
 
 class Image():
 
-    def __init__(self, height = 13, width = 60):
+    def __init__(self, h = 13, w = 60, filename = None):
         self.frames = []
-        self.w = width
-        self.h = height
+        self.w = w
+        self.h = h
+        self.x = 0
+        self.y = 0
         self.t = 0
         self.cFrame = 0
-        self.frames.append(Frame(height, width))   
+        if filename == None or not os.path.exists(filename):
+            self.makeEmpty(h, w)
+        else:
+            self.load(filename)
         self.unsaved = True
 
+    def makeEmpty(self, height, width):
+        self.frames.append(Frame(height, width))  
+ 
     def markChanged(self):
         self.unsaved = True
  
@@ -242,7 +251,7 @@ class Image():
             self.unsaved = False
 
     def copy(self):
-        nImage = Image(self.h, self.w)
+        nImage = Image(h = self.h, w = self.w)
         nImage.frames = []
         for f in self.frames:
             nImage.frames.append(f.copy())

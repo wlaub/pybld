@@ -9,11 +9,10 @@ imageIdx = 0
 
 def addFile(filename, height=13, width = 60):
     global images, imageIdx
-    tImg = image.Image(height, width)
+    tImg = image.Image(h =  height, w =  width, filename = filename)
     hist = image.History(tImg, filename)
     images.append((hist, filename))
     if os.path.exists(filename):
-        tImg.load(filename)
         hist.unsaved = False
  
 
@@ -125,7 +124,7 @@ def confirmUnsaved(curr = False):
             return getConfirm(window, "DISCARD CHANGES?", default = False)
     else:
         for hist, name in images:
-            if hist.getImage().unsaved:
+            if hist.unsaved:
                 return getConfirm(window, "DISCARD CHANGES?", default = False)
     return True
 
