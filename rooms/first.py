@@ -68,6 +68,13 @@ class Bean(game.Item):
     defPos = 'left'
     defQty = 5
 
+    def _checkSprite(self):
+        if self.qty < 3:
+            self.sprite.name = 'img/froom/beansm.bmi'
+        elif self.qty < 6:
+            self.sprite.name = 'img/froom/beanmd.bmi'
+        else:
+            self.sprite.name = 'img/froom/beanlg.bmi'
 
 
 class Door(game.Item):

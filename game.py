@@ -104,12 +104,14 @@ def _doCmd(obj, cmd):
 
 def _show(obj):
     global rend
+    obj._checkSprite()
     if obj.sprite == None:
         return
     rend.addSprite(obj.sprite)
 
 def _hide(obj):
     global rend
+    obj._checkSprite()
     if obj.sprite == None:
         return
     rend.removeSprite(obj.sprite)
@@ -156,7 +158,9 @@ class Game():
     def __setstate__(self, state):
         self.currRoom, self.flags, self.rooms, self.items, self.lastSave = state
         self.refreshImg()
- 
+
+    def _checkSprite(self):
+        pass 
 
     def loadModules(self):
         roomFiles = os.listdir('./rooms')
@@ -207,6 +211,7 @@ class Game():
             pass
         else:
             say('Hmm...')
+        self.refreshImg()
 
     def hasItem(self, name):
         for pos in self.inv.items.values():
@@ -370,6 +375,12 @@ class Room():
         for pos in self.items.values():
             for item in pos.values():
                 item._show()
+
+    def _hide():
+        rend.clear()
+
+    def _checkSprite(self):
+        pass
 
     def _flagName(self, name):
         return _flagName(self, name)
@@ -588,6 +599,9 @@ class Item():
     def _hide(self):
         _hide(self)
 
+    def _checkSprite(self):
+        pass
+
     def getString(self, key):
         if key in self.strings.keys():
             base = self.strings[key]
@@ -633,7 +647,7 @@ class Item():
                 nItem.room = nRoom
                 nRoom.items[nPos][self.name] = nItem 
 
-        self.g.refreshImg()
+#        self.g.refreshImg()
             
 
     def _flagName(self, name):

@@ -1,7 +1,7 @@
 
 Current task:
-making sprites save
-adding changes to d'ldo sprite etc
+
+Fix cursor weirdness
 
 Implementing bldgfx
 Save current sprite
