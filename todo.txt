@@ -1,44 +1,9 @@
 
 Current task:
 
-Fix cursor weirdness
-
-Implementing bldgfx
-Save current sprite
---default sprite info to load from in constructor
+Add achievements system
 
 fix crash on cursor left/right
-
----------------------------------
-
-bldgfx module:
-
-Make Manager class
-    Holds dictionary of images and filenames
-    Loads images as needed to avoid loading duplicate images 
-
-Make Sprite class
-    Holds an image name and position
-    Has a layer
-    Has tick and draw functions that pass on to image
-    Handles fancy stuff like moving images around
-
-
-Make Renderer class
-    Has a dictionary of layers holding lists of sprits
-    Has a buffer dictionary
-    Has a refresh function that replaces the rendering dict with buffer
-    Has a play/paused
-    Has a thread that ticks sprites in main dict and draws in order
-    Has a function to clear buffer
-    Has a window to draw in
-
-
----------------------------------
-
-Make starting room image
-
-Add image support to pybld
 
 Fix stand mechanics for stand down, etc
 

@@ -257,7 +257,7 @@ class CurseInterface():
                 self.scr.pageUp()
             elif char == curses.KEY_PPAGE:
                 self.scr.pageDown()
-            else:
+            elif curses.ascii.isprint(char):
                 self.scr.home()
                 if not force:
                     cmd += chr(char)
