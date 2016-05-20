@@ -2,9 +2,6 @@
 Current task:
 Implementing bldgfx
 
-Move cframe/tick to sprite?
-Else make sprites only tick once per cycle when duplicate images
-
 Store sprites in buffer by id
 
 ---------------------------------

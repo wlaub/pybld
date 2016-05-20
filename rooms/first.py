@@ -1,4 +1,4 @@
-import game
+import game, bldgfx
 import time, sys
 import traceback
 
@@ -20,6 +20,8 @@ class Room(game.Room):
    
     _map = game.HalfMap()
     defPos = "left"
+
+    sprite = bldgfx.Sprite('img/froom/froom.bmi', 0, 0, -1)
 
     def __init__(self, g):
         self.verbs.extend(["beanup", "beandown"])
@@ -58,6 +60,8 @@ class Bean(game.Item):
         "drop": "You drop a {}."
     }
 
+    sprite = bldgfx.Sprite('img/froom/beanmd.bmi', 10, 15)
+
     verbs = ["look", "take", "drop"]
 
     defLoc = 'First Room'
@@ -79,6 +83,8 @@ class Door(game.Item):
     defPos = 'right'
 
     verbs = ["look", "open"]
+
+    sprite = bldgfx.Sprite('img/froom/door.bmi', 2, 40)
 
 
     def look(self, cmd):
@@ -202,6 +208,7 @@ class TextParser(game.Item):
     "speed": 0
     }
 
+    sprite = bldgfx.Sprite('img/froom/txt.bmi', 9, 23)
 
     def eat(self,cmd):
         game.say("Ew, no.")
@@ -294,6 +301,8 @@ class dldo(game.Item):
     defPos = 'left'
 
     verbs = ["where","look", "take", "drop", "use"]
+
+    sprite = bldgfx.Sprite('img/froom/dldo.bmi', 8, 3)
 
     def __init__(self, g):
         game.Item.__init__(self, g)

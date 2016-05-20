@@ -101,6 +101,16 @@ def _doCmd(obj, cmd):
                 return True
     return False
 
+def _show(obj):
+    if obj.sprite == None:
+        return
+    obj.g.rend.addSprite(obj.sprite)
+
+def _hide(obj):
+    if obj.sprite == None:
+        return
+    obj.g.rend.removeSprite(obj.sprite)
+
 def _getVerbs(obj):
     result = []
     result.extend(obj.verbs)
@@ -129,6 +139,8 @@ class Game():
     }
 
     alarms = {}
+
+    rend = None
 
     def __init__(self):
         self.currRoom = None
@@ -331,6 +343,8 @@ class Room():
     _map = Map()
     defPos = ""
 
+    sprite = None
+
     def __init__(self, game):
         self.items = {}
         self.items[''] = {}
@@ -338,6 +352,13 @@ class Room():
             self.items[pos] = {}
         self.g = game
         self.pos = self.defPos
+
+    def _show(self):
+        self.g.rend.clear()
+        _show(self)
+        for pos in self.items.values():
+            for item in pos.values():
+                item._show()
 
     def _flagName(self, name):
         return _flagName(self, name)
@@ -536,6 +557,7 @@ class Item():
     defLoc = ""
     defPos = ""
     defQty = 1
+    sprite = None
 
     def  __init__(self, game):
         self.qty = self.defQty
@@ -545,6 +567,14 @@ class Item():
         for key, string in self.strings.iteritems():
             string = string.replace("{}", self.name.upper())
             self.strings[key] = string
+
+    def _show(self):
+        if self.hidden:
+            return
+        _show(self)
+
+    def _hide(self):
+        _hide(self)
 
     def getString(self, key):
         if key in self.strings.keys():
