@@ -21,7 +21,7 @@ class Room(game.Room):
     _map = game.HalfMap()
     defPos = "left"
 
-    sprite = bldgfx.Sprite('img/froom/froom.bmi', 0, 0, -1)
+    defSprite = bldgfx.Sprite('img/froom/froom.bmi', 0, 0, -1)
 
     def __init__(self, g):
         self.verbs.extend(["beanup", "beandown"])
@@ -60,7 +60,7 @@ class Bean(game.Item):
         "drop": "You drop a {}."
     }
 
-    sprite = bldgfx.Sprite('img/froom/beanmd.bmi', 10, 15)
+    defSprite = bldgfx.Sprite('img/froom/beanmd.bmi', 10, 15)
 
     verbs = ["look", "take", "drop"]
 
@@ -84,7 +84,7 @@ class Door(game.Item):
 
     verbs = ["look", "open"]
 
-    sprite = bldgfx.Sprite('img/froom/door.bmi', 2, 40)
+    defSprite = bldgfx.Sprite('img/froom/door.bmi', 2, 40)
 
 
     def look(self, cmd):
@@ -208,7 +208,7 @@ class TextParser(game.Item):
     "speed": 0
     }
 
-    sprite = bldgfx.Sprite('img/froom/txt.bmi', 9, 23)
+    defSprite = bldgfx.Sprite('img/froom/txt.bmi', 9, 23)
 
     def eat(self,cmd):
         game.say("Ew, no.")
@@ -302,7 +302,7 @@ class dldo(game.Item):
 
     verbs = ["where","look", "take", "drop", "use"]
 
-    sprite = bldgfx.Sprite('img/froom/dldo.bmi', 8, 3)
+    defSprite = bldgfx.Sprite('img/froom/dldo.bmi', 8, 3)
 
     def __init__(self, g):
         game.Item.__init__(self, g)
@@ -321,6 +321,7 @@ class dldo(game.Item):
             return False
         if not self.broken:
             game.say("It breaks.")
+            self.sprite.name = 'img/froom/dldobrk.bmi'
             self.broken = True
         return True
 

@@ -1,8 +1,13 @@
 
 Current task:
+making sprites save
+adding changes to d'ldo sprite etc
+
 Implementing bldgfx
 Save current sprite
 --default sprite info to load from in constructor
+
+fix crash on cursor left/right
 
 ---------------------------------
 

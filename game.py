@@ -35,6 +35,7 @@ def getSaveNames():
     return saves
 
 scr = iface.CurseScreen()
+rend = None
 
 def sayLine(data):
     scr.sayLine(data)
@@ -102,14 +103,16 @@ def _doCmd(obj, cmd):
     return False
 
 def _show(obj):
+    global rend
     if obj.sprite == None:
         return
-    obj.g.rend.addSprite(obj.sprite)
+    rend.addSprite(obj.sprite)
 
 def _hide(obj):
+    global rend
     if obj.sprite == None:
         return
-    obj.g.rend.removeSprite(obj.sprite)
+    rend.removeSprite(obj.sprite)
 
 def _getVerbs(obj):
     result = []
@@ -140,14 +143,20 @@ class Game():
 
     alarms = {}
 
-    rend = None
-
     def __init__(self):
         self.currRoom = None
         self.flags = {}
         self.rooms = {}
         self.items = {}
         self.lastSave = "default"
+
+    def __getstate__(self):
+        return self.currRoom, self.flags, self.rooms, self.items, self.lastSave
+
+    def __setstate__(self, state):
+        self.currRoom, self.flags, self.rooms, self.items, self.lastSave = state
+        self.refreshImg()
+ 
 
     def loadModules(self):
         roomFiles = os.listdir('./rooms')
@@ -344,7 +353,7 @@ class Room():
     _map = Map()
     defPos = ""
 
-    sprite = None
+    defSprite = None
 
     def __init__(self, game):
         self.items = {}
@@ -353,9 +362,10 @@ class Room():
             self.items[pos] = {}
         self.g = game
         self.pos = self.defPos
+        self.sprite = self.defSprite
 
     def _show(self):
-        self.g.rend.clear()
+        rend.clear()
         _show(self)
         for pos in self.items.values():
             for item in pos.values():
@@ -558,7 +568,7 @@ class Item():
     defLoc = ""
     defPos = ""
     defQty = 1
-    sprite = None
+    defSprite = None
 
     def  __init__(self, game):
         self.qty = self.defQty
@@ -568,6 +578,7 @@ class Item():
         for key, string in self.strings.iteritems():
             string = string.replace("{}", self.name.upper())
             self.strings[key] = string
+        self.sprite = self.defSprite
 
     def _show(self):
         if self.hidden:
