@@ -1,9 +1,9 @@
 
 Current task:
 
-Add achievements system
+Fix cursor weirdness
 
-fix crash on cursor left/right
+Add achievements system
 
 Fix stand mechanics for stand down, etc
 
