@@ -184,7 +184,8 @@ class Game():
         self.currRoom = self.rooms['First Room']
         self.inv = self.rooms['inv']
 
-
+    def refreshImg(self):
+        self.currRoom._show()
 
     def doCmd(self, cmd):
         lf()
@@ -620,6 +621,8 @@ class Item():
                 nItem.loc = newLoc
                 nItem.room = nRoom
                 nRoom.items[nPos][self.name] = nItem 
+
+        self.g.refreshImg()
             
 
     def _flagName(self, name):

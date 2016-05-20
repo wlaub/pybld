@@ -1,8 +1,8 @@
 
 Current task:
 Implementing bldgfx
-
-Store sprites in buffer by id
+Save current sprite
+--default sprite info to load from in constructor
 
 ---------------------------------
 
