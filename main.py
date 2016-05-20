@@ -22,8 +22,12 @@ if __name__ == "__main__":
 
         rend = bldgfx.Renderer(interface.imgwin)
 
-        testSprite = bldgfx.Sprite('img/flashy.bmi', 0, 0)
+        testbg = bldgfx.Sprite('img/sunset.bmi',0,0, -1)
+        testSprite = bldgfx.Sprite('img/flashy.bmi', 0, 0, 1)
+        sprite2 = bldgfx.Sprite('img/flashy.bmi', 2, 2, 0)
         rend.addSprite(testSprite)
+        rend.addSprite(testbg)
+        rend.addSprite(sprite2)
 
         game.scr = screen
 

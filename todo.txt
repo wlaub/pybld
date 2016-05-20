@@ -1,7 +1,11 @@
 
 Current task:
-Need a better way of adding and removing sprites to draw.
+Implementing bldgfx
 
+Move cframe/tick to sprite?
+Else make sprites only tick once per cycle when duplicate images
+
+Store sprites in buffer by id
 
 ---------------------------------
 

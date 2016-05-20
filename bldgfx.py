@@ -30,14 +30,24 @@ class Sprite():
         self.x = x
         self.layer = layer
         self.name = name
+        self.frame = 0
+        self.t = 0
         pass
 
     def tick(self, man):
-        man.getImage(self.name).tick()
+        img = man.getImage(self.name)
+        self.t += 1
+        if self.t == img.frames[self.frame].length:
+            self.t = 0
+            self.frame += 1
+            if self.frame == len(img.frames):
+                self.frame = 0
+
         pass
 
     def draw(self, man, window):
-        man.getImage(self.name).draw(window, self.y, self.x)
+        img = man.getImage(self.name)
+        img.frames[self.frame].draw(window, self.y, self.x)
         pass
 
 
@@ -67,6 +77,7 @@ class Renderer():
 
     def draw(self):
         self.win.clear()
+        self.win.hline(self.win.getmaxyx()[0]-1, 0, curses.ACS_HLINE, 60)
         self.win.leaveok(1)
         keys = self.sprites.keys()
         keys.sort()

@@ -21,6 +21,10 @@ class EditWindow():
         self.h, self.w = self.win.getmaxyx()
         self.sx = 0
         self.sy = 0
+        if self.x >= self.w:
+            self.x = self.w-1
+        if self.y >= self.h:
+            self.y = self.h-1
         self.selectmode = None
 
     def __init__(self, window):
