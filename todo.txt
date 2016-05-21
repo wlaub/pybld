@@ -1,7 +1,11 @@
 
 Current task:
 
+Fix extra spaces in first line
+
 Fix cursor weirdness
+--give command line info to renderer so it can reposition cursor?
+--python curses threading?
 
 Add achievements system
 

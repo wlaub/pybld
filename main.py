@@ -29,8 +29,8 @@ if __name__ == "__main__":
         rend.addSprite(sprite2)
 
         game.scr = screen
-        g.refreshImg()
         
+        g.moveRoom('First Room')
 
         interface.commandLoop()
     except:

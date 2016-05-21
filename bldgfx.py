@@ -55,6 +55,7 @@ class Renderer():
 
     def __init__(self, window, rate = .333):
         self.win = window
+        self.win.leaveok(1)
         self.rate = rate
         self.play = True
         self.sprites = {}
@@ -78,7 +79,6 @@ class Renderer():
     def draw(self):
         self.win.clear()
         self.win.hline(self.win.getmaxyx()[0]-1, 0, curses.ACS_HLINE, 60)
-        self.win.leaveok(1)
         keys = self.sprites.keys()
         keys.sort()
         for layer in keys:

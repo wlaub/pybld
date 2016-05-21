@@ -192,9 +192,6 @@ class Game():
             item.room = room
             print("Adding item {} to room {}".format(item.name, room.name))
 
-
-
-        self.currRoom = self.rooms['First Room']
         self.inv = self.rooms['inv']
 
     def refreshImg(self):
@@ -212,6 +209,13 @@ class Game():
         else:
             say('Hmm...')
         self.refreshImg()
+
+    def moveRoom(self, name):
+        if self.currRoom:
+            self.currRoom._onLeave()
+        self.currRoom = self.rooms[name]
+        self.refreshImg()
+        self.currRoom._onEnter()
 
     def hasItem(self, name):
         for pos in self.inv.items.values():
@@ -355,6 +359,8 @@ class Room():
 
     fancyVerbs={}
 
+    flags = {}
+    
     _map = Map()
     defPos = ""
 
@@ -368,6 +374,7 @@ class Room():
         self.g = game
         self.pos = self.defPos
         self.sprite = self.defSprite
+        self.flags['entered'] = False
 
     def _show(self):
         rend.clear()
@@ -401,6 +408,24 @@ class Room():
         say("\nLocations are:\n")
 
         sayList(posList)
+
+    def _onEnter(self):
+        if self.getFlag('entered'):
+            self._onOtherEnter()
+        else:
+            self._onFirstEnter()
+
+    def _onOtherEnter(self):
+#        return
+        lf()
+        self.look("look")
+
+    def _onFirstEnter(self):
+        self.setFlag("entered", True)
+        self._onOtherEnter()
+
+    def _onLeave(self):
+        pass
 
     def getString(self, key):
         if key in self.strings.keys():

@@ -155,8 +155,10 @@ class CurseScreen(Screen):
     def paint(self):
         i = 0
         length = len(self.buffer) - self.offset
-        for i, line in enumerate(self.buffer[length-self.cmdHeight:length]):
-            self.window.addstr(i, 0, line.upper())
+        top = length-min(len(self.buffer), self.cmdHeight)
+        bottom = length
+        for i, line in enumerate(self.buffer[top:bottom]):
+            self.window.addstr(i, 0,line.upper())
             for match in re.finditer("green", line): 
                 self.window.addstr(i, match.start(), "GREEN", curses.color_pair(1))
  
@@ -170,10 +172,10 @@ class CurseScreen(Screen):
 
     def page(self, amt):
         self.offset += amt
-        if self.offset < 0:
-             self.offset = 0
         if self.offset > len(self.buffer)-self.cmdHeight:
             self.offset = len(self.buffer)-self.cmdHeight
+        if self.offset < 0:
+             self.offset = 0
         self.paint() 
 
     def pageUp(self):
