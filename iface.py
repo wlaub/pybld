@@ -190,11 +190,14 @@ class CurseInterface():
 
     cmdwin = None
 
-    def __init__(self,g):
-        self.g = g 
+    def __init__(self, g):
+        self.g = g
         self.infile = sys.stdin
         self.stdscr = curses.initscr()
         self.history = []
+
+    def setGame(g):
+        self.g = g
 
     def setScreen(self, scr):
         self.scr = scr

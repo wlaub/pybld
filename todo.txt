@@ -1,5 +1,13 @@
 
 Current task:
+Loading causes the rooms in the current Game to get their
+game instances set to the loaded game for some goddamn
+reason. (This is a problem).
+
+Refactoring with base class Bld
+
+
+Make First Room constrrutor better
 
 Fix extra spaces in first line
 

@@ -2,32 +2,41 @@ import time, sys, os
 import rooms, game, iface, bldgfx
 import readline
 import curses
+import pdb
 
-g = game.Game()
+#g = game.Game()
 
-g.loadModules()
+#g.loadModules()
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         infile = open(sys.argv[1], 'r')
 
     try:
-        interface = iface.CurseInterface(g)
-        screen = iface.CurseScreen()
-        interface.setScreen(screen)
-        screen.setWindow(interface.cmdwin)
+        curses.initscr()
 
-        rend = bldgfx.Renderer(interface.imgwin)
+#        interface = iface.CurseInterface()
+#        screen = iface.CurseScreen()
+#        interface.setScreen(screen)
+#        screen.setWindow(interface.cmdwin)
+#
+#        rend = bldgfx.Renderer(interface.imgwin)
+#        rend.playing = False
 
-        game.rend = rend
+        g = game.Game()
+        g.initScreens(iface.CurseInterface, iface.CurseScreen)
+        g.loadModules()
 
-        game.scr = screen
+#        game.rend = rend
+
+        game.scr = g.screen
         
         g.moveRoom('First Room')
 
-        interface.commandLoop()
-    except:
+        g.interface.commandLoop()
+    except Exception as e:
         curses.endwin()
+        pdb.set_trace()
         raise
 
 

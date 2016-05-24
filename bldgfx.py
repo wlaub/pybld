@@ -57,7 +57,7 @@ class Renderer():
         self.win = window
         self.win.leaveok(1)
         self.rate = rate
-        self.play = True
+        self.playing = True
         self.sprites = {}
         self.man = Manager()
         #spawn thread?
@@ -67,10 +67,10 @@ class Renderer():
     def thread(self):
         while 1:
             time.sleep(self.rate)
-            if self.play:
+            if self.playing:
                 self.tick(self.rate)
-            self.draw()
-
+                self.draw()
+    
     def tick(self, delta):
         for layer in self.sprites.values():
             for sprite in layer:
@@ -87,7 +87,7 @@ class Renderer():
         self.win.refresh()
 
     def play(self, playing):
-        self.play = playing
+        self.playing = playing
 
     def addSprite(self, sprite):
         """
