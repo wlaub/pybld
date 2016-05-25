@@ -65,7 +65,7 @@ def sayList(items):
             string += "\n"
         else:
             string += " "*(15-len(item))
-    game.say(string)
+    say(string)
 
 
 def extractSaveName(cmd):
@@ -90,44 +90,6 @@ def getInter(list1, list2):
 def _pass():
     return "pass"
 
-"""
-def _doCmd(obj, cmd):
-    for v in obj.verbs:
-        if v in cmd:
-            result = getattr(obj, v)(cmd)
-            if result != "pass":
-                return True
-    for v in obj.fancyVerbs.keys():
-        if v in cmd:
-            result = getattr(obj, obj.fancyVerbs[v])(cmd)
-            if result != "pass":
-                return True
-    return False
-
-def _show(obj):
-    global rend
-    obj._checkSprite()
-    if obj.sprite == None:
-        return
-    rend.addSprite(obj.sprite)
-
-def _hide(obj):
-    global rend
-    obj._checkSprite()
-    if obj.sprite == None:
-        return
-    rend.removeSprite(obj.sprite)
-
-def _getVerbs(obj):
-    result = []
-    result.extend(obj.verbs)
-    result.extend(obj.fancyVerbs)
-    return result
-
-def _flagName(obj, name):
-    return obj.name+"~"+name
-"""
-
 class Bld():
     fancyVerbs = {}
     addVerbs = []
@@ -148,7 +110,7 @@ class Bld():
             except:
                 print("Plain verb error: {} in Bld {}".format(v, self.name))
             else:
-                self.verbs[v] = func
+                self.verbs[v] = v
 
     def _checkSprite(self):
         pass
@@ -174,7 +136,7 @@ class Bld():
     def _doCmd(self, cmd):
         for v in self.verbs.keys():
             if v in cmd:
-                result = self.verbs[v](cmd)
+                result = getattr(self, self.verbs[v])(cmd)
                 if result != "pass":
                     return True
         return False
@@ -456,7 +418,7 @@ class Room(Bld):
             for item in pos.values():
                 item._show()
 
-    def _hide():
+    def _hide(self):
         rend.clear()
 
     def _checkSprite(self):
@@ -653,7 +615,7 @@ class Room(Bld):
 
 class Item(Bld):
     name = "item"
-    defVerbs = ["look", "where"]
+    defVerbs = ["look", "where", "take", "drop"]
     fancyVerbs = {}
     takeable = False    #for automatic take command
     dropable = False    #for automatic drop command

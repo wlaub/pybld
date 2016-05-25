@@ -11,6 +11,7 @@ Make Bld initializer TARCA:
 
 Make Item constructor add verbs based on item type flags
 
+Make module load write to a file instead of stdin
 
 Make First Room constrrutor better
 

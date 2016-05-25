@@ -60,8 +60,6 @@ class Bean(game.Item):
 
     defSprite = bldgfx.Sprite('img/froom/beanmd.bmi', 10, 15)
 
-    defVerbs = ["look", "take", "drop"]
-
     defLoc = 'First Room'
     defPos = 'left'
     defQty = 5
@@ -87,7 +85,7 @@ class Door(game.Item):
     defLoc = "First Room"
     defPos = 'right'
 
-    defVerbs = ["look", "open"]
+    addVerbs = ["open"]
 
     defSprite = bldgfx.Sprite('img/froom/door.bmi', 2, 40)
 
@@ -131,7 +129,7 @@ class Glyph(game.Item):
     }
 
     defPos = ""
-    defVerbs = ["look", "use"]
+    addVerbs = ["use"]
 
     def use(self, cmd):
        game.say(self.getString('use')) 
@@ -154,7 +152,7 @@ class BlackWind(game.Item):
 
     defPos = 'left'
 
-    defVerbs = ["where","look", "use", "take", "drop"]
+    addVerbs = ["use"]
 
     flags = {
     "time": -1, 
@@ -208,7 +206,7 @@ class TextParser(game.Item):
 
     defPos = 'left'
 
-    defVerbs = ["where","look", "use", "caress", "take", "drop", "eat"]
+    addVerbs = ["use", "caress", "eat"]
 
     flags = {
     "tries": 0,
@@ -307,7 +305,7 @@ class dldo(game.Item):
 
     defPos = 'left'
 
-    defVerbs = ["where","look", "take", "drop", "use"]
+    addVerbs = ["use"]
 
     defSprite = bldgfx.Sprite('img/froom/dldo.bmi', 8, 3)
 
