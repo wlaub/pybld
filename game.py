@@ -23,8 +23,6 @@ def load(g, filename):
     with open(makeSaveName(filename), "rb") as f:
         return pickle.load(f)
 
-
-
 def getSaveNames():
     files = os.listdir("save")
     saves = []
@@ -101,9 +99,11 @@ class Bld():
 
     def __init__(self):
         self.sprite = self.defSprite
-        self.defVerbs.extend(self.addVerbs)
         self.verbs = {}
-        verblist = [x for x in self.defVerbs if x not in self.rmVerbs]
+        verblist = list(self.defVerbs)
+        verblist.extend(self.addVerbs)
+        self.verbs = {}
+        verblist = [x for x in verblist if x not in self.rmVerbs]
         for v in verblist:
             try:
                 func = getattr(self, v)
@@ -111,6 +111,7 @@ class Bld():
                 print("Plain verb error: {} in Bld {}".format(v, self.name))
             else:
                 self.verbs[v] = v
+        self.verbs.update(self.fancyVerbs)
 
     def _checkSprite(self):
         pass
@@ -195,40 +196,40 @@ class Game(Bld):
 
 
     def loadModules(self):
-        roomFiles = os.listdir('./rooms')
-        items = []
-        for name in roomFiles:
-            modName, modExt = os.path.splitext(name)
-            if modExt == '.py' and modName != '__init__':
-                print("loading module {}".format(name))
-            
-                mod = importlib.import_module("rooms."+modName)
-#                self.addRoom(mod.Room(self, rend))
+        with open("logs/gameload", "w") as f:
+            roomFiles = os.listdir('./rooms')
+            items = []
+            for name in roomFiles:
+                modName, modExt = os.path.splitext(name)
+                if modExt == '.py' and modName != '__init__':
+                    f.write("loading module {}\n".format(name))
+                
+                    mod = importlib.import_module("rooms."+modName)
 
-                for val in dir(mod):
-                    try:
-                        thing = mod.__dict__[val]
-                        if Room in inspect.getmro(thing):
-                            print("Found Room")
-                            self.addRoom(thing())
-                        if Item in inspect.getmro(thing):
-                            print("Found item")
-                            try:
-                                nItem = thing()
-                                items.append(nItem)
-                                self.addItem(nItem)
-                            except Exception as e:
-                                print(e)
-                    except Exception as e:
-                        pass
+                    for val in dir(mod):
+                        try:
+                            thing = mod.__dict__[val]
+                            if Room in inspect.getmro(thing):
+                                f.write("Found Room\n")
+                                self.addRoom(thing())
+                            if Item in inspect.getmro(thing):
+                                f.write("Found item\n")
+                                try:
+                                    nItem = thing()
+                                    items.append(nItem)
+                                    self.addItem(nItem)
+                                except Exception as e:
+                                    f.write(e+'\n')
+                        except Exception as e:
+                            pass
 
-        for item in items:
-            room = self.rooms[item.loc]
-            room.items[item.pos][item.name] = item
-            item.room = room
-            print("Adding item {} to room {}".format(item.name, room.name))
+            for item in items:
+                room = self.rooms[item.loc]
+                room.items[item.pos][item.name] = item
+                item.room = room
+                f.write("Adding item {} to room {}\n".format(item.name, room.name))
 
-        self.inv = self.rooms['inv']
+            self.inv = self.rooms['inv']
 
     def refreshImg(self):
         self.currRoom._show()

@@ -1,19 +1,7 @@
 
 Current task:
-Refactoring with base class Bld
-
-Make Bld initializer TARCA:
-    Take list of verbs
-    Add from list of extraVerbs
-    Remove from list of delVerbs
-    Copy verbs into dictionary of functions
-    Always just dictionary for verb stuff
 
 Make Item constructor add verbs based on item type flags
-
-Make module load write to a file instead of stdin
-
-Make First Room constrrutor better
 
 Fix extra spaces in first line
 
