@@ -226,7 +226,6 @@ class Game(Bld):
         self.screen.setWindow(self.interface.cmdwin)
         
         rend = bldgfx.Renderer(self.interface.imgwin)
-        rend.play(False)
 
 
     def loadModules(self):

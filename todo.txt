@@ -1,10 +1,14 @@
 
 Current task:
-Loading causes the rooms in the current Game to get their
-game instances set to the loaded game for some goddamn
-reason. (This is a problem).
-
 Refactoring with base class Bld
+
+Make Bld initializer TARCA:
+    Take list of verbs
+    Add from list of extraVerbs
+    Remove from list of delVerbs
+    Copy verbs into dictionary of functions
+    Always just dictionary for verb stuff
+
 
 
 Make First Room constrrutor better

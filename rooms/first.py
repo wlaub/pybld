@@ -330,7 +330,7 @@ class dldo(game.Item):
             return False
         if not self.broken:
             game.say("It breaks.")
-            self.sprite.name = 'img/froom/dldobrk.bmi'
+            self.sprite.change('img/froom/dldobrk.bmi')
             self.broken = True
         return True
 

@@ -34,6 +34,11 @@ class Sprite():
         self.t = 0
         pass
 
+    def change(self, name):
+        self.name = name
+        self.frame = 0
+        self.t = 0
+
     def tick(self, man):
         img = man.getImage(self.name)
         self.t += 1
