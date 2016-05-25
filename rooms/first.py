@@ -23,9 +23,7 @@ class Room(game.Room):
 
     defSprite = bldgfx.Sprite('img/froom/froom.bmi', 0, 0, -1)
 
-    def __init__(self):
-        self.verbs.extend(["beanup", "beandown"])
-        game.Room.__init__(self)
+    addVerbs = ["beanup","beandown"]
 
     def beanup(self, cmd):
         if not 'bean' in self.items['left'].keys():
@@ -62,7 +60,7 @@ class Bean(game.Item):
 
     defSprite = bldgfx.Sprite('img/froom/beanmd.bmi', 10, 15)
 
-    verbs = ["look", "take", "drop"]
+    defVerbs = ["look", "take", "drop"]
 
     defLoc = 'First Room'
     defPos = 'left'
@@ -89,7 +87,7 @@ class Door(game.Item):
     defLoc = "First Room"
     defPos = 'right'
 
-    verbs = ["look", "open"]
+    defVerbs = ["look", "open"]
 
     defSprite = bldgfx.Sprite('img/froom/door.bmi', 2, 40)
 
@@ -133,7 +131,7 @@ class Glyph(game.Item):
     }
 
     defPos = ""
-    verbs = ["look", "use"]
+    defVerbs = ["look", "use"]
 
     def use(self, cmd):
        game.say(self.getString('use')) 
@@ -156,7 +154,7 @@ class BlackWind(game.Item):
 
     defPos = 'left'
 
-    verbs = ["where","look", "use", "take", "drop"]
+    defVerbs = ["where","look", "use", "take", "drop"]
 
     flags = {
     "time": -1, 
@@ -210,7 +208,7 @@ class TextParser(game.Item):
 
     defPos = 'left'
 
-    verbs = ["where","look", "use", "caress", "take", "drop", "eat"]
+    defVerbs = ["where","look", "use", "caress", "take", "drop", "eat"]
 
     flags = {
     "tries": 0,
@@ -309,7 +307,7 @@ class dldo(game.Item):
 
     defPos = 'left'
 
-    verbs = ["where","look", "take", "drop", "use"]
+    defVerbs = ["where","look", "take", "drop", "use"]
 
     defSprite = bldgfx.Sprite('img/froom/dldo.bmi', 8, 3)
 

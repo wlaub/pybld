@@ -1,7 +1,7 @@
 import game
 
 class Room(game.Room):
-    verbs = ["inv"]
+    defVerbs = ["inv"]
     name = 'inv'
     desc = "This is not a room it is your inventory. What are you doing here?"
 

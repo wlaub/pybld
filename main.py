@@ -12,8 +12,10 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         infile = open(sys.argv[1], 'r')
 
+    g = game.Game()
+    g.loadModules()
+
     try:
-        curses.initscr()
 
 #        interface = iface.CurseInterface()
 #        screen = iface.CurseScreen()
@@ -23,9 +25,9 @@ if __name__ == "__main__":
 #        rend = bldgfx.Renderer(interface.imgwin)
 #        rend.playing = False
 
-        g = game.Game()
+        mainScreen = curses.initscr()
         g.initScreens(iface.CurseInterface, iface.CurseScreen)
-        g.loadModules()
+#        g.loadModules()
 
 #        game.rend = rend
 

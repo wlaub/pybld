@@ -129,15 +129,27 @@ def _flagName(obj, name):
 """
 
 class Bld():
-    verbs = []
     fancyVerbs = {}
+    addVerbs = []
+    rmVerbs = []
+    defVerbs = []
     name = ''
     strings = {}
     defSprite = None
 
     def __init__(self):
         self.sprite = self.defSprite
- 
+        self.defVerbs.extend(self.addVerbs)
+        self.verbs = {}
+        verblist = [x for x in self.defVerbs if x not in self.rmVerbs]
+        for v in verblist:
+            try:
+                func = getattr(self, v)
+            except:
+                print("Plain verb error: {} in Bld {}".format(v, self.name))
+            else:
+                self.verbs[v] = func
+
     def _checkSprite(self):
         pass
 
@@ -157,20 +169,12 @@ class Bld():
         return self.name + "~" + name
 
     def _getVerbs(self):
-        result = []
-        result.extend(self.verbs)
-        result.extend(self.fancyVerbs)
-        return result
+        return self.verbs.keys()
 
     def _doCmd(self, cmd):
-        for v in self.verbs:
+        for v in self.verbs.keys():
             if v in cmd:
-                result = getattr(self, v)(cmd)
-                if result != "pass":
-                    return True
-        for v in self.fancyVerbs.keys():
-            if v in cmd:
-                result = getattr(self, self.fancyVerbs[v])(cmd)
+                result = self.verbs[v](cmd)
                 if result != "pass":
                     return True
         return False
@@ -190,7 +194,7 @@ class Game(Bld):
     force = ""
     done = False
 
-    verbs = ["debug", "help", "exit", "hint", "score", "save", "load"]
+    defVerbs = ["debug", "help", "exit", "hint", "score", "save", "load"]
 
     fancyVerbs = {
     "==>": "_mspa"
@@ -388,7 +392,9 @@ class Game(Bld):
         return True
 
     def debug(self, cmd):
+        rend.play(False)
         pdb.set_trace()
+        rend.play(True)
        
 
     def score(self, cmd):
@@ -419,7 +425,7 @@ class Game(Bld):
 
 class Room(Bld):
     name = ""
-    verbs = ["look", "go", "sit", "stand", "loc"]
+    defVerbs = ["look", "go", "sit", "stand", "loc"]
 
     strings = {
     "desc": "It is a room?",
@@ -647,7 +653,7 @@ class Room(Bld):
 
 class Item(Bld):
     name = "item"
-    verbs = ["look", "where"]
+    defVerbs = ["look", "where"]
     fancyVerbs = {}
     takeable = False    #for automatic take command
     dropable = False    #for automatic drop command

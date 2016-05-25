@@ -9,6 +9,7 @@ Make Bld initializer TARCA:
     Copy verbs into dictionary of functions
     Always just dictionary for verb stuff
 
+Make Item constructor add verbs based on item type flags
 
 
 Make First Room constrrutor better
