@@ -23,9 +23,9 @@ class Room(game.Room):
 
     defSprite = bldgfx.Sprite('img/froom/froom.bmi', 0, 0, -1)
 
-    def __init__(self, g):
+    def __init__(self):
         self.verbs.extend(["beanup", "beandown"])
-        game.Room.__init__(self, g)
+        game.Room.__init__(self)
 
     def beanup(self, cmd):
         if not 'bean' in self.items['left'].keys():
@@ -43,7 +43,7 @@ class Room(game.Room):
 
     def sitDown(self):
         game.say("You sit down on the floor.")
-        self.g.flags["sit"] = "down"
+        game.g.flags["sit"] = "down"
         return True
 
 
@@ -95,14 +95,14 @@ class Door(game.Item):
 
 
     def look(self, cmd):
-        state = self.g.getFlag("text pars'r", 0)
+        state = game.g.getFlag("text pars'r", 0)
         if state == 0:
             game.say(self.getString("desc"))
         else:
             game.say(self.getString("desc2"))
   
     def open(self, cmd):
-        state = self.g.getFlag("text pars'r", 0)
+        state = game.g.getFlag("text pars'r", 0)
         pos = self.room.pos
 
         if state ==0:
@@ -112,10 +112,12 @@ class Door(game.Item):
         game.say("You open the door and walk through into the next room. There's no going back now. Hope you didn't miss anything important!")
   
         game.lf()
-        game.say("Congratulations! You completed the demo of pybld.\nYour score was: {score}\nYour hair was: {hair}\n Your turns was: {turn}".format(score = self.g.getScore(), hair=self.g.getHair(), turn=self.g.getTurns()))
-        game.say("BLACK WINDS obtained: {}/1".format(self.g.hasItem('black wind')))
+        game.say("Congratulations! You completed the demo of pybld.\nYour score was: {score}\nYour hair was: {hair}\n Your turns was: {turn}".format(score = game.g.getScore(), hair=game.g.getHair(), turn=game.g.getTurns()))
+
+        #replace with achievements
+        game.say("BLACK WINDS obtained: {}/1".format(game.g.hasItem('black wind')))
         game.say("GLYPHS PARS'D: {}/1".format(0))
-        game.say("D'LDOS BROK'N: {}/1".format(1 if self.g.items["d'ldo"].broken else 0))
+        game.say("D'LDOS BROK'N: {}/1".format(1 if game.g.items["d'ldo"].broken else 0))
         return True
  
 class Glyph(game.Item):
@@ -173,13 +175,13 @@ class BlackWind(game.Item):
         else:
             self.hidden = True
             return
-        self.g.setAlarm(self.timeout, self._tick)
+        game.g.setAlarm(self.timeout, self._tick)
         self.setFlag("ticks",t+1)
 
 
     def take(self, cmd):
         blkTime = self.getFlag("time")
-        currTime = self.g.getFlag("turns")
+        currTime = game.g.getFlag("turns")
         escape = self.getFlag("escape")
         if blkTime < 0:
             return game.fail("...")
@@ -229,10 +231,10 @@ class TextParser(game.Item):
 
     def take(self, cmd):
         if game.Item.take(self, cmd):
-            wind = self.g.items['black wind']
-            self.g.setAlarm(wind.timeout, wind._tick)
-            blkTime = self.g.getFlag("turns")
-            self.g.items['black wind'].setFlag("time", blkTime)
+            wind = game.g.items['black wind']
+            game.g.setAlarm(wind.timeout, wind._tick)
+            blkTime = game.g.getFlag("turns")
+            game.g.items['black wind'].setFlag("time", blkTime)
             return True
         return False
 
@@ -248,7 +250,7 @@ class TextParser(game.Item):
             game.say(self.getString("usePrimed"))
             return False
         elif speed > 1 and speed < len(self.speedStr)+2:
-            self.g.forceCmd("use text pars'r")
+            game.g.forceCmd("use text pars'r")
             self.setFlag("speed", speed + 1)
             game.say(self.speedStr[speed-2])
         elif speed == len(self.speedStr) +2:
@@ -257,7 +259,7 @@ class TextParser(game.Item):
             game.sayLine("But you're still ")
             game.spell("h u n g r y", .25)
             game.say("...")
-            self.g.flags["text pars'r"] = 1
+            game.g.flags["text pars'r"] = 1
             self._move("trash")
         else:
             if tries > 0:
@@ -311,8 +313,8 @@ class dldo(game.Item):
 
     defSprite = bldgfx.Sprite('img/froom/dldo.bmi', 8, 3)
 
-    def __init__(self, g):
-        game.Item.__init__(self, g)
+    def __init__(self):
+        game.Item.__init__(self)
         self.broken = False
 
     def look(self, cmd):
@@ -345,7 +347,7 @@ class dldo(game.Item):
             try:
                 fakeCmd = self.strings['cmd']
                 v = "defy"
-                getattr(self.g, v)(cmd)
+                getattr(game.g, v)(cmd)
             except Exception as e:
                 eList = traceback.format_stack()
                 eList = eList[:-2]

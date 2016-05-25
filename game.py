@@ -36,7 +36,7 @@ def getSaveNames():
 
 scr = iface.CurseScreen()
 rend = None
-
+g = None
 
 def sayLine(data):
     scr.sayLine(data)
@@ -135,8 +135,7 @@ class Bld():
     strings = {}
     defSprite = None
 
-    def __init__(self, game):
-        self.g = game
+    def __init__(self):
         self.sprite = self.defSprite
  
     def _checkSprite(self):
@@ -146,13 +145,13 @@ class Bld():
         self._checkSprite()
         if self.sprite == None:
             return
-        self.g.rend.addSprite(self.sprite)
+        rend.addSprite(self.sprite)
     
     def _hide(self):
         self._checkSprite()
         if self.sprite == None:
             return
-        self.g.rend.removeSprite(self.sprite)
+        rend.removeSprite(self.sprite)
 
     def _flagName(self, name):
         return self.name + "~" + name
@@ -200,8 +199,9 @@ class Game(Bld):
     alarms = {}
 
     def __init__(self):
-        Bld.__init__(self, self)
-
+        global g
+        Bld.__init__(self)
+        g = self
         self.currRoom = None
         self.flags = {}
         self.rooms = {}
@@ -209,23 +209,24 @@ class Game(Bld):
         self.lastSave = "default"
 
     def __getstate__(self):
-        return self.currRoom, self.flags, self.rooms, self.items, self.lastSave
+        return self.currRoom, self.inv, self.flags, self.rooms, self.items, self.lastSave
 
     def __setstate__(self, state):
-        self.currRoom, self.flags, self.rooms, self.items, self.lastSave = state
-#        self.refreshImg()
+        self.currRoom, self.inv, self.flags, self.rooms, self.items, self.lastSave = state
+        self.refreshImg()
 
     def _checkSprite(self):
         pass 
 
     def initScreens(self, Interface, Screen):
+        global rend, scr
         self.interface = Interface(self)
         self.screen = Screen()
         self.interface.setScreen(self.screen)
         self.screen.setWindow(self.interface.cmdwin)
-
-        self.rend = bldgfx.Renderer(self.interface.imgwin)
-        self.rend.play(False)
+        
+        rend = bldgfx.Renderer(self.interface.imgwin)
+        rend.play(False)
 
 
     def loadModules(self):
@@ -244,11 +245,11 @@ class Game(Bld):
                         thing = mod.__dict__[val]
                         if Room in inspect.getmro(thing):
                             print("Found Room")
-                            self.addRoom(thing(self))
+                            self.addRoom(thing())
                         if Item in inspect.getmro(thing):
                             print("Found item")
                             try:
-                                nItem = thing(self)
+                                nItem = thing()
                                 items.append(nItem)
                                 self.addItem(nItem)
                             except Exception as e:
@@ -383,7 +384,6 @@ class Game(Bld):
         if loadGame == None:
             say("Failed to load game {}.".format(self.lastSave))
             return False
-        loadGame.rend = self.rend
         self.__dict__.update(loadGame.__dict__)
         say("Loaded gamed {}.".format(self.lastSave))
         return True
@@ -433,8 +433,8 @@ class Room(Bld):
     _map = Map()
     defPos = ""
 
-    def __init__(self, game):
-        Bld.__init__(self, game)
+    def __init__(self):
+        Bld.__init__(self)
 
         self.items = {}
         self.items[''] = {}
@@ -445,14 +445,14 @@ class Room(Bld):
 
 
     def _show(self):
-        self.g.rend.clear()
+        rend.clear()
         Bld._show(self)
         for pos in self.items.values():
             for item in pos.values():
                 item._show()
 
     def _hide():
-        self.g.rend.clear()
+        rend.clear()
 
     def _checkSprite(self):
         pass
@@ -507,10 +507,10 @@ class Room(Bld):
         return verbs
 
     def getFlag(self, name):
-        return self.g.getFlag(self._flagName(name), self.flags[name])
+        return g.getFlag(self._flagName(name), self.flags[name])
 
     def setFlag(self, name, val):
-        self.g.flags[self._flagName(name)] = val
+        g.flags[self._flagName(name)] = val
 
     def doCmd(self, cmd):
         for pos in self.items.values():
@@ -574,7 +574,7 @@ class Room(Bld):
         if cmd == "go":
             return self._goEmpty()
 
-        if self.g.getFlag("sit") != "not":
+        if g.getFlag("sit") != "not":
             return self._goSit(cmd)
 
         if self._goDir(cmd):
@@ -584,7 +584,7 @@ class Room(Bld):
 
 
     def sit(self, cmd):
-        state = self.g.getFlag("sit", "down")
+        state = g.getFlag("sit", "down")
 
         direction = getDir(cmd)
 
@@ -607,7 +607,7 @@ class Room(Bld):
             return fail("You cannot sit in the direction.")
 
     def stand(self, cmd):
-        state = self.g.getFlag("sit", "down")
+        state = g.getFlag("sit", "down")
 
         if state == "not":
             return fail("You are already standing.")
@@ -637,12 +637,12 @@ class Room(Bld):
 
     def standUp(self):
         say("You stand up. You are now standing.")
-        self.g.flags["sit"] = "not"
+        g.flags["sit"] = "not" #fix this
         return True
 
     def standDown(self):
         say("You chill the fuck out. You are no longer AGGRO.")
-        self.g.flags["aggro"] = 0
+        g.flags["aggro"] = 0 #fix this
         return True
 
 
@@ -676,8 +676,8 @@ class Item(Bld):
             self.fancyVerbs[name] = f
         return f
 
-    def  __init__(self, game):
-        Bld.__init__(self, game)
+    def  __init__(self):
+        Bld.__init__(self)
         self.qty = self.defQty
         self.loc = self.defLoc
         self.pos = self.defPos
@@ -720,7 +720,7 @@ class Item(Bld):
         else:
             self.qty -=1
 
-        nRoom = self.g.rooms[newLoc]
+        nRoom = g.rooms[newLoc]
         nPos = nRoom.pos
 
         ####Change for qtys
@@ -733,19 +733,17 @@ class Item(Bld):
             if self.name in nRoom.items[nPos].keys():
                 nRoom.items[nPos][self.name].qty += 1
             else:
-                nItem = self.__class__(self.g)
+                nItem = self.__class__()
                 nItem.qty = 1
                 nItem.loc = newLoc
                 nItem.room = nRoom
                 nRoom.items[nPos][self.name] = nItem 
 
-#        self.g.refreshImg()
-
     def getFlag(self, name):
-        return self.g.getFlag(self._flagName(name), self.flags[name])
+        return g.getFlag(self._flagName(name), self.flags[name])
 
     def setFlag(self, name, val):
-        self.g.flags[self._flagName(name)] = val
+        g.flags[self._flagName(name)] = val
 
 
     def getGround(self ):
@@ -788,7 +786,7 @@ class Item(Bld):
             return fail()
         say(self.getString('drop'))
         if self.dropable:
-            room = self.g.currRoom
+            room = g.currRoom
             pPos = room.pos
             self.pos = pPos
             self._move(room.name)
