@@ -96,7 +96,7 @@ class Bld():
     name = ''
     strings = {}
     defSprite = None
-    flags = {}
+    defFlags = {}
     flagDec = ''
 
 
@@ -152,12 +152,12 @@ class Bld():
     def getFlag(self, name):
         """
         Retrieves the requested flag from the game flag
-        dictionary. Returns the default from self.flags if
+        dictionary. Returns the default from defFlags if
         not already set. Returns none if no default.
         """
         default = None
-        if name in self.flags.keys():
-            default = self.flags[name]
+        if name in self.defFlags.keys():
+            default = self.defFlags[name]
         return g.getFlag(self._flagName(name), default)
       
     def setFlag(self, name, val):
@@ -184,7 +184,7 @@ class Bld():
 
 class Game(Bld):
 
-    baseFlags = {
+    defFlags = {
     "subTurn": 0,
     "turns": 0,
     "score": 0,
@@ -193,6 +193,9 @@ class Game(Bld):
 
     force = ""
     done = False
+
+    strings =   { 'fail': 'Hmm...'
+                }
 
     defVerbs = ["debug", "help", "exit", "hint", "score", "save", "load"]
 
@@ -220,6 +223,12 @@ class Game(Bld):
         self.refreshImg()
 
     def initScreens(self, Interface, Screen):
+        """
+        Initializes the Interface and Screen objects from
+        the given classes, then initalizes the renderer
+        from the given screen. Also sets global variables
+        for renderer and screen.
+        """
         global rend, scr
         self.interface = Interface(self)
         self.screen = Screen()
@@ -230,9 +239,16 @@ class Game(Bld):
         rend = bldgfx.Renderer(self.interface.imgwin)
 
     def commandLoop(self):
+        """
+        Runs the game.
+        """
         self.interface.commandLoop()
 
     def loadModules(self):
+        """
+        Loads rooms from all modules in rooms/*.py. and sets
+        inventory to the room named 'inv', which must exist.
+        """
         with open("logs/gameload", "w") as f:
             roomFiles = os.listdir('./rooms')
             items = []
@@ -256,7 +272,7 @@ class Game(Bld):
                                     items.append(nItem)
                                     self.addItem(nItem)
                                 except Exception as e:
-                                    f.write(e+'\n')
+                                    f.write(str(e)+'\n')
                         except Exception as e:
                             pass
 
@@ -267,44 +283,6 @@ class Game(Bld):
                 f.write("Adding item {} to room {}\n".format(item.name, room.name))
 
             self.inv = self.rooms['inv']
-
-    def refreshImg(self):
-        self.currRoom._show()
-
-    def doCmd(self, cmd):
-        lf()
-        self.tickTurn()
-        if self.inv.doCmd(cmd):
-            pass
-        elif self.currRoom.doCmd(cmd):
-            pass
-        elif self._doCmd(cmd):
-            pass
-        else:
-            say('Hmm...')
-        self.refreshImg()
-
-    def moveRoom(self, name):
-        if self.currRoom:
-            self.currRoom._onLeave()
-        self.currRoom = self.rooms[name]
-        self.refreshImg()
-        self.currRoom._onEnter()
-
-    def hasItem(self, name):
-        for pos in self.inv.items.values():
-            if name in pos.keys():
-                return pos[name].qty
-        return 0
-
-    def getVerbs(self):
-        verbs = []
-
-        verbs.extend(_getVerbs(self))
-        verbs.extend(self.inv.getVerbs())
-        verbs.extend(self.currRoom.getVerbs())
-        # Making lists of verbs for autocompletion
-        return verbs
 
     def addRoom(self, room):
         if not room.name in self.rooms.keys():
@@ -320,11 +298,72 @@ class Game(Bld):
         else:
             print("Failed to add duplicate item")
 
+
+    def refreshImg(self):
+        self.currRoom._show()
+
+    def doCmd(self, cmd):
+        """
+        Evaluates the given command and says the fail string
+        if the command isn't currently valid. Order is:
+        inv -> room -> game
+        """
+        lf()
+        self.tickTurn()
+        if self.inv.doCmd(cmd):
+            pass
+        elif self.currRoom.doCmd(cmd):
+            pass
+        elif self._doCmd(cmd):
+            pass
+        else:
+            say(self.getString('fail'))
+        self.refreshImg()
+
+    def moveRoom(self, name):
+        """
+        Changes the current room, refreshes rendering info,
+        and calls exit and enter functions.
+        """
+        if self.currRoom:
+            self.currRoom._onLeave()
+        self.currRoom = self.rooms[name]
+        self.refreshImg()
+        self.currRoom._onEnter()
+
+    def hasItem(self, name):
+        """
+        Checks to see if an item with the given name is in
+        the inventory and returns the quantity.
+        """
+        for pos in self.inv.items.values():
+            if name in pos.keys():
+                return pos[name].qty
+        return 0
+
+    def getVerbs(self):
+        """
+        Returns a list of all currently valid verbs i.e.
+        from the game, the current room, and the inventory.
+        This is for autocompletion support.
+        """
+        verbs = []
+
+        verbs.extend(self._getVerbs())
+        verbs.extend(self.inv.getVerbs())
+        verbs.extend(self.currRoom.getVerbs())
+        return verbs
+
     def getFlag(self, name, default = None):
+        """
+        Retrieves the requested flag. If not set, returns
+        and sets the value from defFlags. If still not set,
+        returns default.
+        """
         if name in self.flags.keys():
             return self.flags[name]
-        elif name in self.baseFlags.keys():
-            self.flags[name] = self.baseFlags[name]
+        elif name in self.defFlags.keys():
+            self.flags[name] = self.defFlags[name]
             return self.flags[name]
         else:
             return default
@@ -333,6 +372,9 @@ class Game(Bld):
         self.flags[name] = val
 
     def forceCmd(self, cmd):
+        """
+        Forces the next command to be the given command.
+        """
         self.force = cmd
 
     def getScore(self):
@@ -344,7 +386,11 @@ class Game(Bld):
     def getHair(self):
         return self.getFlag("hair")
 
-    def setAlarm(self, delay, func):
+    def setAlarm(self, delay, func, *args, **kwargs):
+        """
+        Sets an alarm to call the function func after delay
+        turns with the given arguments.
+        """
         turn = self.getFlag("turns")+delay
         if not turn in self.alarms.keys():
             self.alarms[turn] = []
@@ -436,7 +482,7 @@ class Room(Bld):
     "loc": "You are {loc}."
     }
 
-    flags = {}
+    defFlags = {}
     flagDec = '~'
     
     _map = Map()
@@ -450,8 +496,7 @@ class Room(Bld):
         for pos in self._map.locs.keys():
             self.items[pos] = {}
         self.pos = self.defPos
-        self.flags['entered'] = False
-
+        self.defFlags['entered'] = False
 
     def _show(self):
         rend.clear()
@@ -660,7 +705,7 @@ class Item(Bld):
                 , "drop": "You drop the {}."
                 }
     room = None
-    flags = {} 
+    defFlags = {} 
     flagDev = '`'
     defLoc = ""
     defPos = ""

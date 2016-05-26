@@ -14,9 +14,6 @@ class Room(game.Room):
     "beandown": "You decrement the beancount."
     }
 
-    flags={
-    
-    }
    
     _map = game.HalfMap()
     defPos = "left"
@@ -154,7 +151,7 @@ class BlackWind(game.Item):
 
     addVerbs = ["use"]
 
-    flags = {
+    defFlags = {
     "time": -1, 
     "ticks": 0,
     "escape": False,
@@ -208,7 +205,7 @@ class TextParser(game.Item):
 
     addVerbs = ["use", "caress", "eat"]
 
-    flags = {
+    defFlags = {
     "tries": 0,
     "speed": 0
     }

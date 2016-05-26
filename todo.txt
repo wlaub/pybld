@@ -2,9 +2,9 @@
 Current task:
 Documentation
 
-Move string handling to Bld
+Make renderer optional or make empry renderer class
 
-Make Item constructor add verbs based on item type flags
+Make alarm take args
 
 Fix extra spaces in first line
 
