@@ -1,5 +1,8 @@
 
 Current task:
+Documentation
+
+Move string handling to Bld
 
 Make Item constructor add verbs based on item type flags
 

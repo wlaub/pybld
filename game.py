@@ -96,6 +96,9 @@ class Bld():
     name = ''
     strings = {}
     defSprite = None
+    flags = {}
+    flagDec = ''
+
 
     def __init__(self):
         self.sprite = self.defSprite
@@ -129,7 +132,7 @@ class Bld():
         rend.removeSprite(self.sprite)
 
     def _flagName(self, name):
-        return self.name + "~" + name
+        return self.name + self.flagDec + name
 
     def _getVerbs(self):
         return self.verbs.keys()
@@ -142,7 +145,12 @@ class Bld():
                     return True
         return False
 
+    def getFlag(self, name):
+        return g.getFlag(self._flagName(name), self.flags[name])
       
+    def setFlag(self, name, val):
+        g.setFlag(self._flagName(name), val)
+
 
 
 class Game(Bld):
@@ -191,9 +199,12 @@ class Game(Bld):
         self.screen = Screen()
         self.interface.setScreen(self.screen)
         self.screen.setWindow(self.interface.cmdwin)
-        
+       
+        scr = self.screen 
         rend = bldgfx.Renderer(self.interface.imgwin)
 
+    def commandLoop(self):
+        self.interface.commandLoop()
 
     def loadModules(self):
         with open("logs/gameload", "w") as f:
@@ -291,6 +302,9 @@ class Game(Bld):
             return self.flags[name]
         else:
             return default
+
+    def setFlag(self, name, val):
+        self.flags[name] = val
 
     def forceCmd(self, cmd):
         self.force = cmd
@@ -397,6 +411,7 @@ class Room(Bld):
     }
 
     flags = {}
+    flagDec = '~'
     
     _map = Map()
     defPos = ""
@@ -473,12 +488,6 @@ class Room(Bld):
             for item in pos.values():
                 verbs.extend(item.getVerbs())
         return verbs
-
-    def getFlag(self, name):
-        return g.getFlag(self._flagName(name), self.flags[name])
-
-    def setFlag(self, name, val):
-        g.flags[self._flagName(name)] = val
 
     def doCmd(self, cmd):
         for pos in self.items.values():
@@ -634,6 +643,7 @@ class Item(Bld):
                 }
     room = None
     flags = {} 
+    flagDev = '`'
     defLoc = ""
     defPos = ""
     defQty = 1
@@ -706,13 +716,6 @@ class Item(Bld):
                 nItem.loc = newLoc
                 nItem.room = nRoom
                 nRoom.items[nPos][self.name] = nItem 
-
-    def getFlag(self, name):
-        return g.getFlag(self._flagName(name), self.flags[name])
-
-    def setFlag(self, name, val):
-        g.flags[self._flagName(name)] = val
-
 
     def getGround(self ):
         if self.visible and not self.hidden:
