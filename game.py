@@ -382,7 +382,10 @@ class Game(Bld):
 
     def getTurns(self):
         return self.getFlag("turns")
-    
+    def setTurns(self, val):
+        self.setFlag("turns", val)  
+ 
+    #possibly better to derive the game class? 
     def getHair(self):
         return self.getFlag("hair")
 
@@ -391,42 +394,55 @@ class Game(Bld):
         Sets an alarm to call the function func after delay
         turns with the given arguments.
         """
-        turn = self.getFlag("turns")+delay
+        turn = self.getTurns()+delay
         if not turn in self.alarms.keys():
             self.alarms[turn] = []
-        self.alarms[turn].append(func)
+        self.alarms[turn].append((func, args, kwargs))
 
     def tickTurn(self):
-        turns = self.getFlag("turns")
+        """
+        Move time forward. In this implementation the turn
+        count increments every hair commands.
+        Also call any relevant alarm functions for the next
+        turn.
+        """
+        turns = self.getTurns()
         sub = self.getFlag("subTurn")
-        hair = self.getFlag("hair")
+        hair = self.getHair()
         sub += 1
 
         if sub >= hair:
             sub = 0
             turns += 1
             if turns in self.alarms.keys():
-                for func in self.alarms[turns]:
-                    func()
+                for func, args, kwargs in self.alarms[turns]:
+                    func(*args, **kwargs)
 
         self.flags["subTurn"] = sub
-        self.flags["turns"] = turns
-
+        self.setTurns(turns)
 
     def addScore(self, val):
+        """
+        Add points to the player's score.
+        """
         score = self.getFlag("score")
         self.flags["score"] = score+val
 
     def _saveLoad(self, cmd, func):
+        """
+        Gets save name info from save and load commands.
+        """
         saveName = extractSaveName(cmd)
         if saveName == None:
             saveName = self.lastSave
         self.lastSave = saveName
         return func(self, saveName)
 
-        
-
     def save(self, cmd):
+        """
+        Handle the save command: call _saveLoad with the 
+        global save functions
+        """
         self._saveLoad(cmd, save)
         say("Saved gamed as {}.".format(self.lastSave))
         return True
