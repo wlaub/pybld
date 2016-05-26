@@ -428,7 +428,7 @@ class Game(Bld):
         score = self.getFlag("score")
         self.flags["score"] = score+val
 
-    def _saveLoad(self, cmd, func):
+    def _getSaveName(self, cmd):
         """
         Gets save name info from save and load commands.
         """
@@ -436,19 +436,23 @@ class Game(Bld):
         if saveName == None:
             saveName = self.lastSave
         self.lastSave = saveName
-        return func(self, saveName)
 
     def save(self, cmd):
         """
-        Handle the save command: call _saveLoad with the 
-        global save functions
+        Save the game using the given save filename
         """
-        self._saveLoad(cmd, save)
+        self._getSaveName(cmd)
+        save(self, self.lastSave)
         say("Saved gamed as {}.".format(self.lastSave))
         return True
 
     def load(self, cmd):
-        loadGame = self._saveLoad(cmd, load)
+        """
+        Load the game from the given save file and update
+        self from the loaded information.
+        """
+        self._getSaveName(cmd)
+        loadGame = load(self, self.lastSave)
         if loadGame == None:
             say("Failed to load game {}.".format(self.lastSave))
             return False
