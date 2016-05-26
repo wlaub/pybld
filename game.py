@@ -146,10 +146,35 @@ class Bld():
         return False
 
     def getFlag(self, name):
-        return g.getFlag(self._flagName(name), self.flags[name])
+        """
+        Retrieves the requested flag from the game flag
+        dictionary. Returns the default from self.flags if
+        not already set. Returns none if no default.
+        """
+        default = None
+        if name in self.flags.keys():
+            default = self.flags[name]
+        return g.getFlag(self._flagName(name), default)
       
     def setFlag(self, name, val):
+        """
+        Sets the given flag in the game flag dictionary.
+        """
         g.setFlag(self._flagName(name), val)
+
+    def getString(self, key, **kwargs):
+        """
+        Retrieves the descriptive string from strings,
+        formats it with name and kwargs, and returns the
+        result.
+        """
+        if key in self.strings.keys():
+            base = self.strings[key]
+        else:
+            return None
+        return base.format(self.name.upper(), **kwargs) 
+
+       
 
 
 
@@ -464,7 +489,6 @@ class Room(Bld):
             self._onFirstEnter()
 
     def _onOtherEnter(self):
-#        return
         lf()
         self.look("look")
 
@@ -476,11 +500,7 @@ class Room(Bld):
         pass
 
     def getString(self, key):
-        if key in self.strings.keys():
-            base = self.strings[key]
-        elif key in Room.strings.keys():
-            base = Room.strings[key]
-        return base.format(self.name.upper(), loc=self.pos) 
+        return Bld.getString(self, key, loc=self.pos)
 
     def getVerbs(self):
         verbs = _getVerbs(self)
@@ -673,11 +693,7 @@ class Item(Bld):
         pass
 
     def getString(self, key):
-        if key in self.strings.keys():
-            base = self.strings[key]
-        elif key in Item.strings.keys():
-            base = Item.strings[key]
-        return base.format(self.name.upper(), q = self.qty) 
+        return Bld.getString(self, key, q= self.qty)
 
     def getVerbs(self):
         return _getVerbs(self)
