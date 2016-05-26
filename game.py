@@ -461,15 +461,22 @@ class Game(Bld):
         return True
 
     def debug(self, cmd):
+        """
+        Debug command. Stops rendering and starts pdb, then
+        restarts rendering.
+        """
         rend.play(False)
         pdb.set_trace()
         rend.play(True)
        
 
     def score(self, cmd):
-        score = self.getFlag("score")
-        turns = self.getFlag("turns")
-        hair = self.getFlag("hair")
+        """
+        Command to display the player's scoring info.
+        """
+        score = self.getScore()
+        turns = self.getTurns()
+        hair = self.getHair()
         scoreStr = "SCORE: {}".format(score)
         scoreStr += " "*(15 - len(scoreStr))
         scoreStr += "TURNS: {}".format(turns)
