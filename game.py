@@ -10,7 +10,9 @@ import pdb
 WIDTH = 60
 HEIGHT = 45
 
-directions = ["up", "down", "left", "right"]
+scr = iface.CurseScreen()
+rend = None
+g = None
 
 def makeSaveName(name):
     return "save/"+name+".bld"
@@ -32,27 +34,53 @@ def getSaveNames():
             saves.append(name)
     return saves
 
-scr = iface.CurseScreen()
-rend = None
-g = None
+def extractSaveName(cmd):
+    """
+    Extracts a save file name by returning the first word
+    after "save" or "load".
+    """
+    parts = cmd.split(' ')
+    next = False
+    for p in parts:
+        if next:
+            return p
+        if p == 'save' or p == 'load':
+            next = True
+    return None
+
+#Text display functions for saying things
 
 def sayLine(data):
+    """
+    Say some text without adding a newline at the end. Named
+    to be intuitive.
+    """
     scr.sayLine(data)
 
 def spell(data, delay=.75):
+    """
+    Spell some text one character at a time with a delay
+    between characters. For special effects.
+    """
     scr.spell(data, delay)
     
 def lf():
+    """
+    Linefeed. Just adds a newline.
+    """
     scr.lf()
 
 def say(data):
+    """
+    Say some text with a newline at the end. The main
+    function for saything things.
+    """
     scr.say(data)
 
-def fail(string = "Hmm..."):
-    say(string)
-    return False
-
 def sayList(items):
+    """
+    Formats and says a list of strings with some spacing.
+    """
     xpos = 0
     string = "         "
     for item in items:
@@ -66,29 +94,51 @@ def sayList(items):
     say(string)
 
 
-def extractSaveName(cmd):
-    parts = cmd.split(' ')
-    next = False
-    for p in parts:
-        if next:
-            return p
-        if p == 'save' or p == 'load':
-            next = True
-    return None
 
+def fail(string = "Hmm..."):
+    """
+    For commands that have failed e.g. the player used take
+    one something that has a take verb but can't be taken
+    yet. Returns False but can do other things that should
+    often happen when a command fails like say "Hmm...".
+    """
+    say(string)
+    return False
+
+def _pass():
+    """
+    For when a function handles a command but wants to let
+    other objects try the command as well. Used with the
+    base take verb to allow nonunique items in the inventory
+    to not block identical items in the room.
+    """
+    return "pass"
+
+
+
+directions = ["up", "down", "left", "right"]
 
 def getDir(cmd):
+    """
+    Find and return a valid direction in the given command.
+    """
     for part in cmd.split(' '):
         if part in directions:
             return part
 
 def getInter(list1, list2):
+    """
+    Return the intersection of two lists.
+    """
     return [x for x in list1 if x in list2]
 
-def _pass():
-    return "pass"
+
 
 class Bld():
+    """
+    Base class for game objects. Handles verbs, descriptive
+    strings, sprites, and flags.
+    """
     fancyVerbs = {}
     addVerbs = []
     rmVerbs = []
@@ -178,11 +228,14 @@ class Bld():
             return None
         return base.format(self.name.upper(), **kwargs) 
 
-       
-
 
 
 class Game(Bld):
+    """
+    Game class handles loading content, setting up screens,
+    scoring, timekeeping, flags, saving, loading, and the
+    main game loop.
+    """
 
     defFlags = {
     "subTurn": 0,
@@ -497,6 +550,9 @@ class Game(Bld):
         return True
 
     def _mspa(self, cmd):
+        """
+        A refrance. Example of fancyVerbs.
+        """
         return fail("hhhhhhm..")
 
 class Room(Bld):
