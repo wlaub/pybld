@@ -685,9 +685,6 @@ class Item(Bld):
             return
         Bld._show(self)
 
-    def _checkSprite(self):
-        pass
-
     def getString(self, key):
         return Bld.getString(self, key, q= self.qty)
 
