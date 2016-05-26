@@ -680,10 +680,6 @@ class Item(Bld):
         self.loc = self.defLoc
         self.pos = self.defPos
 
-        for key, string in self.strings.iteritems():
-            string = string.replace("{}", self.name.upper())
-            self.strings[key] = string
-
     def _show(self):
         if self.hidden:
             return
