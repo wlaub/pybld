@@ -117,6 +117,10 @@ class Bld():
         self.verbs.update(self.fancyVerbs)
 
     def _checkSprite(self):
+        """
+        Called on show and hide to change the sprite if it
+        needs to change. 
+        """
         pass
 
     def _show(self):
@@ -214,9 +218,6 @@ class Game(Bld):
     def __setstate__(self, state):
         self.currRoom, self.inv, self.flags, self.rooms, self.items, self.lastSave = state
         self.refreshImg()
-
-    def _checkSprite(self):
-        pass 
 
     def initScreens(self, Interface, Screen):
         global rend, scr
@@ -461,9 +462,6 @@ class Room(Bld):
 
     def _hide(self):
         rend.clear()
-
-    def _checkSprite(self):
-        pass
 
     def _makeItemString(self, obscure = False):
         itemStrings = []
