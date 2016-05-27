@@ -874,6 +874,31 @@ class Room(Bld):
 
 
 class Item(Bld):
+    """
+    Items are things that the player can interact with or
+    that can do stuff. They have got a bunch of true/false
+    flags for common behaviors. Hidden items are meant to
+    hold information without being directly interactable,
+    but can also be interactable without the player having
+    and obvious way to know they exist, e.g. the Black Wind
+    item in the demo.
+
+    By default items cannot be picked up or dropped, are not
+    listed in the room look command, are unique, and exist
+    when the room is created.
+
+    Unique items have a unique name and appear in the game
+    objects item list so they can be accessed easily from
+    anywhere. Non-unique items are unique in a given pos,
+    but can appear in multiple different positions. They
+    stack up and have quantity, and can't be accessed except
+    through the room and position of a given instance.
+
+    Items that are useable will have the use verb added in
+    the constructor automatically, so you had better make
+    sure to define a use function and call it use.
+    """
+
     name = "item"
     defVerbs = ["look", "where", "take", "drop"]
     fancyVerbs = {}
@@ -884,6 +909,7 @@ class Item(Bld):
     spawn = True        #Automatically added to room at startup
     obscure = False     #Listed only in the look closer command
     unique = True       #Adds item to global game dictionary
+    useable = False     #The item can be used
 
     strings = {   "desc": "It is {}?"
                 , "ground": "There is a {}"
@@ -891,6 +917,7 @@ class Item(Bld):
                 , "have": "You already have the {}."
                 , "drop": "You drop the {}."
                 }
+
     room = None
     defFlags = {} 
     flagDev = '`'
@@ -899,12 +926,9 @@ class Item(Bld):
     defQty = 1
     defSprite = None
 
-    def bind(self, name):
-        def wrapper(f):
-            self.fancyVerbs[name] = f
-        return f
-
     def  __init__(self):
+        if self.useable:
+            self.addVerbs.append("use")
         Bld.__init__(self)
         self.qty = self.defQty
         self.loc = self.defLoc
