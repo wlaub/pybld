@@ -244,8 +244,9 @@ class Bld():
         return self._getVerbs()
 
     def _doCmd(self, cmd):
+        
         for v in self.verbs.keys():
-            if v in cmd:
+            if v == cmd[:len(v)]:
                 result = getattr(self, self.verbs[v])(cmd)
                 if result != "pass":
                     return True
@@ -574,7 +575,7 @@ class Game(Bld):
         pdb.set_trace()
         rend.play(True)
        
-
+    @require(empty=True)
     def score(self, cmd):
         """
         Command to display the player's scoring info.

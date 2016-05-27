@@ -1,8 +1,6 @@
 
 Current task:
 
-Make verbs always the first word of a command
-
 Make renderer optional or make empry renderer class
 
 Make string formatting take self dictionary as kwargs?
