@@ -6,8 +6,7 @@ Make renderer optional or make empry renderer class
 
 Make string formatting take self dictionary as kwargs?
 
-Re-evaluate purpose of fail function vs returning False
-and letting the game class prints a default fail message.
+Make fail function default to game object's fail string.
 
 Fix extra spaces in first line
 

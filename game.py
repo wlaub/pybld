@@ -95,13 +95,15 @@ def sayList(items):
 
 
 
-def fail(string = "Hmm..."):
+def fail(string = None):
     """
     For commands that have failed e.g. the player used take
     one something that has a take verb but can't be taken
     yet. Returns False but can do other things that should
     often happen when a command fails like say "Hmm...".
     """
+    if string == None:
+        string = g.getString('fail')
     say(string)
     return False
 
@@ -899,6 +901,9 @@ class Item(Bld):
     Items that are useable will have the use verb added in
     the constructor automatically, so you had better make
     sure to define a use function and call it use.
+
+    defPos is the item's default position within a room and
+    defaults to an empty string.
     """
 
     name = "item"
