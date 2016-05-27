@@ -136,14 +136,14 @@ def getInter(list1, list2):
 
 
 
-def require(matches=[], empty = False):
+def require(matches=[], empty=False, any=False):
     """
     A decorator to make a verb function fail if the
     command doesn't contain any of the valid objects.
     """
     def dec(f):
         def wrapper(self, cmd):
-            if self._matchCmd(cmd, matches, empty):
+            if self._matchCmd(cmd, matches, empty, any):
                 return f(self, cmd)
             else:
                 return _pass()
@@ -198,12 +198,15 @@ class Bld():
             return True
         return False
 
-    def _matchCmd(self, cmd, matches=[], empty = False):
+    def _matchCmd(self, cmd, matches=[], empty = False, any = False):
         """
         Checks to see if a command contains one of the words
         in matches. Also checks to see if the command has no
-        objects if empty is True.
+        objects if empty is True. If any is True, returns
+        True as long as there is an object.
         """
+        if any and len(cmd.split(' ')) > 1:
+            return True
         if empty and len(cmd.split(' ')) == 1:
             return True 
         for m in matches:
@@ -589,11 +592,12 @@ class Game(Bld):
 
 
     def help(self, cmd):
-        return fail("there is no one here you can help.")
+        return fail("There is no one here you can help.")
 
     def hint(self, cmd):
         return fail("I don't need any hints, but thanks for offering.")
 
+    @require(empty = True)
     def exit(self, cmd):
         self.done = True
         return True
