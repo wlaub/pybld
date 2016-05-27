@@ -877,15 +877,17 @@ class Item(Bld):
     """
     Items are things that the player can interact with or
     that can do stuff. They have got a bunch of true/false
-    flags for common behaviors. Hidden items are meant to
-    hold information without being directly interactable,
-    but can also be interactable without the player having
-    and obvious way to know they exist, e.g. the Black Wind
-    item in the demo.
+    flags for common behaviors.
 
     By default items cannot be picked up or dropped, are not
     listed in the room look command, are unique, and exist
     when the room is created.
+
+    Hidden items are meant to hold information without being
+    directly interactable, but can also be interactable
+    without the player having and obvious way to know they
+    exist, e.g. the Black Wind item in the demo. They will 
+    be drawn if they have a sprite.
 
     Unique items have a unique name and appear in the game
     objects item list so they can be accessed easily from
@@ -934,37 +936,42 @@ class Item(Bld):
         self.loc = self.defLoc
         self.pos = self.defPos
 
-    def _show(self):
-        if self.hidden:
-            return
-        Bld._show(self)
-
     def getString(self, key):
+        """
+        Return the formatted descriptive string.
+        q : quantity
+        """
         return Bld.getString(self, key, q= self.qty)
 
-    def getVerbs(self):
-        return _getVerbs(self)
-
-
     def _reqInv(self):
+        """
+        For verbs that can only be used on an item in the
+        player's inventory. If not in inventory, says
+        Hmmmm...
+        and returns False.
+        """
         if self.loc != "inv":
             return fail("Hmmmm...")
         return True
 
-    def _move(self, newLoc):
+    def _move(self, newLoc, nPos = None):
+        """
+        Move the item to a different room and position. If
+        no position is given, uses the player's last known
+        location in the room. Also handles quantities and
+        Item duplication/removal for non-unique items.
+        """
         oldRoom = self.room
         oldPos = oldRoom.pos
 
-        ####Change for qtys
         if self.unique or self.qty == 1:
             del oldRoom.items[oldPos][self.name] 
         else:
             self.qty -=1
 
         nRoom = g.rooms[newLoc]
-        nPos = nRoom.pos
-
-        ####Change for qtys
+        if nPos == None:
+            nPos = nRoom.pos
 
         if self.unique:
             nRoom.items[nPos][self.name] = self
@@ -981,17 +988,28 @@ class Item(Bld):
                 nRoom.items[nPos][self.name] = nItem 
 
     def getGround(self ):
+        """
+        If the item is visible and not hidden, returns the
+        string that identifies the item in a room's look
+        command. Defaults to the 'ground' descriptive
+        string.
+        """
         if self.visible and not self.hidden:
             return self.getString("ground")
         return ""
 
     def look(self, cmd):
+        """
+        Says the desc string if the items is not hidden.
+        Otherwise fails.
+        """
         if self.hidden:
             return fail()
         say(self.getString("desc"))
         return True
 
     def where(self, cmd):
+        
         if self.hidden:
             return fail()
         if self.pos != "":
