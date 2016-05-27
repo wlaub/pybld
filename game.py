@@ -872,6 +872,7 @@ class Room(Bld):
         return True
 
 
+
 class Item(Bld):
     name = "item"
     defVerbs = ["look", "where", "take", "drop"]
