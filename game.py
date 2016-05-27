@@ -1009,7 +1009,10 @@ class Item(Bld):
         return True
 
     def where(self, cmd):
-        
+        """
+        Says where the item is if it's not hidden and has
+        a position.
+        """
         if self.hidden:
             return fail()
         if self.pos != "":
@@ -1018,6 +1021,17 @@ class Item(Bld):
         return fail()
 
     def take(self, cmd):
+        """
+        Takes the item if takeable. If the item is unique
+        and in the player's inventory, says the have
+        descriptive string. If the item is not unique,
+        passes so that identical items in the room can catch
+        the command.
+        If the item is out of reach fails with message
+            You can't reach it from here!
+        If the take succeeds, prints the take descriptive
+        string.
+        """
         if self.takeable == False:
             return fail()
         if self.loc == 'inv':
@@ -1032,6 +1046,14 @@ class Item(Bld):
         return True
 
     def drop(self, cmd):
+        """
+        Drops the item if possible. If the item is not in
+        the inventory, passes to let items in the inventory
+        catch the command. If the item is hidden, fails.
+        Otherise, prints the drop descriptive string and
+        if the item is dropable, moves the item to the
+        player's current room and position.
+        """
         if self.loc != 'inv':
             return _pass()
         if self.hidden:
