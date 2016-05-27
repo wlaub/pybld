@@ -189,7 +189,18 @@ class Bld():
         return self.name + self.flagDec + name
 
     def _getVerbs(self):
+        """
+        Returns only the objects valid verbs as a list. Used
+        in getVerbs.
+        """
         return self.verbs.keys()
+
+    def getVerbs(self):
+        """
+        Should be overridden for anything that needs to give
+        more than its own verbs e.g. Room and Game.
+        """
+        return self._getVerbs()
 
     def _doCmd(self, cmd):
         for v in self.verbs.keys():
@@ -556,6 +567,23 @@ class Game(Bld):
         return fail("hhhhhhm..")
 
 class Room(Bld):
+    """
+    A Room is a distinct location in the game. It contains
+    items and sublocations. The current room catches
+    commands from the player and handles them or passes
+    them to items that can. The inventory is a special room
+    that also catches commands and holds items in the
+    player's inventory.
+
+    Rooms can be entered and exited and will call the
+    functions _onFirstEnter, _onOtherEnter, and _onLeave.
+
+    Rooms presently have some shoddy sit/stand functionality
+    and use Maps to let the player move between sublocations.
+    Items live in a dictionary as items[pos][name]. This
+    should probably change. It may be good to make sublocs
+    Be Bld.
+    """
     name = ""
     defVerbs = ["look", "go", "sit", "stand", "loc"]
 
@@ -592,6 +620,10 @@ class Room(Bld):
         rend.clear()
 
     def _makeItemString(self, obscure = False):
+        """
+        Formats a description of items in the room, exluding
+        obscure items.
+        """
         itemStrings = []
         for pos in self.items.values():
             for item in pos.values():
@@ -599,7 +631,11 @@ class Room(Bld):
                     itemStrings.append( item.getGround() )
         return ' '.join(itemStrings)
 
-    def _makeLocStr(self):
+    def _sayLocStr(self):
+        """
+        Formats a list of positions in the room, with no
+        relation to topology.
+        """
         posList = self._map.locs.keys()
         if len(posList) == 0:
             return ""
@@ -612,30 +648,51 @@ class Room(Bld):
         if self.getFlag('entered'):
             self._onOtherEnter()
         else:
+            self.setFlag("entered", True)
             self._onFirstEnter()
 
     def _onOtherEnter(self):
+        """
+        Called when the player enters the room any time
+        other than the first. Runs the look command by
+        by default.
+        """
         lf()
         self.look("look")
 
     def _onFirstEnter(self):
-        self.setFlag("entered", True)
+        """
+        Called the first time the player enters the room.
+        Defaults to _onOtherEnter().
+        """
         self._onOtherEnter()
 
     def _onLeave(self):
+        """
+        Called when the player leaves the room. Does nothing
+        by default.
+        """
         pass
 
     def getString(self, key):
+        """
+        Returns a formatted descriptive string. keywords are
+        loc : player position within the room
+        """
         return Bld.getString(self, key, loc=self.pos)
 
     def getVerbs(self):
-        verbs = _getVerbs(self)
+        verbs = self._getVerbs()
         for pos in self.items.values():
             for item in pos.values():
                 verbs.extend(item.getVerbs())
         return verbs
 
     def doCmd(self, cmd):
+        """
+        Checks commands on items first, then on self.
+        """
+        #TODO this maybe needs to be updates to use pass correctly
         for pos in self.items.values():
             for item in pos.values():
                 if item.name.lower() in cmd:
@@ -646,6 +703,11 @@ class Room(Bld):
         return False
 
     def look(self, cmd):
+        """
+        Says either the desc string or the closer string,
+        then says the list of items in the room from
+        _makeItemString()
+        """
         if "closer" in cmd:
             desc = self.getString('closer')
             items = self._makeItemString(True)
@@ -661,11 +723,19 @@ class Room(Bld):
         return True
 
     def loc(self, cmd):
+        """
+        Says the 'loc' descriptive string then calls
+        _sayLocStr()
+        """
         say(self.getString("loc"))
-        self._makeLocStr()
+        self._sayLocStr()
         return True
 
     def _enterPos(self, pos):
+        """
+        Says the enter string for entering the given pos
+        if one exists.
+        """
         enter = ""
         eKey = "enter "+pos
         if "enter "+pos in self.strings.keys():
@@ -673,9 +743,19 @@ class Room(Bld):
         sayLine(enter) 
 
     def _goEmpty(self):
+        """
+        Called for the go command without a direction of
+        any kind.    
+        """
         return fail("...")
 
     def _goDir(self, cmd):
+        """
+        Extracts a direction from the command and then
+        tries to go that direction on the current map.
+        If successful, calls _enterPos on the new pos to
+        print the valid enter string, then does a linefeed.
+        """
         _dir = getDir(cmd)
         if _dir == None:
             return False
@@ -688,12 +768,27 @@ class Room(Bld):
         return True
 
     def _goOther(self, cmd):
+        """
+        Called when the go command is not in a valid
+        direction. Would get used for things like using
+        "go door" to go through a door or "go away" for
+        like a joke or w/e.
+        """
         return fail("This is the base room. You cannot leave.")
 
     def _goSit(self, cmd):
+        """
+        Called the the player tries to go in a direction
+        while sitting.
+        """
         return fail("You can't walk while sitting!")
 
     def go(self, cmd):
+        """
+        Handles the go verb. Different go functionality
+        should be implemented in the appropriate _go*
+        functions instead of this one.
+        """
         if cmd == "go":
             return self._goEmpty()
 
@@ -707,6 +802,11 @@ class Room(Bld):
 
 
     def sit(self, cmd):
+        """
+        Handles sitting in various directions. Is stupid and
+        should be reworked.
+        """
+        #TODO fix this mess
         state = g.getFlag("sit", "down")
 
         direction = getDir(cmd)
@@ -730,6 +830,9 @@ class Room(Bld):
             return fail("You cannot sit in the direction.")
 
     def stand(self, cmd):
+        """
+        Same dead as sit. Blam this piece of crap.
+        """
         state = g.getFlag("sit", "down")
 
         if state == "not":

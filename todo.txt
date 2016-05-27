@@ -4,7 +4,8 @@ Documentation
 
 Make renderer optional or make empry renderer class
 
-Make alarm take args
+Make string formatting take self dictionary as kwargs?
+
 
 Fix extra spaces in first line
 
