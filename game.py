@@ -99,8 +99,8 @@ def fail(string = None):
     """
     For commands that have failed e.g. the player used take
     one something that has a take verb but can't be taken
-    yet. Returns False but can do other things that should
-    often happen when a command fails like say "Hmm...".
+    yet. Allows a thing print a different fail message than
+    the default without
     """
     if string == None:
         string = g.getString('fail')
@@ -136,6 +136,22 @@ def getInter(list1, list2):
 
 
 
+def require(matches=[], empty = False):
+    """
+    A decorator to make a verb function fail if the
+    command doesn't contain any of the valid objects.
+    """
+    def dec(f):
+        def wrapper(self, cmd):
+            if self._matchCmd(cmd, matches, empty):
+                return f(self, cmd)
+            else:
+                return _pass()
+        return wrapper
+    return dec
+
+
+
 class Bld():
     """
     Base class for game objects. Handles verbs, descriptive
@@ -150,7 +166,6 @@ class Bld():
     defSprite = None
     defFlags = {}
     flagDec = ''
-
 
     def __init__(self):
         self.sprite = self.defSprite
@@ -174,6 +189,27 @@ class Bld():
         needs to change. 
         """
         pass
+
+    def _shortCmd(self, cmd):
+        """
+        Checks to see if a command doesn't have any objects.
+        """
+        if len(cmd.split(' ')) == 1:
+            return True
+        return False
+
+    def _matchCmd(self, cmd, matches=[], empty = False):
+        """
+        Checks to see if a command contains one of the words
+        in matches. Also checks to see if the command has no
+        objects if empty is True.
+        """
+        if empty and len(cmd.split(' ')) == 1:
+            return True 
+        for m in matches:
+            if m in cmd:
+                return True
+        return False
 
     def _show(self):
         self._checkSprite()
@@ -704,6 +740,7 @@ class Room(Bld):
              return True
         return False
 
+    @require(["closer"], True)
     def look(self, cmd):
         """
         Says either the desc string or the closer string,

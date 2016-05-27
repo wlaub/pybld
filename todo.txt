@@ -1,12 +1,10 @@
 
 Current task:
-Documentation
+
 
 Make renderer optional or make empry renderer class
 
 Make string formatting take self dictionary as kwargs?
-
-Make fail function default to game object's fail string.
 
 Fix extra spaces in first line
 
