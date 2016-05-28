@@ -758,7 +758,6 @@ class Room(Bld):
         """
         Checks commands on items first, then on self.
         """
-        #TODO this maybe needs to be updates to use pass correctly
         for pos in self.items.values():
             for item in pos.values():
                 if item.name.lower() in cmd:

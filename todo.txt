@@ -1,12 +1,9 @@
 
 Current task:
-Use object dict in getStrings
 
-Figure out decorators and documentation
+Implement command line using textpad/validator?
 
 Make renderer optional or make empry renderer class
-
-Make string formatting take self dictionary as kwargs?
 
 Fix extra spaces in first line
 
@@ -15,6 +12,7 @@ Fix cursor weirdness
 --python curses threading?
 
 Add achievements system
+
 
 Fix stand mechanics for stand down, etc
 

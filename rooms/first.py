@@ -310,9 +310,10 @@ class dldo(game.Item):
 
     def look(self, cmd):
         if self.broken:
-            game.say(self.strings['descBrk'])
+            lookstr = self.getString('descBrk')
         else:
-            game.say(self.strings['desc'])
+            lookstr = self.getString('desc')
+        game.say(lookstr)
         return True
 
 
