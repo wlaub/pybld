@@ -17,6 +17,7 @@ if __name__ == "__main__":
 
     try:
         mainScreen = curses.initscr()
+
         g.initScreens(iface.CurseInterface, iface.CurseScreen)
         g.moveRoom('First Room')
         g.commandLoop()

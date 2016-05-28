@@ -14,6 +14,18 @@ scr = iface.CurseScreen()
 rend = None
 g = None
 
+
+def debug():
+    rend.play(False)
+    pdb.set_trace()
+
+
+def undebug():
+    rend.play(True)
+    pass
+
+
+
 def makeSaveName(name):
     return "save/"+name+".bld"
 
@@ -163,6 +175,7 @@ class Bld():
     defVerbs = []
     name = ''
     strings = {}
+    defStrings = {}
     defSprite = None
     defFlags = {}
     flagDec = ''
@@ -244,7 +257,6 @@ class Bld():
         return self._getVerbs()
 
     def _doCmd(self, cmd):
-        
         for v in self.verbs.keys():
             if v == cmd[:len(v)]:
                 result = getattr(self, self.verbs[v])(cmd)
@@ -269,17 +281,20 @@ class Bld():
         """
         g.setFlag(self._flagName(name), val)
 
-    def getString(self, key, **kwargs):
+    def getString(self, key):
         """
-        Retrieves the descriptive string from strings,
-        formats it with name and kwargs, and returns the
-        result.
+        Retrieves the descriptive string from strings or
+        defStrings, formats it with name and self's
+        dictionary, and returns the result.
         """
         if key in self.strings.keys():
             base = self.strings[key]
+        elif key in self.defStrings.keys():
+            base = self.defStrings[key]
         else:
             return None
-        return base.format(self.name.upper(), **kwargs) 
+        return base.format(self.name.upper(), **self.__dict__) 
+
 
 
 
@@ -300,7 +315,7 @@ class Game(Bld):
     force = ""
     done = False
 
-    strings =   { 'fail': 'Hmm...'
+    defStrings =   { 'fail': 'Hmm...'
                 }
 
     defVerbs = ["debug", "help", "exit", "hint", "score", "save", "load"]
@@ -370,13 +385,13 @@ class Game(Bld):
                             thing = mod.__dict__[val]
                             if Room in inspect.getmro(thing):
                                 f.write("Found Room\n")
-                                self.addRoom(thing())
+                                self._addRoom(thing())
                             if Item in inspect.getmro(thing):
                                 f.write("Found item\n")
                                 try:
                                     nItem = thing()
                                     items.append(nItem)
-                                    self.addItem(nItem)
+                                    self._addItem(nItem)
                                 except Exception as e:
                                     f.write(str(e)+'\n')
                         except Exception as e:
@@ -390,13 +405,13 @@ class Game(Bld):
 
             self.inv = self.rooms['inv']
 
-    def addRoom(self, room):
+    def _addRoom(self, room):
         if not room.name in self.rooms.keys():
             self.rooms[room.name] = room
         else:
             print("Failed to add duplicate room")
     
-    def addItem(self, item):
+    def _addItem(self, item):
         if not item.unique:
             return
         if not item.name in self.items.keys():
@@ -630,10 +645,10 @@ class Room(Bld):
     name = ""
     defVerbs = ["look", "go", "sit", "stand", "loc"]
 
-    strings = {
+    defStrings = {
     "desc": "It is a room?",
     "closer": "You take a closer look.",
-    "loc": "You are {loc}."
+    "loc": "You are {pos}."
     }
 
     defFlags = {}
@@ -716,13 +731,6 @@ class Room(Bld):
         by default.
         """
         pass
-
-    def getString(self, key):
-        """
-        Returns a formatted descriptive string. keywords are
-        loc : player position within the room
-        """
-        return Bld.getString(self, key, loc=self.pos)
 
     def getVerbs(self):
         verbs = self._getVerbs()
@@ -960,7 +968,7 @@ class Item(Bld):
     unique = True       #Adds item to global game dictionary
     useable = False     #The item can be used
 
-    strings = {   "desc": "It is {}?"
+    defStrings = {   "desc": "It is {}?"
                 , "ground": "There is a {}"
                 , "take": "I pick up the {} and put it in my INV."
                 , "have": "You already have the {}."
@@ -982,13 +990,6 @@ class Item(Bld):
         self.qty = self.defQty
         self.loc = self.defLoc
         self.pos = self.defPos
-
-    def getString(self, key):
-        """
-        Return the formatted descriptive string.
-        q : quantity
-        """
-        return Bld.getString(self, key, q= self.qty)
 
     def _reqInv(self):
         """

@@ -1,5 +1,8 @@
 
 Current task:
+Use object dict in getStrings
+
+Figure out decorators and documentation
 
 Make renderer optional or make empry renderer class
 

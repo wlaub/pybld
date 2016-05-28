@@ -50,7 +50,7 @@ class Bean(game.Item):
     visible = True
     strings = {
         "desc": "It is a {}",
-        "ground": "There are {q} {}(s) on the ground.",
+        "ground": "There are {qty} {}(s) on the ground.",
         "take": "You take a {}.",
         "drop": "You drop a {}."
     }
