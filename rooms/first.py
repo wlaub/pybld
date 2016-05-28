@@ -1,4 +1,5 @@
 import game, bldgfx
+from game import inv, require
 import time, sys
 import traceback
 
@@ -231,9 +232,8 @@ class TextParser(game.Item):
             return True
         return False
 
+    @inv
     def use(self, cmd):
-        if not self._reqInv():
-            return False
 
         tries = self.getFlag("tries")
         speed = self.getFlag("speed")
@@ -263,10 +263,8 @@ class TextParser(game.Item):
             return False
         return True
 
-
+    @inv
     def caress(self, cmd):
-        if not self._reqInv():
-            return False
 
         speed = self.getFlag("speed")
         if speed < 2:
@@ -327,9 +325,8 @@ class dldo(game.Item):
             self.broken = True
         return True
 
+    @inv
     def use(self, cmd):
-        if not self._reqInv():
-            return game.fail()
         game.say(self.strings['useTry'])
         if not self.broken:
             game.say(self.strings['use'])

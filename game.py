@@ -165,6 +165,19 @@ def require(matches=[], empty=False, any=False):
     return dec
 
 
+def inv(f):
+    """
+    A decorator to only calls the function if the object
+    is in the player's inventory. Useful for use functions.
+    """
+    @wraps(f)
+    def wrapper(self, cmd):
+        result = self._reqInv()
+        if result != True:
+            return result
+        return f(self,cmd)
+    return wrapper
+
 
 class Bld():
     """
