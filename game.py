@@ -1,5 +1,6 @@
 import os, time, sys
 import importlib, inspect
+from functools import wraps
 import pickle
 from gmap import *
 import iface
@@ -154,6 +155,7 @@ def require(matches=[], empty=False, any=False):
     command doesn't contain any of the valid objects.
     """
     def dec(f):
+        @wraps(f)
         def wrapper(self, cmd):
             if self._matchCmd(cmd, matches, empty, any):
                 return f(self, cmd)
