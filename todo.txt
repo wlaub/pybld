@@ -3,9 +3,7 @@ Current task:
 
 Implement command line using textpad/validator?
 
-Fix wax trying to load directories
-
-Make renderer optional or make empry renderer class
+Make renderer optional or make empty renderer class
 
 Fix extra spaces in first line
 

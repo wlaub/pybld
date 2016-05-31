@@ -56,10 +56,23 @@ class Sprite():
         pass
 
 
+class EmptyRenderer():
+    def __init__(self, interface = None, rate = .333):
+        pass
+    def play(self, playing):
+        pass
+    def addSprite(self, sprite):
+        pass
+    def removeSprite(self, sprite):
+        pass
+    def clear(self):
+        pass
+
+
 class Renderer():
 
-    def __init__(self, window, rate = .333):
-        self.win = window
+    def __init__(self, interface, rate = .333):
+        self.win = interface.getImgWin()
         self.win.leaveok(1)
         self.rate = rate
         self.playing = True
@@ -119,14 +132,6 @@ class Renderer():
         will be drawn.
         """
         self.sprites = {}
-        pass
-
-    def refresh(self):
-        """
-        Replaces the current draw dictionary with the
-        buffer.
-        """
-        #TODO: Remove
         pass
 
 

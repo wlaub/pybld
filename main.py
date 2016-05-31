@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
         curses.resizeterm(45, 60)
 
-        g.initScreens(iface.CurseInterface, iface.CurseScreen)
+        g.initScreens(iface.CurseInterface, iface.CurseScreen, bldgfx.Renderer)
         g.moveRoom('First Room')
         g.commandLoop()
     except Exception as e:

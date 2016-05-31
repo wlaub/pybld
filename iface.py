@@ -215,6 +215,9 @@ class CurseInterface():
         curses.use_default_colors()
         curses.init_pair(1, curses.COLOR_GREEN, -1)
 
+    def getImgWin(self):
+        return self.imgwin
+
     def refreshCmd(self, cmd):
         self.inwin.clear() 
         self.inwin.addstr(0,0, "> "+cmd.upper())

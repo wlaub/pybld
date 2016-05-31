@@ -358,7 +358,7 @@ class Game(Bld):
         self.currRoom, self.inv, self.flags, self.rooms, self.items, self.lastSave = state
         self.refreshImg()
 
-    def initScreens(self, Interface, Screen):
+    def initScreens(self, Interface, Screen, Renderer):
         """
         Initializes the Interface and Screen objects from
         the given classes, then initalizes the renderer
@@ -372,7 +372,7 @@ class Game(Bld):
         self.screen.setWindow(self.interface.cmdwin)
        
         scr = self.screen 
-        rend = bldgfx.Renderer(self.interface.imgwin)
+        rend = Renderer(self.interface)
 
     def commandLoop(self):
         """
