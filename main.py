@@ -18,6 +18,8 @@ if __name__ == "__main__":
     try:
         mainScreen = curses.initscr()
 
+        curses.resizeterm(45, 60)
+
         g.initScreens(iface.CurseInterface, iface.CurseScreen)
         g.moveRoom('First Room')
         g.commandLoop()

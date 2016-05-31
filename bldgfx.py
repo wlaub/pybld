@@ -107,6 +107,7 @@ class Renderer():
         """
         Removes the sprite from the render dictionary
         """
+        #TODO: remove
         try:
             self.sprites[sprite.layer].remove(sprite)
         except:
@@ -125,4 +126,7 @@ class Renderer():
         Replaces the current draw dictionary with the
         buffer.
         """
+        #TODO: Remove
         pass
+
+

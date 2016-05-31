@@ -7,8 +7,17 @@ import image, waxutil
 images = []
 imageIdx = 0
 
+def validateName(name):
+    if os.path.exists(name):
+        if os.path.isdir(name):
+            return False 
+    return True
+
+
 def addFile(filename, height=13, width = 60):
     global images, imageIdx
+    if not validateName(filename):
+        return
     tImg = image.Image(h =  height, w =  width, filename = filename)
     hist = image.History(tImg, filename)
     images.append((hist, filename))
@@ -178,12 +187,6 @@ def animate():
             window.border
             window.refresh()
             window.leaveok(0)
-
-def validateName(name):
-    if os.path.exists(name):
-        if os.path.isdir(name):
-            return False 
-    return True
 
 def curseName(val):
     for key,v in curses.__dict__.iteritems():
