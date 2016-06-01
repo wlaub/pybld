@@ -888,10 +888,6 @@ class Room(Bld):
             return say("Sit in what direction?")
         elif direction == "down":
             return self.sitDown()
-        elif direction == "left":
-            return self.sitLeft()
-        elif direction == "right":
-            return self.sitRight()
         else:
             return fail("You cannot sit in the direction.")
 
