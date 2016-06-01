@@ -657,11 +657,14 @@ class Room(Bld):
     name = ""
     defVerbs = ["look", "sit", "stand"]
 
-    defStrings = {
-    "desc": "It is a room?",
-    "closer": "You take a closer look.",
-    "loc": "You are {pos}."
-    }
+    defStrings= { "desc": "It is a room?"
+                , "closer": "You take a closer look."
+                , "loc": "You are {pos}."
+                , "sit": "There's nowhere to sit!"
+                , "sit2": "You are already sitting."
+                , "stand": "You stand up. You are now standing."
+                , "stand2": "You are already standing."
+                }
 
     defFlags = {}
     flagDec = '~'
@@ -766,65 +769,34 @@ class Room(Bld):
         Handles sitting in various directions. Is stupid and
         should be reworked.
         """
-        #TODO fix this mess
-        state = g.getFlag("sit", "down")
+        state = g.getFlag("sit", False)
 
-        direction = getDir(cmd)
+        if state:
+            return fail(self.getString("sit2"))
 
-        if state != "not":
-            if direction == "up":
-                return self.sitUp()
-            else:
-                return fail("You are already sitting {}".format(state))
-
-
-        if direction == None:
-            return say("Sit in what direction?")
-        elif direction == "down":
-            return self.sitDown()
-        else:
-            return fail("You cannot sit in the direction.")
+        return self.sitDown()
 
     def stand(self, cmd):
         """
         Same dead as sit. Blam this piece of crap.
         """
-        state = g.getFlag("sit", "down")
+        state = g.getFlag("sit", False)
 
-        if state == "not":
-            return fail("You are already standing.")
+        if not state:
+            return fail(self.getString("stand2"))
 
-        direction = getDir(cmd)
-        if direction == None:
-            return say("Stand in what direction?")
-        elif direction == "up":
-            return self.standUp()
-        elif direction == "down":
-            return self.standDown()
-        else:
-            return fail("You cannot stand in that direction.")
-
-    def sitUp(self):
-        say("You pay more attention to you posture.")
-        return True
+        return self.standUp()
 
     def sitDown(self):
-        return fail("There is nowhere to sit.")
-
-    def sitLeft(self):
-        return fail("You cannot sit in that direction.")
-
-    def sitRight(self):
-        return fail("You cannot sit in that direction")
+        if self.sitable:
+            g.setFlag('sit', True)
+            say(self.getString("sit"))
+            return True
+        return fail(self.getString("sit"))
 
     def standUp(self):
-        say("You stand up. You are now standing.")
-        g.flags["sit"] = "not" #fix this
-        return True
-
-    def standDown(self):
-        say("You chill the fuck out. You are no longer AGGRO.")
-        g.flags["aggro"] = 0 #fix this
+        say(self.getString("stand"))
+        g.setFlag('sit', False)
         return True
 
 

@@ -12,12 +12,18 @@ class Room(game.Room):
     "no beans": "There are no bean(s) left in the alpha bnple.",
     "beanup": "You increment the beancount.",
     "beandown": "You decrement the beancount."
+    , "sit": "You sit down on the floor."
     }
 
+    sitable = True
    
     defSprite = bldgfx.Sprite('img/froom/froom.bmi', 0, 0, -1)
 
     addVerbs = ["beanup","beandown"]
+
+    def _onFirstEnter(self):
+        game.g.setFlag('sit', True)
+        self._onOtherEnter()
 
     def beanup(self, cmd):
         if not 'bean' in self.items.keys():
@@ -32,11 +38,6 @@ class Room(game.Room):
         game.say(self.getString("beandown"))
         self.items['bean'].qty -= 1       
         return True 
-
-    def sitDown(self):
-        game.say("You sit down on the floor.")
-        game.g.flags["sit"] = "down"
-        return True
 
 
 class Bean(game.Item):
