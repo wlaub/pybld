@@ -333,17 +333,17 @@ class Game(Bld):
     main game loop.
     """
 
-    defFlags = {
-    "subTurn": 0,
-    "turns": 0,
-    "score": 0,
-    "hair": 1
-    }
+    defFlags =  { "subTurn": 0
+                , "turns": 0
+                , "score": 0
+                , "hair": 1
+                , "sit": False
+                }
 
     force = ""
     done = False
 
-    defStrings =   { 'fail': 'Hmm...'
+    defStrings= { 'fail': 'Hmm...'
                 }
 
     defVerbs = ["debug", "help", "exit", "hint", "score", "save", "load"]
@@ -668,6 +668,8 @@ class Room(Bld):
     Items live in a dictionary as items[name].
     """
     name = ""
+    sitable = False         #Can the player sit?
+
     defVerbs = ["look", "sit", "stand"]
 
     defStrings= { "desc": "It is a room?"
@@ -783,7 +785,7 @@ class Room(Bld):
         Handles sitting in various directions. Is stupid and
         should be reworked.
         """
-        state = g.getFlag("sit", False)
+        state = g.getFlag("sit")
 
         if state:
             return fail(self.getString("sit2"))
@@ -794,7 +796,7 @@ class Room(Bld):
         """
         Same dead as sit. Blam this piece of crap.
         """
-        state = g.getFlag("sit", False)
+        state = g.getFlag("sit")
 
         if not state:
             return fail(self.getString("stand2"))

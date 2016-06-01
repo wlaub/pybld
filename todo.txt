@@ -11,7 +11,7 @@ Fix cursor weirdness
 
 Add achievements system
 
-Fix stand mechanics for stand down, etc
+Scripts for creating empty rooms and items
 
 ---------------------------------
 
