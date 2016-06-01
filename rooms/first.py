@@ -1,5 +1,5 @@
 import game, bldgfx
-from game import inv, require
+from game import inv, require, standing
 import time, sys
 import traceback
 
@@ -89,7 +89,8 @@ class Door(game.Item):
             game.say(self.getString("desc"))
         else:
             game.say(self.getString("desc2"))
-  
+
+    @standing  
     def open(self, cmd):
         state = game.g.getFlag("text pars'r", 0)
 

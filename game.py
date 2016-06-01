@@ -179,6 +179,19 @@ def inv(f):
     return wrapper
 
 
+def standing(f):
+    """
+    A decorator to only calls the function if the player is
+    standing and fails otherwise.
+    """
+    @wraps(f)
+    def wrapper(self, cmd):
+        if g.getFlag('sit'):
+            return fail(g.currRoom.getString("sitFail"))
+        return f(self,cmd)
+    return wrapper
+
+
 class Bld():
     """
     Base class for game objects. Handles verbs, descriptive
@@ -664,6 +677,7 @@ class Room(Bld):
                 , "sit2": "You are already sitting."
                 , "stand": "You stand up. You are now standing."
                 , "stand2": "You are already standing."
+                , "sitFail": "You can't do that while sitting?"
                 }
 
     defFlags = {}
