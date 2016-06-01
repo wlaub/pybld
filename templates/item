@@ -1,0 +1,33 @@
+class {cname}(game.Item):
+    name = "{name}"
+
+    takeable =  False
+    dropable =  False
+    visible  =  False 
+    hidden   =  False 
+    spawn    =  True  
+    obscure  =  False 
+    unique   =  True  
+    useable  =  False 
+
+    strings = {
+        "desc": "",
+        "ground": "",
+        "take": "",
+        "drop": ""
+    }
+
+    addVerbs = []
+    
+    fancyVerbs ={
+                }
+
+    defFlags =  {
+                }    
+
+    defSprite = bldgfx.Sprite('img/', 0, 0)
+
+    defLoc = '{loc}'
+    defQty = 1
+
+

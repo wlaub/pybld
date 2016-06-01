@@ -1,5 +1,6 @@
 
 Current task:
+Making Room template
 
 Implement command line using textpad/validator?
 

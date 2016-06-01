@@ -1,0 +1,23 @@
+import game, bldgfx
+from game import inv, require, standing
+import time, sys
+
+class Room(game.Room):
+    name = "{name}"
+
+    strings =   { "desc": ""
+                , "closer": ""
+                }
+
+    sitable = True
+   
+    defSprite = bldgfx.Sprite('img/', 0, 0, -1)
+
+    addVerbs = []
+
+    fancyVerbs ={
+                }
+
+    defFlags =  {
+                }
+
