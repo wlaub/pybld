@@ -9,32 +9,28 @@ class Room(game.Room):
     strings = {
     "desc": "You are sitting in a room, different from the one I am in. There is a door to the RIGHT.",
     "closer": "You take a closer look. The walls and floor are made out of MATERIALS.ACOUSTIC.002C.COLORS.00.NAME MATERIALS.ACOUSTICS.002C.NAME. The drop ceiling is made of white high-grade asbestos tile. There is a single square flourescent light in the middle of the ceiling. You stare hard at the ceiling for a few minutes to make sure it's not coated in shifting iridescent glyphs. It is not.",
-    "enter right": "You are now standing next to the door.",
     "no beans": "There are no bean(s) left in the alpha bnple.",
     "beanup": "You increment the beancount.",
     "beandown": "You decrement the beancount."
     }
 
    
-    _map = game.HalfMap()
-    defPos = "left"
-
     defSprite = bldgfx.Sprite('img/froom/froom.bmi', 0, 0, -1)
 
     addVerbs = ["beanup","beandown"]
 
     def beanup(self, cmd):
-        if not 'bean' in self.items['left'].keys():
+        if not 'bean' in self.items.keys():
             return game.fail(self.getString("no beans"))
         game.say(self.getString("beanup"))
-        self.items['left']['bean'].qty += 1
+        self.items['bean'].qty += 1
         return True
 
     def beandown(self,cmd):
-        if not 'bean' in self.items['left'].keys():
+        if not 'bean' in self.items.keys():
             return game.fail(self.getString("no beans"))
         game.say(self.getString("beandown"))
-        self.items['left']['bean'].qty -= 1       
+        self.items['bean'].qty -= 1       
         return True 
 
     def sitDown(self):
@@ -59,7 +55,6 @@ class Bean(game.Item):
     defSprite = bldgfx.Sprite('img/froom/beanmd.bmi', 10, 15)
 
     defLoc = 'First Room'
-    defPos = 'left'
     defQty = 5
 
     def _checkSprite(self):
@@ -81,7 +76,6 @@ class Door(game.Item):
 
 
     defLoc = "First Room"
-    defPos = 'right'
 
     addVerbs = ["open"]
 
@@ -97,12 +91,10 @@ class Door(game.Item):
   
     def open(self, cmd):
         state = game.g.getFlag("text pars'r", 0)
-        pos = self.room.pos
 
         if state ==0:
             return game.fail("It's not a real door.")
-        if pos != "right":
-            return game.fail("You can't reach the door from here. You are too far left.")
+
         game.say("You open the door and walk through into the next room. There's no going back now. Hope you didn't miss anything important!")
   
         game.lf()
@@ -126,7 +118,6 @@ class Glyph(game.Item):
         "use": "You still don't know what they mean..."
     }
 
-    defPos = ""
     addVerbs = ["use"]
 
     def use(self, cmd):
@@ -148,8 +139,6 @@ class BlackWind(game.Item):
         "drop": "You try to drop it but it just floats there."
     }
 
-    defPos = 'left'
-
     addVerbs = ["use"]
 
     defFlags = {
@@ -165,8 +154,6 @@ class BlackWind(game.Item):
             return
         t = self.getFlag("ticks")
         if t == 0:
-            self.pos = "right"
-        else:
             self.hidden = True
             return
         game.g.setAlarm(self.timeout, self._tick)
@@ -201,8 +188,6 @@ class TextParser(game.Item):
         "useHint": "The TEXT PARS'R throbs gently in your hands. It seems pleased, but it would like a little more attention.",
         "usePrimed": "The TEXT PARS'R pulse violenty in your hands. It seems XCIT'D."
     }
-
-    defPos = 'left'
 
     addVerbs = ["use", "caress", "eat"]
 

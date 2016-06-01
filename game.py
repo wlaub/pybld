@@ -414,7 +414,7 @@ class Game(Bld):
 
             for item in items:
                 room = self.rooms[item.loc]
-                room.items[item.pos][item.name] = item
+                room.items[item.name] = item
                 item.room = room
                 f.write("Adding item {} to room {}\n".format(item.name, room.name))
 
@@ -642,7 +642,7 @@ class Game(Bld):
 class Room(Bld):
     """
     A Room is a distinct location in the game. It contains
-    items and sublocations. The current room catches
+    items. The current room catches
     commands from the player and handles them or passes
     them to items that can. The inventory is a special room
     that also catches commands and holds items in the
@@ -651,14 +651,11 @@ class Room(Bld):
     Rooms can be entered and exited and will call the
     functions _onFirstEnter, _onOtherEnter, and _onLeave.
 
-    Rooms presently have some shoddy sit/stand functionality
-    and use Maps to let the player move between sublocations.
-    Items live in a dictionary as items[pos][name]. This
-    should probably change. It may be good to make sublocs
-    Be Bld.
+    Rooms presently have some shoddy sit/stand functionality.
+    Items live in a dictionary as items[name].
     """
     name = ""
-    defVerbs = ["look", "go", "sit", "stand", "loc"]
+    defVerbs = ["look", "sit", "stand"]
 
     defStrings = {
     "desc": "It is a room?",
@@ -668,26 +665,18 @@ class Room(Bld):
 
     defFlags = {}
     flagDec = '~'
-    
-    _map = Map()
-    defPos = ""
 
     def __init__(self):
         Bld.__init__(self)
 
         self.items = {}
-        self.items[''] = {}
-        for pos in self._map.locs.keys():
-            self.items[pos] = {}
-        self.pos = self.defPos
         self.defFlags['entered'] = False
 
     def _show(self):
         rend.clear()
         Bld._show(self)
-        for pos in self.items.values():
-            for item in pos.values():
-                item._show()
+        for item in self.items.values():
+            item._show()
 
     def _hide(self):
         rend.clear()
@@ -698,24 +687,10 @@ class Room(Bld):
         obscure items.
         """
         itemStrings = []
-        for pos in self.items.values():
-            for item in pos.values():
-                if item.obscure == obscure:
-                    itemStrings.append( item.getGround() )
+        for item in self.items.values():
+            if item.obscure == obscure:
+                itemStrings.append( item.getGround() )
         return ' '.join(itemStrings)
-
-    def _sayLocStr(self):
-        """
-        Formats a list of positions in the room, with no
-        relation to topology.
-        """
-        posList = self._map.locs.keys()
-        if len(posList) == 0:
-            return ""
-
-        say("\nLocations are:\n")
-
-        sayList(posList)
 
     def _onEnter(self):
         if self.getFlag('entered'):
@@ -749,20 +724,18 @@ class Room(Bld):
 
     def getVerbs(self):
         verbs = self._getVerbs()
-        for pos in self.items.values():
-            for item in pos.values():
-                verbs.extend(item.getVerbs())
+        for item in self.items.values():
+            verbs.extend(item.getVerbs())
         return verbs
 
     def doCmd(self, cmd):
         """
         Checks commands on items first, then on self.
         """
-        for pos in self.items.values():
-            for item in pos.values():
-                if item.name.lower() in cmd:
-                    if item._doCmd(cmd):
-                        return True
+        for item in self.items.values():
+            if item.name.lower() in cmd:
+                if item._doCmd(cmd):
+                    return True
         if self._doCmd(cmd):
              return True
         return False
@@ -787,85 +760,6 @@ class Room(Bld):
             say(items)
 
         return True
-
-    def loc(self, cmd):
-        """
-        Says the 'loc' descriptive string then calls
-        _sayLocStr()
-        """
-        say(self.getString("loc"))
-        self._sayLocStr()
-        return True
-
-    def _enterPos(self, pos):
-        """
-        Says the enter string for entering the given pos
-        if one exists.
-        """
-        enter = ""
-        eKey = "enter "+pos
-        if "enter "+pos in self.strings.keys():
-            enter = self.getString("enter "+pos)
-        sayLine(enter) 
-
-    def _goEmpty(self):
-        """
-        Called for the go command without a direction of
-        any kind.    
-        """
-        return fail("...")
-
-    def _goDir(self, cmd):
-        """
-        Extracts a direction from the command and then
-        tries to go that direction on the current map.
-        If successful, calls _enterPos on the new pos to
-        print the valid enter string, then does a linefeed.
-        """
-        _dir = getDir(cmd)
-        if _dir == None:
-            return False
-        nPos = self._map.go(self.pos, _dir)
-        if nPos != None:
-            self.pos = nPos
-            self._enterPos(nPos)
-            lf()
-            return True
-        return True
-
-    def _goOther(self, cmd):
-        """
-        Called when the go command is not in a valid
-        direction. Would get used for things like using
-        "go door" to go through a door or "go away" for
-        like a joke or w/e.
-        """
-        return fail("This is the base room. You cannot leave.")
-
-    def _goSit(self, cmd):
-        """
-        Called the the player tries to go in a direction
-        while sitting.
-        """
-        return fail("You can't walk while sitting!")
-
-    def go(self, cmd):
-        """
-        Handles the go verb. Different go functionality
-        should be implemented in the appropriate _go*
-        functions instead of this one.
-        """
-        if cmd == "go":
-            return self._goEmpty()
-
-        if g.getFlag("sit") != "not":
-            return self._goSit(cmd)
-
-        if self._goDir(cmd):
-            return True
-
-        return self._goOther(cmd)
-
 
     def sit(self, cmd):
         """
@@ -967,7 +861,7 @@ class Item(Bld):
     """
 
     name = "item"
-    defVerbs = ["look", "where", "take", "drop"]
+    defVerbs = ["look", "take", "drop"]
     fancyVerbs = {}
     takeable = False    #for automatic take command
     dropable = False    #for automatic drop command
@@ -989,7 +883,6 @@ class Item(Bld):
     defFlags = {} 
     flagDev = '`'
     defLoc = ""
-    defPos = ""
     defQty = 1
     defSprite = None
 
@@ -999,7 +892,6 @@ class Item(Bld):
         Bld.__init__(self)
         self.qty = self.defQty
         self.loc = self.defLoc
-        self.pos = self.defPos
 
     def _reqInv(self):
         """
@@ -1020,30 +912,27 @@ class Item(Bld):
         Item duplication/removal for non-unique items.
         """
         oldRoom = self.room
-        oldPos = oldRoom.pos
 
         if self.unique or self.qty == 1:
-            del oldRoom.items[oldPos][self.name] 
+            del oldRoom.items[self.name] 
         else:
             self.qty -=1
 
         nRoom = g.rooms[newLoc]
-        if nPos == None:
-            nPos = nRoom.pos
 
         if self.unique:
-            nRoom.items[nPos][self.name] = self
+            nRoom.items[self.name] = self
             self.room = nRoom
             self.loc = newLoc
         else:
-            if self.name in nRoom.items[nPos].keys():
-                nRoom.items[nPos][self.name].qty += 1
+            if self.name in nRoom.items.keys():
+                nRoom.items[self.name].qty += 1
             else:
                 nItem = self.__class__()
                 nItem.qty = 1
                 nItem.loc = newLoc
                 nItem.room = nRoom
-                nRoom.items[nPos][self.name] = nItem 
+                nRoom.items[self.name] = nItem 
 
     def getGround(self ):
         """
@@ -1066,18 +955,6 @@ class Item(Bld):
         say(self.getString("desc"))
         return True
 
-    def where(self, cmd):
-        """
-        Says where the item is if it's not hidden and has
-        a position.
-        """
-        if self.hidden:
-            return fail()
-        if self.pos != "":
-            say(self.pos)
-            return True
-        return fail()
-
     def take(self, cmd):
         """
         Takes the item if takeable. If the item is unique
@@ -1085,8 +962,6 @@ class Item(Bld):
         descriptive string. If the item is not unique,
         passes so that identical items in the room can catch
         the command.
-        If the item is out of reach fails with message
-            You can't reach it from here!
         If the take succeeds, prints the take descriptive
         string.
         """
@@ -1096,9 +971,7 @@ class Item(Bld):
             if not self.unique:
                 return _pass()
             return fail(self.getString("have"))
-        pPos = self.room.pos
-        if pPos != None and pPos != self.pos:
-            return fail("You can't reach it from here!")
+
         self._move('inv')
         say(self.getString('take'))
         return True
@@ -1110,7 +983,7 @@ class Item(Bld):
         catch the command. If the item is hidden, fails.
         Otherise, prints the drop descriptive string and
         if the item is dropable, moves the item to the
-        player's current room and position.
+        player's current room.
         """
         if self.loc != 'inv':
             return _pass()
@@ -1119,8 +992,6 @@ class Item(Bld):
         say(self.getString('drop'))
         if self.dropable:
             room = g.currRoom
-            pPos = room.pos
-            self.pos = pPos
             self._move(room.name)
             return True
         return False
