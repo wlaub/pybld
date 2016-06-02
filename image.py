@@ -255,6 +255,7 @@ class Image():
         nImage.frames = []
         for f in self.frames:
             nImage.frames.append(f.copy())
+        nImage.cFrame = self.cFrame
         return nImage
 
     def resize(self, l, r, t, b):
