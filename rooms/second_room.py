@@ -5,14 +5,14 @@ import time, sys
 class Room(game.Room):
     name = "Second Room"
 
-    strings =   { "desc": "You are in a bare room."
+    strings =   { "desc": "You are in a bare room lit only by a FBDNG GLOW."
                 , "closer": "There's nothing else here."
                 , "sit": "You had better not..."
                 }
 
     sitable = False
    
-#    defSprite = bldgfx.Sprite('img/', 0, 0, -1)
+    defSprite = bldgfx.Sprite('img/sroom/room.bmi', 0, 0, -1)
 
     addVerbs = []
 
@@ -53,7 +53,7 @@ class Chair(game.Item):
     defFlags =  {
                 }    
 
-#    defSprite = bldgfx.Sprite('img/', 0, 0)
+    defSprite = bldgfx.Sprite('img/sroom/chair.bmi', 0, 23)
 
     defLoc = 'Second Room'
 
@@ -84,8 +84,6 @@ class Anyway(game.Item):
 
     defFlags =  {
                 }    
-
-#    defSprite = bldgfx.Sprite('img/', 0, 0)
 
     defLoc = 'Second Room'
     defQty = 1

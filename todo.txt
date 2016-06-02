@@ -1,11 +1,12 @@
 
 Current task:
 
-Link first and second rooms
 make Second Room graphix
 
 Add confirmation dialogs
 Add sprite one-shots/ending callbacks?
+
+Add command to delete frame in wax
 
 Implement command line using textpad/validator?
 

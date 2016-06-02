@@ -98,7 +98,7 @@ class Door(game.Item):
             return game.fail("It's not a real door.")
 
         game.say("You open the door and walk through into the next room. There's no going back now. Hope you didn't miss anything important!")
-  
+        """ 
         game.lf()
         game.say("Congratulations! You completed the demo of pybld.\nYour score was: {score}\nYour hair was: {hair}\n Your turns was: {turn}".format(score = game.g.getScore(), hair=game.g.getHair(), turn=game.g.getTurns()))
 
@@ -106,6 +106,7 @@ class Door(game.Item):
         game.say("BLACK WINDS obtained: {}/1".format(game.g.hasItem('black wind')))
         game.say("GLYPHS PARS'D: {}/1".format(0))
         game.say("D'LDOS BROK'N: {}/1".format(1 if game.g.items["d'ldo"].broken else 0))
+        """
         game.g.moveRoom('Second Room')
 
         return True
