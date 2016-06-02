@@ -62,7 +62,7 @@ def makeItem():
     Makes an empty item with given name and location
     """
     loc = raw_input("Default room: ").strip()
-    fname = makeFname(name)
+    fname = makeFname(loc)
 
     if not os.path.exists(fname):
         print("Room {} does not exist".format(loc))

@@ -1,6 +1,8 @@
 
 Current task:
-Making Room template
+
+Link first and second rooms
+make Second Room graphix
 
 Implement command line using textpad/validator?
 

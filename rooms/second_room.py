@@ -58,3 +58,42 @@ class Chair(game.Item):
     defLoc = 'Second Room'
 
 
+class Anyway(game.Item):
+    name = "anyway"
+
+    takeable =  False #Default
+    dropable =  False #Default
+    visible  =  False  #Default
+    hidden   =  False  #Default
+    spawn    =  True   #Default
+    obscure  =  False  #Default
+    unique   =  True   #Default
+    useable  =  False  #Default
+
+    strings = {
+        "desc": "",
+        "ground": "",
+        "take": "",
+        "drop": ""
+    }
+
+    addVerbs = ["sit"]
+    
+    fancyVerbs ={
+                }
+
+    defFlags =  {
+                }    
+
+    defSprite = bldgfx.Sprite('img/', 0, 0)
+
+    defLoc = 'Second Room'
+    defQty = 1
+
+    @standing
+    def sit(self, cmd):
+        game.say("You sit in the chair desptire your better judgment.")
+
+
+
+
