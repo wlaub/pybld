@@ -5,7 +5,7 @@ import time, sys
 class Room(game.Room):
     name = "gameover"
 
-    strings =   { "desc": "You have died. Your score was."
+    strings =   { "desc": "You have died. Your score was:"
                 , "closer": ""
                 }
 

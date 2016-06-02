@@ -106,6 +106,8 @@ class Door(game.Item):
         game.say("BLACK WINDS obtained: {}/1".format(game.g.hasItem('black wind')))
         game.say("GLYPHS PARS'D: {}/1".format(0))
         game.say("D'LDOS BROK'N: {}/1".format(1 if game.g.items["d'ldo"].broken else 0))
+        game.g.moveRoom('Second Room')
+
         return True
  
 class Glyph(game.Item):
