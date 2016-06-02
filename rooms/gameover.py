@@ -5,13 +5,13 @@ import time, sys
 class Room(game.Room):
     name = "gameover"
 
-    strings =   { "desc": ""
+    strings =   { "desc": "You have died. Your score was."
                 , "closer": ""
                 }
 
     sitable = False #Default
    
-    defSprite = bldgfx.Sprite('img/gameover', 0, 0, -1)
+    defSprite = bldgfx.Sprite('img/go/go1.bmi', 0, 0, -1)
 
     addVerbs = []
     rmVerbs = []
@@ -23,5 +23,7 @@ class Room(game.Room):
                 }
 
     def _onOtherEnter(self):
+        self.look("look") 
+        game.g.score("score")
         
 

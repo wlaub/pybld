@@ -12,6 +12,9 @@ loading module inv.py
 Found Room
 loading module second_room.py
 Found item
+Found item
+Found Room
+loading module gameover.py
 Found Room
 Adding item bean to room First Room
 Adding item black wind to room First Room
@@ -19,4 +22,5 @@ Adding item door to room First Room
 Adding item glyphs to room First Room
 Adding item text pars'r to room First Room
 Adding item d'ldo to room First Room
+Adding item anyway to room Second Room
 Adding item chair to room Second Room

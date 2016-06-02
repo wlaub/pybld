@@ -85,7 +85,7 @@ class Anyway(game.Item):
     defFlags =  {
                 }    
 
-    defSprite = bldgfx.Sprite('img/', 0, 0)
+#    defSprite = bldgfx.Sprite('img/', 0, 0)
 
     defLoc = 'Second Room'
     defQty = 1
@@ -93,6 +93,8 @@ class Anyway(game.Item):
     @standing
     def sit(self, cmd):
         game.say("You sit in the chair desptire your better judgment.")
+        time.sleep(2) #TODO: Replace with confirm action
+        game.g.moveRoom('gameover')
 
 
 
