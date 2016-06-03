@@ -94,7 +94,7 @@ class Frame():
 
 
     def load(self, data, height, width):
-        length = struct.unpack("B", data[0])
+        self.length = struct.unpack("B", data[0])[0]
         raw = data[1:]
         self.arrays[0] = [self.decode(x) if ord(x) & 0x80 == 0 else '\x00' for x in raw]
         self.arrays[1] = [self.decode(x) if ord(x) & 0x80 != 0 else '\x00' for x in raw]

@@ -1,5 +1,6 @@
 
 Current task:
+Fix wax not saving frame lengths
 
 Add confirmation dialogs
 
