@@ -278,6 +278,15 @@ class Image():
         self.frames.insert(pos+1, nFrame)
         self.cFrame = pos+1
 
+    def rmFrame(self):
+        pos = self.cFrame
+        if len(self.frames) < 2:
+            return
+        dFrame = self.frames[pos]
+        self.frames.remove(dFrame)
+        if self.cFrame >= len(self.frames):
+            self.cFrame = len(self.frames)-1 
+
     def tick(self):
         self.t += 1
         if self.t >= self.frames[self.cFrame].length:

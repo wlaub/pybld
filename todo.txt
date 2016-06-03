@@ -1,10 +1,7 @@
 
 Current task:
-Fix wax not saving frame lengths
 
 Add confirmation dialogs
-
-Add command to delete frame in wax
 
 Implement command line using textpad/validator?
 

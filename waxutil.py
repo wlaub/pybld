@@ -285,7 +285,7 @@ class SymMap(CommandMap):
         CommandMap.__init__(self)
         self.blocks = [ ['new', 'save', 'load', 'open', 'close', 'undo', 'redo']
                         , ['edit', 'select', 'paste', 'char', 'color', 'bucket', 'resize']
-                        , ['frame', 'frame length', 'next frame', 'prev frame']
+                        , ['frame', 'del frame', 'frame length', 'next frame', 'prev frame']
                         , ['play', 'alpha', 'cursor', 'scopy', 'prev img', 'next img']
                         ]
         self.commands = { ord('w'): ['new']
@@ -298,6 +298,7 @@ class SymMap(CommandMap):
                         , ord('t'): ['edit']
                         , ord('v'): ['select']
                         , ord('n'): ['frame', 'new frame']
+                        , ord('j'): ['del frame']
                         , ord('r'): ['resize']
                         , ord('y'): ['char', 'set char']
                         , ord('b'): ['paste']
