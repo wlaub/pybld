@@ -143,11 +143,14 @@ class Darkmagyx(game.Item):
     #require black wind
     @needItem('black wind')
     def dispel(self, cmd):
+        chair = self.room.items['chair']
         game.say(self.getString('dispel'))
         game.g.inv.items['black wind']._move('trash')
-        #Remove black wind
+        chair.strings['desc'] = chair.strings['descSafe']
+        chair.strings['take'] = chait.strings['descSafe']
+        chair.sprite.change('img/sroom/chair2.bmi') 
         self.room.items['chair'].setFlag('safe', True)
-
+        return True
 
 
 

@@ -7,12 +7,11 @@ class Room(game.Room):
 
     def inv(self, cmd):
         invList = []
-        for pos in self.items.values():
-            for item in pos.values():
-                if not item.hidden:
-                    nameStr = item.name
-                    if item.qty > 1:
-                        nameStr+="({})".format(item.qty)
-                    invList.append(nameStr)
+        for item in self.items.values():
+            if not item.hidden:
+                nameStr = item.name
+                if item.qty > 1:
+                    nameStr+="({})".format(item.qty)
+                invList.append(nameStr)
         game.sayList(invList)
 
