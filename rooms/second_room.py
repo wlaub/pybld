@@ -24,7 +24,7 @@ class Room(game.Room):
 
     def _onFirstEnter(self):
         game.say("The door slams shut behind you and then vanishes.")
-
+        self._onOtherEnter()
 
 
 class Chair(game.Item):
@@ -90,7 +90,7 @@ class Anyway(game.Item):
 
     @standing
     def sit(self, cmd):
-        game.say("You sit in the chair desptire your better judgment.")
+        game.say("You sit in the chair despite your better judgment.")
         time.sleep(2) #TODO: Replace with confirm action
         game.g.moveRoom('gameover')
 

@@ -11,7 +11,7 @@ class Room(game.Room):
 
     sitable = False #Default
    
-    defSprite = bldgfx.Sprite('img/go/go1.bmi', 0, 0, -1)
+    defSprite = bldgfx.Sprite('img/go/go1.bmi', 0, 0, -1, bldgfx.oneshot)
 
     addVerbs = []
     rmVerbs = []

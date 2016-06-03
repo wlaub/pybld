@@ -22,16 +22,24 @@ class Manager():
         """
         pass
 
+def loop(obj):
+    obj.frame = 0
+
+def oneshot(obj):
+    obj.frame -=1
+    obj.stopped=True
 
 class Sprite():
 
-    def __init__(self, name, y, x, layer=0):
+    def __init__(self, name, y, x, layer=0, callback = loop):
         self.y = y
         self.x = x
         self.layer = layer
         self.name = name
         self.frame = 0
         self.t = 0
+        self.callback = callback
+        self.stopped = False
         pass
 
     def change(self, name):
@@ -40,13 +48,15 @@ class Sprite():
         self.t = 0
 
     def tick(self, man):
+        if self.stopped:
+            return
         img = man.getImage(self.name)
         self.t += 1
         if self.t == img.frames[self.frame].length:
             self.t = 0
             self.frame += 1
             if self.frame == len(img.frames):
-                self.frame = 0
+                self.callback(self)
 
         pass
 
