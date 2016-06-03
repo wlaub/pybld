@@ -179,6 +179,22 @@ def inv(f):
     return wrapper
 
 
+def needItem(name, qty=1):
+    """
+    Decorator to require that the player has at least qty
+    of the specified item in inv.
+    """
+    def dec(f):
+        @wraps(f)
+        def wrapper(self, cmd):
+            result = g.hasItem(name)
+            if result >= qty:
+                return f(self,cmd)
+            return fail()
+        return wrapper
+    return dec
+
+
 def standing(f):
     """
     A decorator to only calls the function if the player is
@@ -485,9 +501,8 @@ class Game(Bld):
         Checks to see if an item with the given name is in
         the inventory and returns the quantity.
         """
-        for pos in self.inv.items.values():
-            if name in pos.keys():
-                return pos[name].qty
+        if name in self.inv.items.keys():
+            return self.inv.items[name].qty
         return 0
 
     def getVerbs(self):

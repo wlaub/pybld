@@ -10,12 +10,11 @@ class {cname}(game.Item):
     unique   =  True  
     useable  =  False 
 
-    strings = {
-        "desc": "",
-        "ground": "",
-        "take": "",
-        "drop": ""
-    }
+    strings =   { "desc": ""
+                , "ground": ""
+                , "take": ""
+                , "drop": ""
+                }
 
     addVerbs = []
     

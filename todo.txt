@@ -1,5 +1,17 @@
 
 Current task:
+    Implement reqItem decorator
+    Make dark magyx lookable
+    Make chair change sprite and desc based on safe
+Implement dispel on dark magyx
+Make victory room
+
+Make too script show comments on booleans
+
+Change verb recognition to be exact so that e.g.
+    d'spell != d'spel
+
+Fix script execution
 
 Add confirmation dialogs
 

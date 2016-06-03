@@ -1,5 +1,5 @@
 import game, bldgfx
-from game import inv, require, standing
+from game import inv, require, standing, needItem
 import time, sys
 
 class Room(game.Room):

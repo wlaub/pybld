@@ -1,5 +1,5 @@
 import game, bldgfx
-from game import inv, require, standing
+from game import inv, require, standing, needItem
 import time, sys
 
 class Room(game.Room):
@@ -8,6 +8,7 @@ class Room(game.Room):
     strings =   { "desc": "You are in a bare room lit only by a FBDNG GLOW."
                 , "closer": "There's nothing else here."
                 , "sit": "You had better not..."
+                , "safeSit": "It seems safe enough now. You sit in the chair."
                 }
 
     sitable = False
@@ -26,6 +27,14 @@ class Room(game.Room):
         game.say("The door slams shut behind you and then vanishes.")
         self._onOtherEnter()
 
+    def sit(self, cmd):
+        safe = self.items['chair'].getFlag('safe')
+        if not safe:
+            game.say(self.getString('sit'))
+        else:
+            game.say(self.getString('safeSit'))
+            #Victory
+
 
 class Chair(game.Item):
     name = "chair"
@@ -39,18 +48,19 @@ class Chair(game.Item):
     unique   =  True  
     useable  =  False 
 
-    strings = {
-        "desc": "The {} pulses with DARK MAGYX.",
-        "ground": "There is a {} in the middle of the room.",
-        "take": "You'd better not get too close",
-    }
+    strings =   { "desc": "The {} pulses with DARK MAGYX."
+                , "descSafe": "The {} looks safe now."
+                , "ground": "There is a {} in the middle of the room."
+                , "take": "You'd better not get too close"
+                , "takeSafe": "You can't pick it up. It's too unwieldy."
+                }
 
     addVerbs = []
     
     fancyVerbs ={
                 }
 
-    defFlags =  {
+    defFlags =  { "safe": False
                 }    
 
     defSprite = bldgfx.Sprite('img/sroom/chair.bmi', 0, 23)
@@ -90,9 +100,54 @@ class Anyway(game.Item):
 
     @standing
     def sit(self, cmd):
-        game.say("You sit in the chair despite your better judgment.")
-        time.sleep(2) #TODO: Replace with confirm action
-        game.g.moveRoom('gameover')
+        safe = self.room.items['chair'].getFlag('safe')
+        if not safe:
+            game.say("You sit in the chair despite your better judgment.")
+            time.sleep(2) #TODO: Replace with confirm action
+            game.g.moveRoom('gameover')
+        else:
+            return self.room.sit('sit')
+
+
+
+class Darkmagyx(game.Item):
+    name = "dark magyx"
+
+    takeable =  False #Default
+    dropable =  False #Default
+    visible  =  False  #Default
+    hidden   =  True  #Default
+    spawn    =  True   #Default
+    obscure  =  False  #Default
+    unique   =  True   #Default
+    useable  =  False  #Default
+
+    strings =   { "desc": ""
+                , "ground": ""
+                , "take": ""
+                , "drop": ""
+                , "dispel": "The BLACK WIND leaves your INV and passes through the CHAIR. The {} has been D'SPEL!"
+                }
+
+    addVerbs = []
+    
+    fancyVerbs ={ "d'spel": 'dispel'
+                }
+
+    defFlags =  {
+                }    
+
+    defLoc = 'Second Room'
+    defQty = 1
+
+    #require black wind
+    @needItem('black wind')
+    def dispel(self, cmd):
+        game.say(self.getString('dispel'))
+        game.g.inv.items['black wind']._move('trash')
+        #Remove black wind
+        self.room.items['chair'].setFlag('safe', True)
+
 
 
 
