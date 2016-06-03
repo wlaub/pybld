@@ -13,7 +13,7 @@ class Room(game.Room):
 
     sitable = False
    
-    defSprite = bldgfx.Sprite('img/sroom/room.bmi', 0, 0, -1)
+#    defSprite = bldgfx.Sprite('img/sroom/room.bmi', 0, 0, -1)
 
     addVerbs = []
 
@@ -152,7 +152,6 @@ class Darkmagyx(game.Item):
         game.g.inv.items['black wind']._move('trash')
         chair.strings['desc'] = chair.strings['descSafe']
         chair.strings['take'] = chair.strings['descSafe']
-        chair.sprite.change('img/sroom/chair2.bmi') 
         self.room.items['chair'].setFlag('safe', True)
         self._move('trash')
         return True

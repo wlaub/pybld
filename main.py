@@ -7,7 +7,7 @@ import pdb
 
 
 if __name__ == "__main__":
-    infile = sys.stdin
+    infile = None
     if len(sys.argv) > 1:
         infile = open(sys.argv[1], 'r')
 

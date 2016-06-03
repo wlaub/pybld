@@ -1,6 +1,5 @@
 
 Current task:
-Make dark magyx lookable
 
 Make tool script show comments on booleans
 Make tool script flag defaults correctly
