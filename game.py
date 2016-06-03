@@ -77,11 +77,11 @@ def spell(data, delay=.75):
     """
     scr.spell(data, delay)
     
-def lf():
+def lf(num = 1):
     """
     Linefeed. Just adds a newline.
     """
-    scr.lf()
+    scr.lf(num)
 
 def say(data):
     """

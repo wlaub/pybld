@@ -23,6 +23,7 @@ class Room(game.Room):
                 }
 
     def _onOtherEnter(self):
+        game.lf(6)
         self.look("look") 
         game.g.score("score")
         

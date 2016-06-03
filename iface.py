@@ -28,10 +28,11 @@ class Screen():
         sys.stdout.write(data.upper())
         sys.stdout.flush()
 
-    def lf(self):
-        self.sayBit('\n')
-        self.buffer.append('')
-        self.line = ''
+    def lf(self, num = 1):
+        for i in range(num):
+            self.sayBit('\n')
+            self.buffer.append('')
+            self.line = ''
 
     def sayWord(self, word):
         if self.checkWord(word):
@@ -142,8 +143,9 @@ class CurseScreen(Screen):
         self.buffer[-1] += data
         self.paint()
 
-    def lf(self):
-        self.buffer.append('')
+    def lf(self, num=1):
+        for i in range(num):
+            self.buffer.append('')
 
     def drawScrollBar(self):
         self.window.vline(0, self.width-1, curses.ACS_VLINE, self.cmdHeight)
