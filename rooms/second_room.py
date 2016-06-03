@@ -147,7 +147,7 @@ class Darkmagyx(game.Item):
         game.say(self.getString('dispel'))
         game.g.inv.items['black wind']._move('trash')
         chair.strings['desc'] = chair.strings['descSafe']
-        chair.strings['take'] = chait.strings['descSafe']
+        chair.strings['take'] = chair.strings['descSafe']
         chair.sprite.change('img/sroom/chair2.bmi') 
         self.room.items['chair'].setFlag('safe', True)
         return True
