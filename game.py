@@ -907,7 +907,7 @@ class Item(Bld):
             return fail("Hmmmm...")
         return True
 
-    def _move(self, newLoc, nPos = None):
+    def _move(self, newLoc):
         """
         Move the item to a different room and position. If
         no position is given, uses the player's last known
