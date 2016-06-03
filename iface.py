@@ -241,7 +241,14 @@ class CurseInterface():
         hpos = 0
         cmdTemp = ''
         while 1:
-            char =self.inwin.getch()
+            if self.infile != None:
+                char = self.infile.read(1)
+                if char == '':
+                    self.infile = None
+                else:
+                    char = ord(char)
+            if self.infile == None:    
+                char =self.inwin.getch()
             if char == 0x0a:
                 break
             elif char == -1:
@@ -293,8 +300,8 @@ class CurseInterface():
         return cmd
 
 
-    def commandLoop(self):
-        self.infile = open(sys.argv[1],'r')
+    def commandLoop(self, infile = None):
+        self.infile = infile
         while not self.g.done:
             cmd = self.getCmd(self.infile)
 

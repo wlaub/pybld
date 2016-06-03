@@ -7,6 +7,7 @@ import pdb
 
 
 if __name__ == "__main__":
+    infile = sys.stdin
     if len(sys.argv) > 1:
         infile = open(sys.argv[1], 'r')
 
@@ -20,7 +21,7 @@ if __name__ == "__main__":
 
         g.initScreens(iface.CurseInterface, iface.CurseScreen, bldgfx.Renderer)
         g.moveRoom('First Room')
-        g.commandLoop()
+        g.commandLoop(infile)
     except Exception as e:
         curses.endwin()
         pdb.set_trace()

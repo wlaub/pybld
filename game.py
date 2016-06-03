@@ -403,11 +403,11 @@ class Game(Bld):
         scr = self.screen 
         rend = Renderer(self.interface)
 
-    def commandLoop(self):
+    def commandLoop(self, infile = None):
         """
         Runs the game.
         """
-        self.interface.commandLoop()
+        self.interface.commandLoop(infile)
 
     def loadModules(self):
         """

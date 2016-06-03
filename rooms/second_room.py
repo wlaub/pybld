@@ -5,7 +5,7 @@ import time, sys
 class Room(game.Room):
     name = "Second Room"
 
-    strings =   { "desc": "You are in a bare room lit only by a FBDNG GLOW."
+    strings =   { "desc": "You are in a bare room lit only by the FBDNG GLOW or DARK MAGYX."
                 , "closer": "There's nothing else here."
                 , "sit": "You had better not..."
                 , "safeSit": "It seems safe enough now. You sit in the chair."
@@ -33,7 +33,10 @@ class Room(game.Room):
             game.say(self.getString('sit'))
         else:
             game.say(self.getString('safeSit'))
-            #Victory
+            time.sleep(2) #TODO: same
+            game.g.moveRoom('victory')
+
+
 
 
 class Chair(game.Item):
@@ -109,20 +112,19 @@ class Anyway(game.Item):
             return self.room.sit('sit')
 
 
-
 class Darkmagyx(game.Item):
     name = "dark magyx"
 
     takeable =  False #Default
     dropable =  False #Default
     visible  =  False  #Default
-    hidden   =  True  #Default
+    hidden   =  False  #Default
     spawn    =  True   #Default
     obscure  =  False  #Default
     unique   =  True   #Default
     useable  =  False  #Default
 
-    strings =   { "desc": ""
+    strings =   { "desc": "The {} pulse and writhe upon the CHAIR."
                 , "ground": ""
                 , "take": ""
                 , "drop": ""
@@ -137,6 +139,8 @@ class Darkmagyx(game.Item):
     defFlags =  {
                 }    
 
+    defSprite = bldgfx.Sprite('img/sroom/magyx1.bmi', 0, 19)
+
     defLoc = 'Second Room'
     defQty = 1
 
@@ -150,6 +154,7 @@ class Darkmagyx(game.Item):
         chair.strings['take'] = chair.strings['descSafe']
         chair.sprite.change('img/sroom/chair2.bmi') 
         self.room.items['chair'].setFlag('safe', True)
+        self._move('trash')
         return True
 
 
