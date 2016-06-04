@@ -144,7 +144,6 @@ class Darkmagyx(game.Item):
     defLoc = 'Second Room'
     defQty = 1
 
-    #require black wind
     @needItem('black wind')
     def dispel(self, cmd):
         chair = self.room.items['chair']

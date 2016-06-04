@@ -26,7 +26,9 @@ def getBools(template):
                     val = 'False'
                 else:
                     val = default
-                out = line.replace(default, val) + " #Default"
+                out = line.replace(default, val)
+                if val == default:
+                    out += " #Default"
         result.append(out)
 
     return '\n'.join(result)

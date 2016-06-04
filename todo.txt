@@ -1,6 +1,5 @@
 
 Current task:
-Make tool script flag defaults correctly
 
 Change verb recognition to be exact so that e.g.
     d'spell != d'spel
