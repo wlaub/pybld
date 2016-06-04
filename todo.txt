@@ -1,10 +1,8 @@
 
 Current task:
 
-Change verb recognition to be exact so that e.g.
-    d'spell != d'spel
-
-Fix script execution
+Create Combo (Responds to items + conjuctions, catches verbs before items)
+    Create Combo template, add to tools
 
 Add confirmation dialogs
 

@@ -302,7 +302,7 @@ class Bld():
 
     def _doCmd(self, cmd):
         for v in self.verbs.keys():
-            if v == cmd[:len(v)]:
+            if v == cmd.split(' ')[0]:
                 result = getattr(self, self.verbs[v])(cmd)
                 if result != "pass":
                     return True
