@@ -11,13 +11,15 @@ def getBools(template):
     result = []
     for line in template.split('\n'):
         out = line
-        match = re.search("(?P<name>\w+)\s*=\s*(?P<val>\w+)", line)
+        match = re.search("(?P<name>\w+)\s*=\s*(?P<val>\w+)\s*(?P<comment>#*.*)", line)
         if match != None:
             if match.group('val') == 'True' or match.group('val') == 'False':
                 default = match.group('val')
-                val = raw_input('{} ({}): T/F? '.format(
-                            match.group('name'), default)
-                               ).strip().lower()
+                val = raw_input('{}, {} ({}): T/F? '
+                             .format( match.group('name')
+                                    , match.group('comment')
+                                    , default)
+                                    ).strip().lower()
                 if 't' in val:
                     val = 'True'
                 elif 'f' in val:

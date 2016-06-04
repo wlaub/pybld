@@ -1,7 +1,5 @@
 
 Current task:
-
-Make tool script show comments on booleans
 Make tool script flag defaults correctly
 
 Change verb recognition to be exact so that e.g.
@@ -20,8 +18,6 @@ Fix cursor weirdness
 --python curses threading?
 
 Add achievements system
-
-Scripts for creating empty rooms and items
 
 ---------------------------------
 

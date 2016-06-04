@@ -1,14 +1,14 @@
 class {cname}(game.Item):
     name = "{name}"
 
-    takeable =  False
-    dropable =  False
-    visible  =  False 
-    hidden   =  False 
-    spawn    =  True  
-    obscure  =  False 
-    unique   =  True  
-    useable  =  False 
+    takeable = False    #for automatic take command
+    dropable = False    #for automatic drop command
+    visible = False     #Appears in room description.
+    hidden = False      #Does not respond to look, does not appear in inventory
+    spawn = True        #Automatically added to room at startup
+    obscure = False     #Listed only in the look closer command
+    unique = True       #Adds item to global game dictionary
+    useable = False     #The item can be used
 
     strings =   { "desc": ""
                 , "ground": ""
