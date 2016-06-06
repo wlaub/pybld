@@ -126,16 +126,6 @@ class Renderer():
         if not sprite in self.sprites[sprite.layer]:
             self.sprites[sprite.layer].append(sprite)
 
-    def removeSprite(self, sprite):
-        """
-        Removes the sprite from the render dictionary
-        """
-        #TODO: remove
-        try:
-            self.sprites[sprite.layer].remove(sprite)
-        except:
-            pass
-
     def clear(self):
         """
         Clears the current draw dictionary so nothing

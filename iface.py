@@ -225,6 +225,40 @@ class CurseInterface():
         self.inwin.addstr(0,0, "> "+cmd.upper())
         return len(cmd)
 
+    def validateCmd(self, val):
+        force = self.g.force
+        if len(force) > 0:
+            if self.xpos < len(force) :
+                if curses.ascii.isprint(val):
+                    val = force[self.xpos].upper()
+                    self.xpos +=1
+                    return val
+                else:
+                    return 0
+            else:
+                return val if val == 0x0a else 0
+        if val == curses.KEY_UP:
+            if self.hpos > -len(self.history):
+                self.hpos -= 1
+                self.inwin.clear()
+                self.inwin.addstr(0,0, "> "+self.history[self.hpos].upper())
+        elif val == curses.KEY_DOWN:
+            if self.hpos < -1:
+                self.hpos += 1 
+                self.inwin.clear()
+                self.inwin.addstr(0,0, "> "+self.history[self.hpos].upper())
+            elif self.hpos == -1:
+                self.hpos = 0
+                self.inwin.clear()
+                self.inwin.addstr(0,0,"> ")
+        elif val == curses.KEY_NPAGE:
+            self.scr.pageUp()
+        elif val == curses.KEY_PPAGE:
+            self.scr.pageDown()
+        if curses.ascii.isprint(val):
+            val = ord(chr(val).upper())
+        return val
+
     def getCmd(self, f):
         
         self.scr.paint()
@@ -237,6 +271,15 @@ class CurseInterface():
         self.inwin.addstr(0,0, "> ")
         self.inwin.refresh()
 
+        ###
+        
+        self.xpos = 0
+        self.hpos = 0
+        tbox = Textbox(self.inwin.derwin(0,2))
+        cmd = tbox.edit(self.validateCmd)[:].strip().lower()
+        
+        ### 
+        """
         xpos = 0
         hpos = 0
         cmdTemp = ''
@@ -286,7 +329,7 @@ class CurseInterface():
                 cmdTemp = cmd
             xpos = self.refreshCmd(cmd)
             self.inwin.refresh()
-
+        """
         if force:
             cmd = forceCmd
 
