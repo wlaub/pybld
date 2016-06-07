@@ -208,7 +208,8 @@ class CurseInterface():
         self.cmdwin = curses.newwin(self.scr.cmdHeight+1, self.scr.width, self.scr.height-self.scr.cmdHeight-1, 0) 
         self.inwin = curses.newwin(1, self.scr.width, self.scr.height-1, 0)
         self.cmdwin.leaveok(1)
-        self.tbox = Textbox(self.inwin)
+
+        self.inwin.keypad(1)
 
         self.imgwin.border()
         self.imgwin.refresh()
@@ -240,13 +241,11 @@ class CurseInterface():
         if val == curses.KEY_UP:
             if self.hpos > -len(self.history):
                 self.hpos -= 1
-                self.inwin.clear()
-                self.inwin.addstr(0,0, "> "+self.history[self.hpos].upper())
+                self.refreshCmd(self.history[self.hpos])
         elif val == curses.KEY_DOWN:
             if self.hpos < -1:
                 self.hpos += 1 
-                self.inwin.clear()
-                self.inwin.addstr(0,0, "> "+self.history[self.hpos].upper())
+                self.refreshCmd(self.history[self.hpos])
             elif self.hpos == -1:
                 self.hpos = 0
                 self.inwin.clear()
@@ -272,14 +271,14 @@ class CurseInterface():
         self.inwin.refresh()
 
         ###
-        
+        """
         self.xpos = 0
         self.hpos = 0
         tbox = Textbox(self.inwin.derwin(0,2))
         cmd = tbox.edit(self.validateCmd)[:].strip().lower()
-        
-        ### 
         """
+        ### 
+        curses.flushinp() 
         xpos = 0
         hpos = 0
         cmdTemp = ''
@@ -329,7 +328,9 @@ class CurseInterface():
                 cmdTemp = cmd
             xpos = self.refreshCmd(cmd)
             self.inwin.refresh()
-        """
+       
+        ###
+     
         if force:
             cmd = forceCmd
 

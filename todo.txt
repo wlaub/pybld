@@ -1,6 +1,7 @@
 
 Current task:
-Working on textbox/validate command entry and forcing.
+
+
 
 Need a way to decouple cursor movement from drawing images.
 
