@@ -33,7 +33,7 @@ class Room(game.Room):
             game.say(self.getString('sit'))
         else:
             game.say(self.getString('safeSit'))
-            time.sleep(2) #TODO: same
+            game.wait()
             game.g.moveRoom('victory')
 
 
@@ -106,7 +106,7 @@ class Anyway(game.Item):
         safe = self.room.items['chair'].getFlag('safe')
         if not safe:
             game.say("You sit in the chair despite your better judgment.")
-            time.sleep(2) #TODO: Replace with confirm action
+            game.wait()
             game.g.moveRoom('gameover')
         else:
             return self.room.sit('sit')

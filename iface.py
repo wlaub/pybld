@@ -223,8 +223,20 @@ class CurseInterface():
 
     def refreshCmd(self, cmd):
         self.inwin.clear() 
-        self.inwin.addstr(0,0, "> "+cmd.upper())
+        self.inwin.addstr(0,0, self.prefix+cmd.upper())
         return len(cmd)
+
+    def getNext(self):
+        if self.infile != None:
+            char = self.infile.read(1)
+            if char == '':
+                self.infile = None
+            else:
+                char = ord(char)
+        if self.infile == None:    
+            char =self.inwin.getch()
+        return char
+ 
 
     def validateCmd(self, val):
         force = self.g.force
@@ -241,11 +253,11 @@ class CurseInterface():
         if val == curses.KEY_UP:
             if self.hpos > -len(self.history):
                 self.hpos -= 1
-                self.refreshCmd(self.history[self.hpos])
+                self.refreshCmd(self.history[self.hpos], self.prefix)
         elif val == curses.KEY_DOWN:
             if self.hpos < -1:
                 self.hpos += 1 
-                self.refreshCmd(self.history[self.hpos])
+                self.refreshCmd(self.history[self.hpos], self.prefix)
             elif self.hpos == -1:
                 self.hpos = 0
                 self.inwin.clear()
@@ -258,7 +270,7 @@ class CurseInterface():
             val = ord(chr(val).upper())
         return val
 
-    def getCmd(self, f):
+    def getCmd(self, f, prefix = "> ", history = True):
         
         self.scr.paint()
         curses.noecho()
@@ -266,8 +278,11 @@ class CurseInterface():
         force = not self.g.force == ""
         if force:
             forceCmd = self.g.force
+
+        self.prefix = prefix
+
         self.inwin.clear()
-        self.inwin.addstr(0,0, "> ")
+        self.inwin.addstr(0,0, self.prefix)
         self.inwin.refresh()
 
         ###
@@ -283,14 +298,7 @@ class CurseInterface():
         hpos = 0
         cmdTemp = ''
         while 1:
-            if self.infile != None:
-                char = self.infile.read(1)
-                if char == '':
-                    self.infile = None
-                else:
-                    char = ord(char)
-            if self.infile == None:    
-                char =self.inwin.getch()
+            char = self.getNext()
             if char == 0x0a:
                 break
             elif char == -1:
@@ -301,11 +309,11 @@ class CurseInterface():
             elif char == 21:
                 if not force:
                     cmd = ''
-            elif char == curses.KEY_UP:
+            elif char == curses.KEY_UP and history:
                 if hpos > -len(self.history):
                     hpos -= 1
                     cmd = self.history[hpos]
-            elif char == curses.KEY_DOWN:
+            elif char == curses.KEY_DOWN and history:
                 if hpos < -1:
                     hpos += 1 
                     cmd = self.history[hpos]
@@ -339,9 +347,26 @@ class CurseInterface():
 
         self.g.force = ""
 
-        self.history.append(cmd)
+        if history:
+            self.history.append(cmd)
 
         return cmd
+
+
+    def getConfirm(self, text = "Are you sure? y/n "):
+        result = self.getCmd(self.infile, text.upper(), history=False)
+        if 'y' in result:
+            return True
+        return False
+
+    def getPause(self, text = "(continue)"):
+        self.inwin.clear()
+        self.inwin.addstr(0,0, text.upper())
+        self.inwin.refresh()
+       
+        self.getNext()
+        self.inwin.clear()
+        self.inwin.refresh()
 
 
     def commandLoop(self, infile = None):

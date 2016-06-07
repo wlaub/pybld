@@ -5,12 +5,8 @@ Current task:
 
 Need a way to decouple cursor movement from drawing images.
 
-Clear input from before cmd started
-
 Create Combo (Responds to items + conjuctions, catches verbs before items)
     Create Combo template, add to tools
-
-Add confirmation dialogs
 
 Implement command line using textpad/validator?
 

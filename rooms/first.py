@@ -98,6 +98,7 @@ class Door(game.Item):
             return game.fail("It's not a real door.")
 
         game.say("You open the door and walk through into the next room. There's no going back now. Hope you didn't miss anything important!")
+        game.wait()
         game.g.moveRoom('Second Room')
 
         return True

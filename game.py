@@ -130,6 +130,25 @@ def _pass():
     return "pass"
 
 
+def confirm(text = None):
+    """
+    Prompt the player for input and return True of False for
+    y/n. Default is
+    ARE YOU SURE? Y/N
+    """
+    if text != None:
+       return g.interface.getConfirm(text) 
+    return g.interface.getConfirm()
+
+def wait(text = None):
+    """
+    Print some text and wait for the player to press a key
+    to continue. Default is 
+    (CONTINUE)
+    """
+    if text != None:
+        return g.interface.getPause(text)
+    return g.interface.getPause()
 
 directions = ["up", "down", "left", "right"]
 
