@@ -133,7 +133,7 @@ class CurseScreen(Screen):
     width = 60
 
     def __init__(self):
-        self.buffer=[' ']
+        self.buffer=['']
         self.offset = 0
 
     def setWindow(self, win):

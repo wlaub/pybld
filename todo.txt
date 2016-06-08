@@ -1,11 +1,8 @@
 
 Current task:
-Achievement formatting
 
 Create Combo (Responds to items + conjuctions, catches verbs before items)
     Create Combo template, add to tools
-
-Fix extra spaces in first line
 
 Fix cursor weirdness
 --give command line info to renderer so it can reposition cursor?

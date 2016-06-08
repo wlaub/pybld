@@ -545,9 +545,10 @@ class Game(Bld):
         Formats and returns a list of strings for the
         player's achievements.
         """
-        result = [x.getString() for x in self.achievements.values()]
+        strings = [x.getString() for x in self.achievements.values()]
+        result = []       
 
-        #TODO: Sort by lengths and collapse into fewer lines
+        strings = sorted(strings, key=lambda x: len(x)) 
 
         return result
 
@@ -805,7 +806,6 @@ class Room(Bld):
         other than the first. Runs the look command by
         by default.
         """
-        lf()
         self.look("look")
 
     def _onFirstEnter(self):
