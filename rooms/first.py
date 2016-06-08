@@ -165,8 +165,10 @@ class BlackWind(game.Item):
             return game.fail("...")
         elif self.hidden:
             return game.fail(self.getString('take2'))
-        return game.Item.take(self, cmd)
-
+        result = game.Item.take(self, cmd)
+        if result:
+            game.g.giveAchievement('black wind', 1)
+        return result
 
 
 class TextParser(game.Item):
@@ -306,6 +308,7 @@ class dldo(game.Item):
             game.say("It breaks.")
             self.sprite.change('img/froom/dldobrk.bmi')
             self.broken = True
+            game.g.giveAchievement("dldo")
         return True
 
     @inv

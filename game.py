@@ -5,6 +5,7 @@ import pickle
 from gmap import *
 import iface
 import bldgfx
+import achieve
 
 import pdb
 
@@ -227,6 +228,30 @@ def standing(f):
     return wrapper
 
 
+class Achievement():
+    """
+    An achievement with a desc and length. Displays as
+    [DESC]: X/Y
+    where x is the player's progress and y is the total
+    possible progress. A single-event achievement will have
+    length of 0 e.g.
+    BLACK WINDS ACQUIRED: 0/1
+    """
+
+    def __init__(self, desc, length = 1):
+        self.desc = desc.upper()
+        self.length = length
+        self.qty = 0
+
+    def give(self, qty = 1):
+        self.qty += qty
+        if self.qty > self.length:
+            self.qty = self.length
+
+    def getString(self):
+        return "{desc}: {qty}/{length}".format(**self.__dict__)
+
+
 class Bld():
     """
     Base class for game objects. Handles verbs, descriptive
@@ -397,13 +422,14 @@ class Game(Bld):
         self.flags = {}
         self.rooms = {}
         self.items = {}
+        self.achievements = {}
         self.lastSave = "default"
 
     def __getstate__(self):
-        return self.currRoom, self.inv, self.flags, self.rooms, self.items, self.lastSave
+        return self.currRoom, self.inv, self.flags, self.rooms, self.items, self.lastSave, self.achievements
 
     def __setstate__(self, state):
-        self.currRoom, self.inv, self.flags, self.rooms, self.items, self.lastSave = state
+        self.currRoom, self.inv, self.flags, self.rooms, self.items, self.lastSave, self.achievements = state
         self.refreshImg()
 
     def initScreens(self, Interface, Screen, Renderer):
@@ -468,6 +494,9 @@ class Game(Bld):
 
             self.inv = self.rooms['inv']
 
+            for name, desc, qty in achieve.achievements:
+                self.achievements[name] = Achievement(desc, qty)
+
     def _addRoom(self, room):
         if not room.name in self.rooms.keys():
             self.rooms[room.name] = room
@@ -503,6 +532,24 @@ class Game(Bld):
         else:
             say(self.getString('fail'))
         self.refreshImg()
+
+    def giveAchievement(self, name, qty = 1):
+        """
+        Gives the player qty progress towards the named
+        achievement.
+        """
+        self.achievements[name].give(qty)
+
+    def getAchievements(self):
+        """
+        Formats and returns a list of strings for the
+        player's achievements.
+        """
+        result = [x.getString() for x in self.achievements.values()]
+
+        #TODO: Sort by lengths and collapse into fewer lines
+
+        return result
 
     def moveRoom(self, name):
         """
