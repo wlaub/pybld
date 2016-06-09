@@ -1,9 +1,5 @@
 
 Current task:
-Handle combos in cmd
-
-Add moveItem function to game for moving unique items.
-
 
 Fix cursor weirdness
 --give command line info to renderer so it can reposition cursor?

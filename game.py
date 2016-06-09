@@ -576,6 +576,12 @@ class Game(Bld):
         self.refreshImg()
         self.currRoom._onEnter()
 
+    def moveItem(self, name, newLoc):
+        """
+        Move the named unique item to the given room.
+        """
+        self.items[name]._move(newLoc)
+
     def hasItem(self, name):
         """
         Checks to see if an item with the given name is in

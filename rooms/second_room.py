@@ -182,7 +182,7 @@ class Cdispel(game.Combo):
         chair.strings['take'] = chair.strings['descSafe']
         self.room.items['chair'].setFlag('safe', True)
         self.voidVerb("d'spel")
-        self.room.items['dark magyx']._move('trash')
+        game.g.moveItem('dark magyx', 'trash')
         return True
 
 
