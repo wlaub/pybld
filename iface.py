@@ -354,7 +354,9 @@ class CurseInterface():
 
 
     def getConfirm(self, text = "Are you sure? y/n "):
-        result = self.getCmd(self.infile, text.upper(), history=False)
+        result = ''
+        while result != 'y' and result != 'n':
+            result = self.getCmd(self.infile, text.upper(), history=False)
         if 'y' in result:
             return True
         return False
