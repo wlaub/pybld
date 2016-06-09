@@ -950,7 +950,7 @@ class Item(Bld):
 
     room = None
     defFlags = {} 
-    flagDev = '`'
+    flagDec = '`'
     defLoc = ""
     defQty = 1
     defSprite = None
@@ -1064,5 +1064,75 @@ class Item(Bld):
             self._move(room.name)
             return True
         return False
+
+
+class Combo(Bld):
+    """
+    For handling commands containing pairs of items with a
+    conjunction. Commands caught have the form
+    VERB LEFT CONJUCTION RIGHT.
+    Combos are checked before items.
+    """
+
+    name = "combo"
+
+    directional = False     #whether left/right order matters
+
+    strings =   {
+                }
+    
+    defFlags =  {
+                }
+    flagDec = '+'
+
+    room = None
+    defLoc = ""
+
+    left = 'left'
+    right = 'right'
+    
+    conj =  {
+            }
+
+    def _checkConj(self, cmd, conj, left, right):
+        if len(cmd) < len(left) + len(right) + 3:
+            return False
+
+        if cmd[:len(left)] != left or cmd[len(left)] != ' ':
+            return False 
+        
+        cmd = cmd[len(left)+1:]
+        c = cmd.split(' ')[0]
+        if not c in conj:
+            return False
+
+        if right != ' '.join(cmd.split(' ')[1:]):
+            return False
+        return True
+
+
+    def _checkCmd(self, cmd):
+        parts = cmd.split(' ')
+        rest = ' '.join(cmd.split(' ')[1:])
+        verb = parts[0]
+
+        if not verb in self.verbs.keys():
+            return False
+        conj = self.conj[verb]
+
+        if self._checkConj(rest, conj, self.left, self.right):
+            return True
+        if not self.directional and self._checkConj(rest, conj, self.right, self.left):
+            return True
+        return False
+
+
+    def _doCmd(self, cmd):
+        pass
+
+
+
+
+
 
 

@@ -4,6 +4,9 @@ Current task:
 Create Combo (Responds to items + conjuctions, catches verbs before items)
     Create Combo template, add to tools
 
+Change inv dectorator to take optional item name.
+
+
 Fix cursor weirdness
 --give command line info to renderer so it can reposition cursor?
 --python curses threading?
