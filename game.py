@@ -1128,7 +1128,11 @@ class Combo(Bld):
 
 
     def _doCmd(self, cmd):
-        pass
+        if not self._checkCmd(cmd):
+            return _pass()
+
+        return Bld._doCmd(self, cmd)
+
 
 
 

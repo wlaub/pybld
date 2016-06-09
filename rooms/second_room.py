@@ -157,3 +157,41 @@ class Darkmagyx(game.Item):
 
 
 
+class Cdispel(game.Combo):
+    name = "cdispel"
+
+    directional = True     #whether left/right order matters
+
+    strings =   {
+                }
+   
+    addVerbs = []
+    fancyVerbs ={ "d'spel": 'dispel'
+                }
+ 
+    defFlags =  {
+                }
+    flagDec = '+'
+
+    room = None
+    defLoc = "Second Room"
+
+    left = 'dark magyx'
+    right = 'black wind'
+    
+    conj =  { "d'spel": ['with']
+            }
+
+    @needItem('black wind')
+    def dispel(self, cmd):
+        chair = self.room.items['chair']
+        game.say(self.getString('dispel'))
+        game.g.inv.items['black wind']._move('trash')
+        chair.strings['desc'] = chair.strings['descSafe']
+        chair.strings['take'] = chair.strings['descSafe']
+        self.room.items['chair'].setFlag('safe', True)
+        self._move('trash')
+        self.room.items['dark magyx'].move('trash')
+        return True
+
+

@@ -89,10 +89,45 @@ def makeItem():
     return True
 
 
+def makeCombo():
+    """
+    Makes an empty combo with given name, location, and
+    left/right objects.
+    """
+    loc = raw_input("Default room: ").strip()
+    fname = makeFname(loc)
+
+    if not os.path.exists(fname):
+        print("Room {} does not exist".format(loc))
+        return False
+
+    name = raw_input("Combo name: ").strip()
+    cname = name.replace(' ','').capitalize()
+
+    left = raw_input("Left object: ").strip()
+    right = raw_input("Right object: ").strip()
+
+    with open('templates/combo','r') as f:
+        template = f.read()
+
+    template = template.replace('{name}', name)\
+                       .replace('{cname}', cname)\
+                       .replace('{loc}', loc)\
+                       .replace('{left}', left)\
+                       .replace('{right}', right)
+    template = getBools(template)
+
+    with open(fname, 'a') as f:
+        f.write(template)
+
+    return True
+
+
+
 
 if __name__ == '__main__':
     while True:
-        print('(R)oom, (I)tem, (Q)uit')
+        print('(R)oom, (I)tem, (C)ombo, (Q)uit')
         cmd = raw_input('> ').strip().lower()
 
         if cmd == 'q':
@@ -101,6 +136,8 @@ if __name__ == '__main__':
             makeItem()
         elif cmd == 'r':
             makeRoom()
+        elif cmd == 'c':
+            makeCombo()
         else:
             print('Invalid command')
 

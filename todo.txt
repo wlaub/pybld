@@ -1,10 +1,9 @@
 
 Current task:
 
-Create Combo (Responds to items + conjuctions, catches verbs before items)
-    Create Combo template, add to tools
+Load and handle Combos
 
-Change inv dectorator to take optional item name.
+Add moveItem function to game for moving unique items.
 
 
 Fix cursor weirdness
