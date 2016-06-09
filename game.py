@@ -1059,6 +1059,8 @@ class Item(Bld):
         string.
         """
         if self.takeable == False:
+            if 'take' in self.strings.keys():
+                return fail(self.getString('take'))
             return fail()
         if self.loc == 'inv':
             if not self.unique:

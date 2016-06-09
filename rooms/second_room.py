@@ -179,7 +179,7 @@ class Cdispel(game.Combo):
         game.say(self.getString('dispel'))
         game.g.inv.items['black wind']._move('trash')
         chair.strings['desc'] = chair.strings['descSafe']
-        chair.strings['take'] = chair.strings['descSafe']
+        chair.strings['take'] = chair.strings['takeSafe']
         self.room.items['chair'].setFlag('safe', True)
         self.voidVerb("d'spel")
         game.g.moveItem('dark magyx', 'trash')
