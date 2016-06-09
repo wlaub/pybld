@@ -1,0 +1,26 @@
+class {cname}(game.Combo):
+    name = "{name}"
+
+    directional = False     #whether left/right order matters
+
+    strings =   {
+                }
+   
+    addVerbs = []
+    fancyVerbs ={
+                }
+ 
+    defFlags =  {
+                }
+    flagDec = '+'
+
+    room = None
+    defLoc = "{loc}"
+
+    left = '{left}'
+    right = '{right}'
+    
+    conj =  {
+            }
+
+
