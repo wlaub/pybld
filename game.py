@@ -462,6 +462,7 @@ class Game(Bld):
         with open("logs/gameload", "w") as f:
             roomFiles = os.listdir('./rooms')
             items = []
+            combos = []
             for name in roomFiles:
                 modName, modExt = os.path.splitext(name)
                 if modExt == '.py' and modName != '__init__':
@@ -486,8 +487,7 @@ class Game(Bld):
                             elif Combo in inspect.getmro(thing):
                                 try:
                                     nCombo = thing()
-                                    items.append(nCombo)   #For linking rooms
-                                    self._addCombo(nCombo)
+                                    combos.append(nCombo)
                                 except Exception as e:
                                     f.write(str(e)+'\n')
  
@@ -499,6 +499,12 @@ class Game(Bld):
                 room.items[item.name] = item
                 item.room = room
                 f.write("Adding item {} to room {}\n".format(item.name, room.name))
+
+            for combo in combos:
+                room = self.rooms[combo.loc]
+                room.combos[combo.name] = combo
+                combo.room = room
+                f.write("Adding combo {} to room {}\n".format(combo.name, room.name))
 
             self.inv = self.rooms['inv']
 
@@ -518,14 +524,6 @@ class Game(Bld):
             self.items[item.name] = item
         else:
             print("Failed to add duplicate item")
-
-    def _addCombo(self, combo):
-        if not combo.name in self.combos.keys():
-            self.combos[combo.name] = combo
-        else:
-            print("Failed to add duplicate combo")
-     
-
 
     def refreshImg(self):
         self.currRoom._show()
@@ -786,6 +784,7 @@ class Room(Bld):
         Bld.__init__(self)
 
         self.items = {}
+        self.combos = {}
         self.defFlags['entered'] = False
 
     def _show(self):
@@ -847,6 +846,10 @@ class Room(Bld):
         """
         Checks commands on items first, then on self.
         """
+        for combo in self.combos.values():
+            if combo._checkCmd(cmd):
+                if combo._doCmd(cmd):
+                    return True 
         for item in self.items.values():
             if item.name.lower() in cmd:
                 if item._doCmd(cmd):
@@ -1112,6 +1115,8 @@ class Combo(Bld):
     def  __init__(self):
         Bld.__init__(self)
         self.loc = self.defLoc
+        self.left = self.left
+        self.right = self.right
 
     def _checkConj(self, cmd, conj, left, right):
         if len(cmd) < len(left) + len(right) + 3:
@@ -1152,6 +1157,9 @@ class Combo(Bld):
 
         return Bld._doCmd(self, cmd)
 
+    def voidVerb(self, verb):
+        if verb in self.verbs.keys():
+            del self.verbs[verb]
 
 
 

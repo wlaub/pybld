@@ -128,7 +128,7 @@ class Darkmagyx(game.Item):
                 , "ground": ""
                 , "take": ""
                 , "drop": ""
-                , "dispel": "The BLACK WIND leaves your INV and passes through the CHAIR. The {} has been D'SPEL!"
+                , "dispel": "D'SPEL with what?"
                 }
 
     addVerbs = []
@@ -144,17 +144,8 @@ class Darkmagyx(game.Item):
     defLoc = 'Second Room'
     defQty = 1
 
-    @needItem('black wind')
     def dispel(self, cmd):
-        chair = self.room.items['chair']
-        game.say(self.getString('dispel'))
-        game.g.inv.items['black wind']._move('trash')
-        chair.strings['desc'] = chair.strings['descSafe']
-        chair.strings['take'] = chair.strings['descSafe']
-        self.room.items['chair'].setFlag('safe', True)
-        self._move('trash')
-        return True
-
+        return game.fail(self.getString('dispel'))
 
 
 class Cdispel(game.Combo):
@@ -162,7 +153,7 @@ class Cdispel(game.Combo):
 
     directional = True     #whether left/right order matters
 
-    strings =   {
+    strings =   { "dispel": "The BLACK WIND leaves your INV and passes through the CHAIR. The {left} has been D'SPEL!"
                 }
    
     addVerbs = []
@@ -190,8 +181,8 @@ class Cdispel(game.Combo):
         chair.strings['desc'] = chair.strings['descSafe']
         chair.strings['take'] = chair.strings['descSafe']
         self.room.items['chair'].setFlag('safe', True)
-        self._move('trash')
-        self.room.items['dark magyx'].move('trash')
+        self.voidVerb("d'spel")
+        self.room.items['dark magyx']._move('trash')
         return True
 
 

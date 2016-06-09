@@ -14,7 +14,6 @@ loading module victory.py
 Found Room
 loading module second_room.py
 Found item
-Game instance has no attribute 'combos'
 Found item
 Found item
 Found Room
@@ -27,6 +26,6 @@ Adding item glyphs to room First Room
 Adding item text pars'r to room First Room
 Adding item d'ldo to room First Room
 Adding item anyway to room Second Room
-Adding item cdispel to room Second Room
 Adding item chair to room Second Room
 Adding item dark magyx to room Second Room
+Adding combo cdispel to room Second Room

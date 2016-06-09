@@ -1,7 +1,6 @@
 
 Current task:
-
-Load and handle Combos
+Handle combos in cmd
 
 Add moveItem function to game for moving unique items.
 
