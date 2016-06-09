@@ -563,7 +563,7 @@ class Game(Bld):
 
         strings = sorted(strings, key=lambda x: len(x)) 
 
-        return result
+        return strings
 
     def moveRoom(self, name):
         """
