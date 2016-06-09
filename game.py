@@ -483,6 +483,14 @@ class Game(Bld):
                                     self._addItem(nItem)
                                 except Exception as e:
                                     f.write(str(e)+'\n')
+                            elif Combo in inspect.getmro(thing):
+                                try:
+                                    nCombo = thing()
+                                    items.append(nCombo)   #For linking rooms
+                                    self._addCombo(nCombo)
+                                except Exception as e:
+                                    f.write(str(e)+'\n')
+ 
                         except Exception as e:
                             pass
 
@@ -510,6 +518,13 @@ class Game(Bld):
             self.items[item.name] = item
         else:
             print("Failed to add duplicate item")
+
+    def _addCombo(self, combo):
+        if not combo.name in self.combos.keys():
+            self.combos[combo.name] = combo
+        else:
+            print("Failed to add duplicate combo")
+     
 
 
     def refreshImg(self):
@@ -1093,6 +1108,10 @@ class Combo(Bld):
     
     conj =  {
             }
+
+    def  __init__(self):
+        Bld.__init__(self)
+        self.loc = self.defLoc
 
     def _checkConj(self, cmd, conj, left, right):
         if len(cmd) < len(left) + len(right) + 3:
