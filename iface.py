@@ -236,7 +236,6 @@ class CurseInterface():
         if self.infile == None:    
             char =self.inwin.getch()
         return char
- 
 
     def validateCmd(self, val):
         force = self.g.force
@@ -294,7 +293,7 @@ class CurseInterface():
         """
         ### 
         curses.flushinp() 
-        xpos = 0
+        self.xpos = 0
         hpos = 0
         cmdTemp = ''
         while 1:
@@ -304,7 +303,7 @@ class CurseInterface():
             elif char == -1:
                 pass
             elif char == 127 or char == curses.KEY_BACKSPACE:
-                if xpos > 0 and not force:
+                if self.xpos > 0 and not force:
                     cmd = cmd[:-1]
             elif char == 21:
                 if not force:
@@ -328,13 +327,13 @@ class CurseInterface():
                 self.scr.home()
                 if not force:
                     cmd += chr(char)
-                elif xpos < len(forceCmd):
-                    cmd += forceCmd[xpos]
-                xpos += 1
-                if force and xpos >= len(cmd):
-                    xpos = len(cmd)-1
+                elif self.xpos < len(forceCmd):
+                    cmd += forceCmd[self.xpos]
+                self.xpos += 1
+                if force and self.xpos >= len(cmd):
+                    self.xpos = len(cmd)-1
                 cmdTemp = cmd
-            xpos = self.refreshCmd(cmd)
+            self.xpos = self.refreshCmd(cmd)
             self.inwin.refresh()
        
         ###

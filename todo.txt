@@ -1,6 +1,9 @@
 
 Current task:
 
+Get sound library
+Add sound support
+
 Fix cursor weirdness
 --give command line info to renderer so it can reposition cursor?
 --python curses threading?

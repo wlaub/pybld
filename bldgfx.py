@@ -90,7 +90,7 @@ class Renderer():
         self.man = Manager()
         #spawn thread?
         thread.start_new_thread(self.thread,())
-
+        
 
     def thread(self):
         while 1:
