@@ -1,6 +1,13 @@
 
 Current task:
 
+New game function
+    Clears game object and reloads from files
+
+verb to list save files and info? e.g.
+    save name | location | score: nnn | turns: nnn
+
+
 Get sound library
 Add sound support
 

@@ -44,8 +44,8 @@ def getSaveNames():
     saves = []
     for name in files:
         parts = name.split('.')
-        if len(parts) > 1 and parts[1] == 'bld':
-            saves.append(name)
+        if len(parts) > 1 and parts[-1] == 'bld':
+            saves.append('.'.join(parts[:-1]))
     return saves
 
 def extractSaveName(cmd):
@@ -408,9 +408,9 @@ class Game(Bld):
 
     defVerbs = ["debug", "help", "exit", "hint", "score", "save", "load"]
 
-    fancyVerbs = {
-    "==>": "_mspa"
-    }
+    fancyVerbs ={ "==>": "_mspa"
+                , "saves": "showsaves"
+                }
 
     alarms = {}
 
@@ -708,6 +708,26 @@ class Game(Bld):
             return False
         self.__dict__.update(loadGame.__dict__)
         say("Loaded gamed {}.".format(self.lastSave))
+        return True
+
+    def showsaves(self, cmd):
+        saves = getSaveNames()
+        result = []
+        fmt = "{name:12}{loc:12}{score:12}{time:12}"
+        result.append(fmt.format( name="name"
+                                , loc ="room"
+                                , score = "score"
+                                , time = "turns"
+                                ))
+        for name in saves:
+            loadGame = load(self, name)
+            if loadGame != None:
+                result.append(fmt.format( name=name
+                                        , loc=loadGame.currRoom.name
+                                        , score=str(loadGame.getScore())
+                                        , time=str(loadGame.getTurns())
+                                        ))
+        game.say('\n'.join(result))
         return True
 
     def debug(self, cmd):

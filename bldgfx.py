@@ -98,6 +98,7 @@ class Renderer():
             if self.playing:
                 self.tick(self.rate)
                 self.draw()
+                
     
     def tick(self, delta):
         for layer in self.sprites.values():

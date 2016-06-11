@@ -210,6 +210,9 @@ class CurseInterface():
         self.cmdwin.leaveok(1)
 
         self.inwin.keypad(1)
+        self.inwin.leaveok(1)
+
+        self.imgwin.leaveok(1)
 
         self.imgwin.border()
         self.imgwin.refresh()
@@ -252,11 +255,11 @@ class CurseInterface():
         if val == curses.KEY_UP:
             if self.hpos > -len(self.history):
                 self.hpos -= 1
-                self.refreshCmd(self.history[self.hpos], self.prefix)
+                self.refreshCmd(self.history[self.hpos])
         elif val == curses.KEY_DOWN:
             if self.hpos < -1:
                 self.hpos += 1 
-                self.refreshCmd(self.history[self.hpos], self.prefix)
+                self.refreshCmd(self.history[self.hpos])
             elif self.hpos == -1:
                 self.hpos = 0
                 self.inwin.clear()
@@ -285,10 +288,12 @@ class CurseInterface():
         self.inwin.refresh()
 
         ###
-        """
+        
         self.xpos = 0
         self.hpos = 0
         tbox = Textbox(self.inwin.derwin(0,2))
+        #game.rend.play(False)
+        tbox.stripspaces = 0
         cmd = tbox.edit(self.validateCmd)[:].strip().lower()
         """
         ### 
@@ -337,7 +342,7 @@ class CurseInterface():
             self.inwin.refresh()
        
         ###
-     
+        """ 
         if force:
             cmd = forceCmd
 
