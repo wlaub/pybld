@@ -1,4 +1,4 @@
-import curses
+import unicurses as curses
 import os, sys, time, thread
 import pdb
 

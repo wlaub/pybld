@@ -1,7 +1,7 @@
 import struct, re, copy
 import os, sys
 import pdb
-import curses
+import unicurses as curses
 import locale
 locale.setlocale(locale.LC_ALL, '')
 code = locale.getpreferredencoding()

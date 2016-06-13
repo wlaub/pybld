@@ -2,7 +2,7 @@
 import time, sys, os
 import rooms, game, iface, bldgfx
 import readline
-import curses
+import unicurses as curses
 import pdb
 
 
@@ -17,7 +17,7 @@ if __name__ == "__main__":
     try:
         mainScreen = curses.initscr()
 
-        curses.resizeterm(45, 60)
+        #curses.resizeterm(45, 60)
 
         g.initScreens(iface.CurseInterface, iface.CurseScreen, bldgfx.Renderer)
         g.moveRoom('First Room')

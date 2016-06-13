@@ -2,8 +2,9 @@ import game
 import os, sys, time, re
 import readline
 import pdb
-import curses
-from curses.textpad import Textbox
+import curses.ascii as crsascii
+import unicurses as curses
+#from curses.textpad import Textbox
 
 class Screen():
     width = 60
@@ -288,7 +289,7 @@ class CurseInterface():
         self.inwin.refresh()
 
         ###
-        
+        """
         self.xpos = 0
         self.hpos = 0
         tbox = Textbox(self.inwin.derwin(0,2))
@@ -328,7 +329,7 @@ class CurseInterface():
                 self.scr.pageUp()
             elif char == curses.KEY_PPAGE:
                 self.scr.pageDown()
-            elif curses.ascii.isprint(char):
+            elif crsascii.isprint(char):
                 self.scr.home()
                 if not force:
                     cmd += chr(char)
@@ -342,7 +343,7 @@ class CurseInterface():
             self.inwin.refresh()
        
         ###
-        """ 
+        
         if force:
             cmd = forceCmd
 
