@@ -2,7 +2,6 @@ import game
 import os, sys, time, re
 import readline
 import pdb
-import curses.ascii as crsascii
 import unicurses as curses
 #from curses.textpad import Textbox
 
@@ -329,7 +328,7 @@ class CurseInterface():
                 self.scr.pageUp()
             elif char == curses.KEY_PPAGE:
                 self.scr.pageDown()
-            elif crsascii.isprint(char):
+            elif char >= 32 and char <= 126:
                 self.scr.home()
                 if not force:
                     cmd += chr(char)
