@@ -687,13 +687,19 @@ class Game(Bld):
             saveName = self.lastSave
         self.lastSave = saveName
 
+    def _clear(self):
+        """
+        Clear and reload data.
+        """
+        self.__init__()
+        self.loadModules()
+
     def restart(self, cmd):
         """
         Restart the game. Starts in the room named _init.
         """
         #TODO: Check unsaved game and confirm if so?
-        self.__init__()
-        self.loadModules()
+        self._clear()
         self.moveRoom('_init')
 
     def save(self, cmd):
