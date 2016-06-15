@@ -1,6 +1,9 @@
 
 Current task:
-Make title screen room (start)
+
+Implement save and/or verb blocking
+    E.g. to prevent saving on the title screen
+    and to prevent score checking on title screen
 
 Make clear also clear interface buffers.
 
