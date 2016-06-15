@@ -22,6 +22,6 @@ class Room(game.Room):
                 }
 
     def _onOtherEnter(self):
-        game.g.moveRoom('First Room')
+        game.g.moveRoom('start')
     
 

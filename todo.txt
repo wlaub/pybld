@@ -1,11 +1,12 @@
 
 Current task:
-New game function
-    Clears game object and reloads from files
+Make title screen room (start)
+
+Make clear also clear interface buffers.
+
+Make wax create directories as needed
 
 Create game saved check and confirm. Possibly as a decorator
-
-Create _init room
 
 Test on a windows machine i guess
 
