@@ -687,6 +687,15 @@ class Game(Bld):
             saveName = self.lastSave
         self.lastSave = saveName
 
+    def restart(self, cmd):
+        """
+        Restart the game. Starts in the room named _init.
+        """
+        #TODO: Check unsaved game and confirm if so?
+        self.__init__()
+        self.loadModules()
+        self.moveRoom('_init')
+
     def save(self, cmd):
         """
         Save the game using the given save filename

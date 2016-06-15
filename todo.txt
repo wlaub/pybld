@@ -1,8 +1,18 @@
 
 Current task:
-
 New game function
     Clears game object and reloads from files
+
+Create game saved check and confirm. Possibly as a decorator
+
+Create _init room
+
+Test on a windows machine i guess
+
+Renderer/sprite animation and cutscene support:
+    Renderer functions to trigger non-blocking animations
+    in sprites, flag actions with names
+    Renderer functions to block until named actions finish
 
 Add sound support
 
