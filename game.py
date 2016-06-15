@@ -406,7 +406,7 @@ class Game(Bld):
     defStrings= { 'fail': 'Hmm...'
                 }
 
-    defVerbs = ["debug", "help", "exit", "hint", "score", "save", "load"]
+    defVerbs = ["debug", "help", "exit", "hint", "score", "save", "load", "restart"]
 
     fancyVerbs ={ "==>": "_mspa"
                 , "saves": "showsaves"
