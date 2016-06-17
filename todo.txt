@@ -1,8 +1,6 @@
 
 Current task:
 
-Make command loop hide cursor outside of command input
-
 Implement save and/or verb blocking
     E.g. to prevent saving on the title screen
     and to prevent score checking on title screen

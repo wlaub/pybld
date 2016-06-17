@@ -217,6 +217,7 @@ class CurseInterface():
         self.imgwin.border()
         self.imgwin.refresh()
 
+        curses.curs_set(0)
         curses.start_color()
         curses.use_default_colors()
         curses.init_pair(1, curses.COLOR_GREEN, -1)
@@ -273,7 +274,7 @@ class CurseInterface():
         return val
 
     def getCmd(self, f, prefix = "> ", history = True):
-        
+        curses.curs_set(1)
         self.scr.paint()
         curses.noecho()
         cmd = ""
@@ -354,6 +355,7 @@ class CurseInterface():
         if history:
             self.history.append(cmd)
 
+        curses.curs_set(0)
         return cmd
 
 
