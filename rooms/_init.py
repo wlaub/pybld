@@ -29,4 +29,4 @@ class Room(game.Room):
         time.sleep(7)
         game.say("START  LOAD  EXIT")
         game.g.showsaves("saves")
-        game.say("EXIT")
+

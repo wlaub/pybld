@@ -691,6 +691,7 @@ class Game(Bld):
         Clear and reload data.
         """
         self.__init__()
+        self.interface.clear()
         self.loadModules()
 
     def restart(self, cmd):

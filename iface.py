@@ -136,6 +136,10 @@ class CurseScreen(Screen):
         self.buffer=['']
         self.offset = 0
 
+    def clear(self):
+        self.buffer = ['']
+        self.offset = 0
+
     def setWindow(self, win):
         self.window = win
 
@@ -197,6 +201,11 @@ class CurseInterface():
         self.infile = sys.stdin
         self.stdscr = curses.initscr()
         self.history = []
+
+    def clear(self):
+        self.history = []
+        self.scr.clear()
+        self.scr.paint()
 
     def setGame(g):
         self.g = g
