@@ -430,7 +430,6 @@ class Game(Bld):
 
     def __setstate__(self, state):
         self.currRoom, self.inv, self.flags, self.rooms, self.items, self.lastSave, self.achievements = state
-        self.refreshImg()
 
     def initScreens(self, Interface, Screen, Renderer):
         """
@@ -722,6 +721,7 @@ class Game(Bld):
             say("Failed to load game {}.".format(self.lastSave))
             return False
         self.__dict__.update(loadGame.__dict__)
+        self.refreshImg()
         say("Loaded gamed {}.".format(self.lastSave))
         return True
 
@@ -742,6 +742,7 @@ class Game(Bld):
                                         , score=str(loadGame.getScore())
                                         , time=str(loadGame.getTurns())
                                         ))
+        
         game.say('\n'.join(result))
         return True
 

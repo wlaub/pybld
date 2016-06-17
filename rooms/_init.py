@@ -26,5 +26,7 @@ class Room(game.Room):
    
     def _onOtherEnter(self):
         #Wait for sprite to finish animating?
-        
-        pass
+        time.sleep(7)
+        game.say("START  LOAD  EXIT")
+        game.g.showsaves("saves")
+        game.say("EXIT")
