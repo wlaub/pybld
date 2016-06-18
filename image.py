@@ -2,17 +2,25 @@ import struct, re, copy
 import os, sys
 import pdb
 import curses
-import locale
+import locale, platform
 locale.setlocale(locale.LC_ALL, '')
 code = locale.getpreferredencoding()
+
+if platform.system == 'Windows':
+    cMap =  { 1: unichr(176)
+            , 2: unichr(177)
+            , 3: unichr(178)
+            }
+else:
+    cMap =  { 1: unichr(0x2592)
+            , 2: unichr(0x2593)
+            , 3: unichr(0x2588)
+            }
 
 
 class Frame():
 
-    charMap =   { 1: unichr(0x2592)
-                , 2: unichr(0x2593)
-                , 3: unichr(0x2588)
-                }
+    charMap = cMap
 
     deMap = {}
 
