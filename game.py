@@ -422,6 +422,7 @@ class Game(Bld):
         self.flags = {}
         self.rooms = {}
         self.items = {}
+        self.banned = []
         self.achievements = {}
         self.lastSave = "default"
 
@@ -535,7 +536,9 @@ class Game(Bld):
         """
         lf()
         self.tickTurn()
-        if self.inv.doCmd(cmd):
+        if cmd.split(' ')[0] in self.banned:
+            pass
+        elif self.inv.doCmd(cmd):
             pass
         elif self.currRoom.doCmd(cmd):
             pass
@@ -571,9 +574,17 @@ class Game(Bld):
         """
         if self.currRoom:
             self.currRoom._onLeave()
+        self.banned = []
         self.currRoom = self.rooms[name]
         self.refreshImg()
         self.currRoom._onEnter()
+
+    def banVerbs(self, verbs):
+        """
+        Temporarily ban the given verbs from being
+        recognized. Cleared on moveRoom.
+        """
+        self.banned.extend(verbs)
 
     def moveItem(self, name, newLoc):
         """

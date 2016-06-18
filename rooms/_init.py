@@ -25,6 +25,7 @@ class Room(game.Room):
         game.g.moveRoom('First Room')
    
     def _onOtherEnter(self):
+        game.g.banVerbs(['save', 'restart', 'score', 'hint', 'help'])
         #TODO Wait for sprite to finish animating?
         time.sleep(7)
         game.say("START  LOAD  EXIT")
