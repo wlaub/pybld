@@ -1,13 +1,14 @@
 
 Current task:
 
+Add charset switching for windows
+Look into fixing command entry backspace for windows
+
 Implement save and/or verb blocking
     E.g. to prevent saving on the title screen
     and to prevent score checking on title screen
 
-Make clear also clear interface buffers.
-
-Make wax create directories as needed
+    Make wax create directories as needed
 
 Create game saved check and confirm. Possibly as a decorator
 

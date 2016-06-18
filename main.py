@@ -2,7 +2,7 @@
 import time, sys, os
 import rooms, game, iface, bldgfx
 import readline
-import unicurses as curses
+import curses
 import pdb
 
 

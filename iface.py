@@ -2,8 +2,8 @@ import game
 import os, sys, time, re
 import readline
 import pdb
-import unicurses as curses
-#from curses.textpad import Textbox
+import curses
+from curses.textpad import Textbox
 
 class Screen():
     width = 60
