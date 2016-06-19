@@ -1,7 +1,6 @@
 #!/usr/bin/python
 import time, sys, os
 import rooms, game, iface, bldgfx
-import readline
 import curses
 import pdb
 

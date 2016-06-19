@@ -1,6 +1,5 @@
 import game
 import os, sys, time, re
-import readline
 import pdb
 import curses
 from curses.textpad import Textbox
@@ -85,6 +84,7 @@ class AutoCompleter():
 class Interface():
 
     def __init__(self, g):
+        import readline
         self.g = g
         self.ac = AutoCompleter(self.g)
         readline.set_completer(self.ac.complete)
