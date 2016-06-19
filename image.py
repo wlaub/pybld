@@ -6,7 +6,7 @@ import locale, platform
 locale.setlocale(locale.LC_ALL, '')
 code = locale.getpreferredencoding()
 
-if platform.system == 'Windows':
+if platform.system() == 'Windows':
     cMap =  { 1: unichr(176)
             , 2: unichr(177)
             , 3: unichr(178)

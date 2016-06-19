@@ -317,7 +317,7 @@ class CurseInterface():
                 break
             elif char == -1:
                 pass
-            elif char == 127 or char == curses.KEY_BACKSPACE:
+            elif char == 127 or char == curses.KEY_BACKSPACE or char == 8:
                 if self.xpos > 0 and not force:
                     cmd = cmd[:-1]
             elif char == 21:
