@@ -1,13 +1,13 @@
 
 Current task:
 
-Look into fixing command entry backspace for windows
+Make fbdng glow item in second room
+
+Implement conditionals in desc strings in second room
 
 Make wax create directories as needed
 
 Create game saved check and confirm. Possibly as a decorator
-
-Test on a windows machine i guess
 
 Renderer/sprite animation and cutscene support:
     Renderer functions to trigger non-blocking animations

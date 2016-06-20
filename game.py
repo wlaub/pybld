@@ -1,4 +1,4 @@
-import os, time, sys
+import os, time, sys, re
 import importlib, inspect
 from functools import wraps
 import pickle
@@ -381,9 +381,23 @@ class Bld():
             base = self.defStrings[key]
         else:
             return None
+
+        pattern = "\<\s*flag=`(?P<flag>.*)`\s*`(?P<true>.*)`\s*`(?P<false>.*)`\s*\>"
+
+        for match in re.finditer(pattern, base):
+            flag = match.group('flag').split('=')
+            val = flag[1]
+            try:
+                val = int(val)
+            except:
+                pass
+            rstr = match.string[match.start():match.end()]
+            if g.getFlag(flag[0]) == val:
+                base = base.replace(rstr, match.group('true'))
+            else:
+                base = base.replace(rstr, match.group('false'))
+
         return base.format(self.name.upper(), **self.__dict__) 
-
-
 
 
 class Game(Bld):
@@ -1022,7 +1036,7 @@ class Item(Bld):
 
     room = None
     defFlags = {} 
-    flagDec = '`'
+    flagDec = '|'
     defLoc = ""
     defQty = 1
     defSprite = None

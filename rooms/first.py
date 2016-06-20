@@ -7,7 +7,7 @@ class Room(game.Room):
     name = "First Room"
 
     strings = {
-    "desc": "You are sitting in a room, different from the one I am in. There is a door to the RIGHT.",
+    "desc": "You are sitting in a room, different from the one I am in. There is a door to the RIGHT. <flag=`black wind|escape=1` `Black wind escaped` `Black wind did not escaped`>.",
     "closer": "You take a closer look. The walls and floor are made out of MATERIALS.ACOUSTIC.002C.COLORS.00.NAME MATERIALS.ACOUSTICS.002C.NAME. The drop ceiling is made of white high-grade asbestos tile. There is a single square flourescent light in the middle of the ceiling. You stare hard at the ceiling for a few minutes to make sure it's not coated in shifting iridescent glyphs. It is not.",
     "no beans": "There are no bean(s) left in the alpha bnple.",
     "beanup": "You increment the beancount.",
@@ -152,6 +152,7 @@ class BlackWind(game.Item):
         t = self.getFlag("ticks")
         if t == 0:
             self.hidden = True
+            self.setFlag("escape", True)
             return
         game.g.setAlarm(self.timeout, self._tick)
         self.setFlag("ticks",t+1)
@@ -159,7 +160,7 @@ class BlackWind(game.Item):
 
     def take(self, cmd):
         blkTime = self.getFlag("time")
-        currTime = game.g.getFlag("turns")
+        currTime = game.g.getFlag("turns") #TODO: Replace
         escape = self.getFlag("escape")
         if blkTime < 0:
             return game.fail("...")
